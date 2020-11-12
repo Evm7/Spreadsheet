@@ -5,7 +5,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.CellImpl;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
 
@@ -63,7 +63,7 @@ public class System {
         String[] position = this.view.askQuestion("Where do you want your value? (column-raw)").split("-");        
         int column = getIntColumn(position[0]);
         int row = Integer.parseInt(position[1]);
-        Cell cell = getCell(column, row);
+        CellImpl cell = getCell(column, row);
         String value;
         if (cell == null || cell.getType_of_content().equals("None")) {
             value = this.view.askQuestion("Which value do you want to introduce in [" + position[0] + row + "] ?");
@@ -110,7 +110,7 @@ public class System {
         this.view.display("See you, "+ this.name+"!");
     }
 
-    private Cell getCell(int column, int raw) {
+    private CellImpl getCell(int column, int raw) {
         return (this.model.checkEmpty(column, raw));
     }
 

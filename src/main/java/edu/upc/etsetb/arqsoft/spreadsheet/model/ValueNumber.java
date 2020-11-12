@@ -9,14 +9,12 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  *
  * @author estev
  */
-public class CellNumber extends Cell{
+public class ValueNumber extends CellValue {
     private Float value;
-    
-    public CellNumber(int row, int column, Float value) {
-        super(row, column, TypeOfContent.NUMBER);
+
+    public ValueNumber(Float value) {
         this.value = value;
     }
-
 
     public Float getValue() {
         return value;
@@ -25,17 +23,4 @@ public class CellNumber extends Cell{
     public void setValue(Float value) {
         this.value = value;
     }
-    
-        public void show(){
-        System.out.println("Cell ["+this.column+" "+ this.row+"] ("+this.type_of_content+"): "+this.value);
-    }
-        
-    public String printValue(){
-        return ""+ this.value;
-    }
-    
-    public String getSource(){
-        return ""+ this.value;
-    }
-        
 }

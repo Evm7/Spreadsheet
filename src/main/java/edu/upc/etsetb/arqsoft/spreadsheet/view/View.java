@@ -5,7 +5,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.view;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.CellImpl;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import java.util.Scanner;
 
@@ -63,7 +63,7 @@ public class View {
         }
     }
 
-    private void printCell(Cell cell, boolean lastColumn, boolean lastRow) {
+    private void printCell(CellImpl cell, boolean lastColumn, boolean lastRow) {
         System.out.print(cell.printValue());
     }
 

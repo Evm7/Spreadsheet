@@ -9,29 +9,19 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  *
  * @author estev
  */
-public class CellText extends Cell{
-    
+public class ValueText extends CellValue {
     private String value;
-    
-    public CellText(int row, int column, String text) {
-        super(row,column,  TypeOfContent.TEXT);
+
+    public ValueText(String value) {
         this.value = value;
-        
     }
 
-    public String printValue() {
+    public String getValue() {
         return value;
     }
 
     public void setValue(String value) {
         this.value = value;
     }
-        
-    public void show(){
-        System.out.println("Cell ["+this.column+" "+ this.row+"] ("+this.type_of_content+"): "+this.value);
-    }
     
-    public String getSource(){
-        return value;
-    }
 }
