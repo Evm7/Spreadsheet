@@ -10,12 +10,14 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  * @author estev
  */
 public class ValueText extends CellValue {
+
     private String value;
 
     public ValueText(String value) {
         this.value = value;
     }
 
+    @Override
     public String getValue() {
         return value;
     }
@@ -23,5 +25,9 @@ public class ValueText extends CellValue {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
+    @Override
+    public String print() {
+        return this.value;
+    }
 }

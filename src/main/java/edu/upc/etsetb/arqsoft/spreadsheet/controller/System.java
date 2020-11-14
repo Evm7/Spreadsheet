@@ -7,6 +7,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.model.CellImpl;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
 
 
@@ -60,33 +61,38 @@ public class System {
     }
     
     private void addValue() {
-        String[] position = this.view.askQuestion("Where do you want your value? (column-raw)").split("-");        
-        int column = getIntColumn(position[0]);
-        int row = Integer.parseInt(position[1]);
+        String[] position = this.view.askQuestion("Where do you want your value? (column-raw)").split("-");   
+        int column, row;
+        try{
+            column= getIntColumn(position[0]);
+            row = Integer.parseInt(position[1]);
+        }catch(IndexOutOfBoundsException ex){
+            view.display("Value was not correctly introduced");
+            return;
+        }
         CellImpl cell = getCell(column, row);
+        cell.show();
         String value;
-        if (cell == null || cell.getType_of_content().equals("None")) {
+        if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
             value = this.view.askQuestion("Which value do you want to introduce in [" + position[0] + row + "] ?");
-            model.createCell(row, column, value);
+            model.createCell(column, row, value);
         } else {
-            value = this.view.askQuestion("Do you want to modify cell in [" + position[0] + row + "] : " + cell.getSource() + "? [y/n]");
+            value = this.view.askQuestion("Do you want to modify cell in [" + position[0] + row + "] : " + cell.printValue()+ "? [y/n]");
             if (value.equals("n")) {
                 return;
             } else {
                 value = this.view.askQuestion("Which value do you want to introduce?");
-                model.createCell(row, column, value);
+                model.createCell(column, row, value);
             }
         }
     }
     
     private int getIntColumn(String column){
         int column_num=0;
-        
         for (int i = 0; i < column.length(); i++) {
             column_num += Math.pow(('Z' - 'A' + 1), i) * (column.charAt(column.length()-1-i) - 'A' + 1);
-
         }
-        return column_num;
+        return column_num-1;
     }
     
     private String getStrColumn(int number) {
@@ -111,7 +117,7 @@ public class System {
     }
 
     private CellImpl getCell(int column, int raw) {
-        return (this.model.checkEmpty(column, raw));
+        return (this.model.checkEmpty(column, raw-1));
     }
 
 }

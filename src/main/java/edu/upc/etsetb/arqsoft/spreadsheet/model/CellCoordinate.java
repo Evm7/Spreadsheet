@@ -25,12 +25,11 @@ public class CellCoordinate {
     }
     
     public char[] intToChar(int column) {
-        int number_of_letters = column;
+        int number_of_letters = column+1;
         String col = "";
         int modulo;
-
         while (number_of_letters > 0) {
-            modulo = (number_of_letters - 1) % ('Z'-'A');
+            modulo = (number_of_letters-1) % ('Z'-'A');
             col = String.valueOf((char)('A' + modulo) + col);
             number_of_letters = (int) ((number_of_letters - modulo) / ('Z'-'A'));
         }
@@ -38,11 +37,16 @@ public class CellCoordinate {
     }
     
     public String print(){
-        return "["+ column+","+row+"]";
+        return "["+ new String(column)+","+row+"]";
     }
     
     public int getColumn(){
-        return 0;
+        String column = new String(this.column);
+        int column_num=0;
+        for (int i = 0; i < column.length(); i++) {
+            column_num += Math.pow(('Z' - 'A' + 1), i) * (column.charAt(column.length()-1-i) - 'A' + 1);
+        }
+        return column_num-1;
     }
     
     public int getRow(){

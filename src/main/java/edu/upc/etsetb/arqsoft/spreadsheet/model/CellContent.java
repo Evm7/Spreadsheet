@@ -21,5 +21,5 @@ public class CellContent {
     public TypeOfContent getType(){
         return type_of_content;
     }
-    
+        
 }

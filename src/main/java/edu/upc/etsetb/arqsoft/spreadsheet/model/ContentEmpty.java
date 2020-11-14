@@ -9,15 +9,10 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  *
  * @author estev
  */
-class CellValue {
-
+public class ContentEmpty extends CellContent{
     
-    public Object getValue() {
-        return null;
+    public ContentEmpty() {
+        super(TypeOfContent.EMPTY, "");
+        
     }
-    
-    public String print(){
-        return "";
-    }
-    
 }

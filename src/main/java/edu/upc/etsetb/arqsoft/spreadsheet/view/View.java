@@ -40,6 +40,8 @@ public class View {
     }
 
     public void printTabloid(SpreadSheet cells) {
+        printasu(cells);
+                
         int[] max = cells.getMaxLength();
         max_column = max[0];
         max_raw = max[1];
@@ -56,7 +58,7 @@ public class View {
                     }
                     System.out.print(getColumn(j+1) + "\t");
                 } else {
-                    System.out.print(cells.getCell(i - 1, j).printValue() + "\t");
+                    System.out.print(cells.getCell(j, i-1).printValue() + "\t");
                 }
             }
             System.out.println();
@@ -88,5 +90,19 @@ public class View {
             number_of_letters = (int) ((number_of_letters - module) / ('Z' - 'A'+1));
         }
         return col;
+    }
+    
+    private void printasu(SpreadSheet sheet){
+        int[] max = sheet.getMaxLength();
+        int max_col = max[0];
+        int max_row = max[1];
+        CellImpl cell ;
+        for(int i=0; i<max_col; i++){
+            for(int j = 0; j< max_row; j++){
+                cell  = sheet.getCell(i, j);
+                System.out.println(" For column "+ i +" and row " + j+ " we have:");
+                cell.show();
+            }
+        }
     }
 }

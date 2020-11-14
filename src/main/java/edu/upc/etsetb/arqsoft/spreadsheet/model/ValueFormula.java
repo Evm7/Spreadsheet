@@ -16,6 +16,7 @@ public class ValueFormula extends CellValue {
         this.value = value;
     }
 
+    @Override
     public Float getValue() {
         return value;
     }
@@ -23,4 +24,11 @@ public class ValueFormula extends CellValue {
     public void setValue(Float value) {
         this.value = value;
     }
+    
+    @Override
+    public String print(){
+        return ""+this.value;
+    }
+    
+
 }

@@ -8,13 +8,17 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
 /**
  *
  * @author estev
+ * 
+ * IT IS IMPORTANT TOT TAKE INTO ACCOUNT THAT SPREADSHEET IS A MATTRIX THAT GOES FROM [0--> MAX_COLUMN-1][0-->MAX_RAW-1]
+ * However, when creating the cells, a cell [0][0] have the position A1. A0 does no exists.
+ * Therefore, in order to do the creation of cells, remind that SpreadSheet.Row = Cell.Row-1
  */
 public class SpreadSheet {
     
     private String name;
-    private CellImpl[][] spreadsheet;
+    private CellImpl[][] spreadsheet;   // [column][row]
     private int max_column;
-    private int max_raw;
+    private int max_row;
     
     public SpreadSheet(String name, int length) {
         this.name = name;
@@ -24,36 +28,37 @@ public class SpreadSheet {
     public int[] getMaxLength() {
         int[] max = new int[2];
         max[0] = max_column;
-        max[1] = max_raw;
+        max[1] = max_row;
         return max;
     }
     
-    public CellImpl getCell(int row, int column) {
-        return this.spreadsheet[row][column];
+    public CellImpl getCell(int column, int row) {
+        return this.spreadsheet[column][row];
     }
     
     private void initializeSpreadSheet(int length) {
         this.spreadsheet = new CellImpl[length][length];
         for (int row = 0; row < length; row++) {
             for (int column = 0; column < length; column++) {
-                this.spreadsheet[column][row] = new CellImpl(column, row, "");
+                this.spreadsheet[column][row] = new CellImpl(column, row+1, "");
             }
         }
-        this.max_raw = length;
+        this.max_row = length;
         this.max_column = length;
     }
     
-    public CellImpl createCell(int row, int column, String content) {
-        System.out.println("We are creating a cell "+ content+ " in column "+ column+" and row " +row);
-        complete_cells(row, column);
-        CellImpl cell = new CellImpl(row, column, content);
-        addCell(cell, column, row);
+    public CellImpl createCell(int column, int row, String content) {
+        System.out.println("Creating cell for "+ column +" and "+ row);
+        complete_cells(column, row);
+        CellImpl cell = new CellImpl(column, row, content);
+        addCell(cell, column, row-1);
         cell.show();
         return cell;
     }
     
     private void addCell(CellImpl cell, int column, int row) {
-        this.spreadsheet[column-1][row-1] = cell;
+        System.out.println("You are adding to column " +column + " and row "+ row);
+        this.spreadsheet[column][row] = cell;
     }
     
     public CellImpl checkEmpty(int column, int raw) {
@@ -65,11 +70,11 @@ public class SpreadSheet {
         }
     }
     
-    private void complete_cells(int num_row, int num_column) {
-        if ((this.max_column < num_column) || (this.max_raw < num_row)){
+    private void complete_cells(int num_column, int num_row) {
+        if ((this.max_column < num_column) || (this.max_row < num_row)){
             CellImpl[][] copy = this.spreadsheet.clone();
             int new_size_column =Math.max(num_column, this.max_column);
-            int new_size_row =Math.max(num_row, this.max_raw);
+            int new_size_row =Math.max(num_row, this.max_row);
 
             System.out.println("The new size column is the new size col: "+new_size_column+" + row:"+ new_size_row );
                     
@@ -85,7 +90,7 @@ public class SpreadSheet {
                 }
             }
             this.max_column = new_size_column;
-            this.max_raw = new_size_row;
+            this.max_row = new_size_row;
         }
     }
 }
