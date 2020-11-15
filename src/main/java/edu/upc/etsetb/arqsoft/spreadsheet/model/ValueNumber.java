@@ -11,18 +11,18 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  */
 public class ValueNumber extends CellValue {
 
-    private Float value;
+    private Double value;
 
-    public ValueNumber(Float value) {
+    public ValueNumber(Double value) {
         this.value = value;
     }
 
     @Override
-    public Float getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Float value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 

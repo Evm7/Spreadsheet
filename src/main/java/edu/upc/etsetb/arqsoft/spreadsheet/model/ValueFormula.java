@@ -5,29 +5,31 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
+
 /**
  *
  * @author estev
  */
 public class ValueFormula extends CellValue {
-    private Float value;
+    private Value[] values;
 
-    public ValueFormula(Float value) {
-        this.value = value;
+    public ValueFormula(Value[] value) {
+        this.values = value;
     }
 
     @Override
-    public Float getValue() {
-        return value;
-    }
-
-    public void setValue(Float value) {
-        this.value = value;
+    public Value[] getValue() {
+        return values;
     }
     
     @Override
     public String print(){
-        return ""+this.value;
+        String result = "";
+        for(Value f: values){
+            result = result +" "+ f.getValue();
+        }
+        return result;
     }
     
 

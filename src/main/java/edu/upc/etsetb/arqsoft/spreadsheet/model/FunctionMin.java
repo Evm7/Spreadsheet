@@ -5,7 +5,9 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 
 /**
  *
@@ -14,20 +16,26 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
 public class FunctionMin implements Function{
     
     private String arguments;
-    private Float value;
+    private Double value;
     
-    public FunctionMin(String arguments) {
-        this.arguments=arguments;
+    public FunctionMin() {
     }
     
     @Override
-    public Float[] parseArguments() throws NoParseableArguments{
+    public Double[] parseArguments() throws NoParseableArguments{
         throw new NoParseableArguments("Not supported yet."); 
     }
 
     @Override
-    public Float computeFormula() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public OperantNumber computeFormula(OperantFunction args) {
+        OperantNumber[] values = args.getValue();
+        OperantNumber result = values[0];
+        for (OperantNumber v: values){
+            if ((Double) result.getValue() > (Double) v.getValue()){
+                result = v;
+            }
+        }
+        return result;
     }
     
     

@@ -5,23 +5,27 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operant;
 
 /**
  *
  * @author estev
  */
-class CellValue implements Value{
+public class OperantNumber implements Operant {
 
-    public Object getValue() {
-        return null;
+    Double operant;
+
+    public OperantNumber(Double operant) {
+        this.operant = operant;
     }
 
-    public CellValue() {
+
+    public Double getValue() {
+        return this.operant;
     }
 
+    @Override
     public String print() {
-        return "";
+        return ""+ this.operant;
     }
-
 }

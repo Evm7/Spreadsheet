@@ -5,12 +5,13 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
-
 /**
  *
  * @author estev
  */
-public interface Operant {
-    String print();
-    Object getValue();
+public interface Operator {
+    Operant computeOperation(Operant arg1, Operant arg2);
+    String getSign();
+    int getWeight();
+
 }

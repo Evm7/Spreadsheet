@@ -30,7 +30,7 @@ public class CellImpl {
         }
         else if(typeOfContent == TypeOfContent.NUMBER){
             this.cellcontent = new ContentNumber(content);
-            this.value = new ValueNumber(Float.parseFloat(content));
+            this.value = new ValueNumber(Double.parseDouble(content));
         }
         else if(typeOfContent == TypeOfContent.TEXT){
             this.cellcontent = new ContentText(content);
@@ -51,7 +51,7 @@ public class CellImpl {
         } else {
 
             try {
-                Float num = Float.parseFloat(content);
+                Double num = Double.parseDouble(content);
                 return TypeOfContent.NUMBER;
             } catch (NumberFormatException e) {
                 return TypeOfContent.TEXT;

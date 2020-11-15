@@ -5,14 +5,16 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.model.ArgumentFunction;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.NoParseableArguments;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.OperantFunction;
 
 /**
  *
  * @author estev
  */
 public interface Function {
-    Float[] parseArguments() throws NoParseableArguments;
+    Double[] parseArguments() throws NoParseableArguments;
     
-    Float computeFormula();
+    Operant computeFormula(OperantFunction args);
 }

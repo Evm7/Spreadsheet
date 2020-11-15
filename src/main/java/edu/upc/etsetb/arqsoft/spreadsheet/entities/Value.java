@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.upc.etsetb.arqsoft.spreadsheet.model;
+package edu.upc.etsetb.arqsoft.spreadsheet.entities;
+
 
 /**
  *
  * @author estev
  */
-class Argument {
-    
+public interface Value {
+    Object getValue();
 }
