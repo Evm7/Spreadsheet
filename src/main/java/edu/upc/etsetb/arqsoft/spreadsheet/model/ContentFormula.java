@@ -45,7 +45,7 @@ public class ContentFormula extends CellContent {
             i++;
         }
 
-        return new Double(3.14);
+        return ((OperantNumber) values_op[values_op.length-1]).getValue();
     }
 
     private Operant[] rearrangeArguments(Operant[] values, Argument[] arguments) {
