@@ -13,8 +13,8 @@ public class ValueText extends CellValue {
 
     private String value;
 
-    public ValueText(String value) {
-        this.value = value;
+    public ValueText(ContentText content) {
+        this.value = content.getContent();
     }
 
     @Override

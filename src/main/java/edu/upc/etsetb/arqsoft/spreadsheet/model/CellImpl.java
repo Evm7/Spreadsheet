@@ -27,18 +27,19 @@ public class CellImpl {
         TypeOfContent typeOfContent = parseContent(content);
         if (typeOfContent == TypeOfContent.FORMULA) {
             this.cellcontent = new ContentFormula(content);
+            this.value = new ValueFormula((ContentFormula) this.cellcontent);
         }
         else if(typeOfContent == TypeOfContent.NUMBER){
             this.cellcontent = new ContentNumber(content);
-            this.value = new ValueNumber(Double.parseDouble(content));
+            this.value = new ValueNumber((ContentNumber) this.cellcontent);
         }
         else if(typeOfContent == TypeOfContent.TEXT){
             this.cellcontent = new ContentText(content);
-            this.value = new ValueText(content);
+            this.value = new ValueText((ContentText) this.cellcontent);
         }
         else{
-            this.cellcontent = new ContentEmpty();
-            this.value = new ValueText("");
+            this.cellcontent = new CellContent(TypeOfContent.EMPTY, "");
+            this.value = new CellValue();
         }
     }
 

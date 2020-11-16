@@ -195,7 +195,6 @@ public class FormulaParser {
 
         FormulaParser parser = new FormulaParser();
         ContentFormula content = new ContentFormula(difficult);
-        content.computeFormula();
     }
 
 }

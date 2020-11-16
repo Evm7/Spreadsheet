@@ -13,8 +13,8 @@ public class ValueNumber extends CellValue {
 
     private Double value;
 
-    public ValueNumber(Double value) {
-        this.value = value;
+    public ValueNumber(ContentNumber content) {
+        this.value = Double.parseDouble(content.getContent());
     }
 
     @Override
