@@ -15,9 +15,7 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
  */
 public class FunctionSuma implements Function{
     
-    private String arguments;
-    private Double value;
-    
+
     public FunctionSuma() {
     }
     
@@ -27,13 +25,13 @@ public class FunctionSuma implements Function{
     }
 
     @Override
-    public OperantNumber computeFormula(OperantFunction args) {
-        OperantNumber[] values = args.getValue();
+    public OperandNumber computeFormula(OperandFunction args) {
+        OperandNumber[] values = args.getValue();
         Double result = new Double(0);
-        for (OperantNumber v: values){
+        for (OperandNumber v: values){
             result = result + (Double) (v.getValue());
         }
-        return new OperantNumber(result);
+        return new OperandNumber(result);
     }
     
     

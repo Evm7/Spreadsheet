@@ -5,17 +5,17 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operant;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
 
 /**
  *
  * @author estev
  */
-public class OperantNumber implements Operant {
+public class OperandNumber implements Operand {
 
     Double operant;
 
-    public OperantNumber(Double operant) {
+    public OperandNumber(Double operant) {
         this.operant = operant;
     }
 

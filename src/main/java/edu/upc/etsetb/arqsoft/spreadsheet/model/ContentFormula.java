@@ -8,13 +8,13 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operator;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javafx.util.Pair;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
 
 /**
  *

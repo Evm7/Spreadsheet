@@ -11,6 +11,6 @@ package edu.upc.etsetb.arqsoft.spreadsheet.entities;
  * @author estev
  */
 public interface Argument {
-    Operant getValue();
+    Operand getValue();
     String getSource();
 }

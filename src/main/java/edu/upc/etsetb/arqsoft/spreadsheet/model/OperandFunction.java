@@ -5,38 +5,38 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
 
 /**
  *
  * @author estev
  */
-public class OperantFunction implements Operant {
+public class OperandFunction implements Operand {
 
-    Operant[] operants;
+    Operand[] operants;
 
-    public OperantFunction(Operant[] operants) {
+    public OperandFunction(Operand[] operants) {
         this.operants = operants;
     }
 
-    public OperantNumber[] getValue() {
+    public OperandNumber[] getValue() {
         return flatten(this);
     }
     
-    private OperantNumber[] flatten(OperantFunction fun){
-        List<OperantNumber> flatList = new ArrayList<OperantNumber>();
-        for(Operant op : fun.operants){
-            if(op instanceof OperantNumber){
-                flatList.add((OperantNumber) op);
+    private OperandNumber[] flatten(OperandFunction fun){
+        List<OperandNumber> flatList = new ArrayList<OperandNumber>();
+        for(Operand op : fun.operants){
+            if(op instanceof OperandNumber){
+                flatList.add((OperandNumber) op);
             }else{
-                flatList.addAll(Arrays.asList(flatten((OperantFunction) op)));
+                flatList.addAll(Arrays.asList(flatten((OperandFunction) op)));
             }
         }
-        return flatList.toArray(new OperantNumber[flatList.size()]);
+        return flatList.toArray(new OperandNumber[flatList.size()]);
     }
 
 
@@ -44,7 +44,7 @@ public class OperantFunction implements Operant {
     @Override
     public String print() {
         String res = "[";
-        for (Operant op : operants) {
+        for (Operand op : operants) {
             res = res + op.print() + " ; ";
         }
         return res + "]";

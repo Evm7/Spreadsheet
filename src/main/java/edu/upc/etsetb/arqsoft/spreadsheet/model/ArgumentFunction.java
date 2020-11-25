@@ -20,10 +20,10 @@ public class ArgumentFunction implements Argument {
     }
 
     @Override
-    public OperantFunction getValue() {
-        OperantNumber[] example = new OperantNumber[]{new OperantNumber(4.0),new OperantNumber(1.0),new OperantNumber(2.0)};
+    public OperandFunction getValue() {
+        OperandNumber[] example = new OperandNumber[]{new OperandNumber(4.0),new OperandNumber(1.0),new OperandNumber(2.0)};
         System.out.println("4;1;2");
-        return new OperantFunction(example);
+        return new OperandFunction(example);
     }
     
 

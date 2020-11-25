@@ -10,7 +10,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.entities;
  *
  * @author estev
  */
-public interface Operant {
+public interface Operand {
     String print();
     Object getValue();
 }

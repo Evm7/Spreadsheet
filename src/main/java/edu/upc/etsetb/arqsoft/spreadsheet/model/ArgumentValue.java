@@ -20,8 +20,8 @@ public class ArgumentValue implements Argument {
     }
 
     @Override
-    public OperantNumber getValue() {
-        return new OperantNumber(Double.parseDouble(arg));
+    public OperandNumber getValue() {
+        return new OperandNumber(Double.parseDouble(arg));
     }
 
     @Override

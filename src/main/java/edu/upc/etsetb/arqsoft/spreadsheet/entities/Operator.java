@@ -10,7 +10,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.entities;
  * @author estev
  */
 public interface Operator {
-    Operant computeOperation(Operant arg1, Operant arg2);
+    Operand computeOperation(Operand arg1, Operand arg2);
     String getSign();
     int getWeight();
 

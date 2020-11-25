@@ -15,9 +15,7 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
  */
 public class FunctionPromedio implements Function{
     
-    private String arguments;
-    private Double value;
-    
+
     public FunctionPromedio() {
     }
     
@@ -27,13 +25,13 @@ public class FunctionPromedio implements Function{
     }
 
     @Override
-    public OperantNumber computeFormula(OperantFunction args) {
-        OperantNumber[] values = args.getValue();
+    public OperandNumber computeFormula(OperandFunction args) {
+        OperandNumber[] values = args.getValue();
         Double result = new Double(0);
-        for (OperantNumber v: values){
+        for (OperandNumber v: values){
             result = result + (Double) (v.getValue());
         }
-        return new OperantNumber(result/values.length);
+        return new OperandNumber(result/values.length);
     }
     
     

@@ -15,9 +15,6 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
  */
 public class FunctionMax implements Function{
     
-    private String arguments;
-    private Double value;
-    
     public FunctionMax() {
     }
     
@@ -27,10 +24,10 @@ public class FunctionMax implements Function{
     }
 
     @Override
-    public OperantNumber computeFormula(OperantFunction args) {
-        OperantNumber[] values = args.getValue();
-        OperantNumber result = values[0];
-        for (OperantNumber v: values){
+    public OperandNumber computeFormula(OperandFunction args) {
+        OperandNumber[] values = args.getValue();
+        OperandNumber result = values[0];
+        for (OperandNumber v: values){
             if ((Double) result.getValue() < (Double) v.getValue()){
                 result = v;
             }

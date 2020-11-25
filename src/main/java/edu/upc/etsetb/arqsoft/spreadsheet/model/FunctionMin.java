@@ -15,9 +15,7 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
  */
 public class FunctionMin implements Function{
     
-    private String arguments;
-    private Double value;
-    
+
     public FunctionMin() {
     }
     
@@ -27,10 +25,10 @@ public class FunctionMin implements Function{
     }
 
     @Override
-    public OperantNumber computeFormula(OperantFunction args) {
-        OperantNumber[] values = args.getValue();
-        OperantNumber result = values[0];
-        for (OperantNumber v: values){
+    public OperandNumber computeFormula(OperandFunction args) {
+        OperandNumber[] values = args.getValue();
+        OperandNumber result = values[0];
+        for (OperandNumber v: values){
             if ((Double) result.getValue() > (Double) v.getValue()){
                 result = v;
             }

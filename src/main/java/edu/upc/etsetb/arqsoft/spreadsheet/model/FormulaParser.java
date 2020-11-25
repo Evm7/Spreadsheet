@@ -27,11 +27,11 @@ public class FormulaParser {
     public FormulaParser() {
         FUNCTIONS = new String[]{"SUMA", "MIN", "MAX", "PROMEDIO"};
         operators = new HashMap<>();
-        operators.put(";", new OperatorSeparator());
-        operators.put("/", new OperatorDivision());
-        operators.put("*", new OperatorProduct());
-        operators.put("-", new OperatorSubstract());
-        operators.put("+", new OperatorSum());
+        operators.put(";", new OperatorImpl(";"));
+        operators.put("/", new OperatorImpl("/"));
+        operators.put("*", new OperatorImpl("*"));
+        operators.put("-", new OperatorImpl("-"));
+        operators.put("+", new OperatorImpl("+"));
         
         functions = new HashMap<>();
         functions.put("MAX", new FunctionMax());

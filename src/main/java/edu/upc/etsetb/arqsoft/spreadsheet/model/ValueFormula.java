@@ -7,13 +7,13 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operant;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operator;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import javafx.util.Pair;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
 
 /**
  *
@@ -38,23 +38,23 @@ public class ValueFormula extends CellValue {
     }
     
      public Double computeFormula(Pair<Argument[], Operator[]>[] pairs) {
-        Operant[] values_op = new Operant[pairs.length];
+        Operand[] values_op = new Operand[pairs.length];
         int i = 0;
         for (Pair pair : pairs) {
             System.out.println(i + ".- Computing Formula ");
-            Operant[] operant = rearrangeArguments(values_op, (Argument[]) pair.getKey());
+            Operand[] operant = rearrangeArguments(values_op, (Argument[]) pair.getKey());
             values_op[i] = calculateFormula(operant, (Operator[]) pair.getValue());
             System.out.println("Result is " + values_op[i].print());
             i++;
         }
 
-        return ((OperantNumber) values_op[values_op.length-1]).getValue();
+        return ((OperandNumber) values_op[values_op.length-1]).getValue();
     }
 
-    private Operant[] rearrangeArguments(Operant[] values, Argument[] arguments) {
+    private Operand[] rearrangeArguments(Operand[] values, Argument[] arguments) {
         String source;
-        Operant[] operants = new Operant[arguments.length];
-        Operant value;
+        Operand[] operants = new Operand[arguments.length];
+        Operand value;
         String name;
         boolean modified = false;
         for (int i = 0; i < arguments.length; i++) {
@@ -66,7 +66,7 @@ public class ValueFormula extends CellValue {
                 if (source.contains(name)) {
                     value = values[Integer.parseInt(source.replaceAll("[A-Z_]", ""))];
                     System.out.println("Value is " + value.print());
-                    Operant result = entry.getValue().computeFormula((OperantFunction) value);
+                    Operand result = entry.getValue().computeFormula((OperandFunction) value);
                     operants[i] = result;
                     modified = true;
                 }
@@ -85,14 +85,14 @@ public class ValueFormula extends CellValue {
         return operants;
     }
 
-    private Operant calculateFormula(Operant[] operant, Operator[] operator) {
+    private Operand calculateFormula(Operand[] operant, Operator[] operator) {
         printList(operant);
         printList(operator);
         // First we need to compute MULTIPLICATIONS and DIVISIONS
-        ArrayList<Operant> args = new ArrayList<>();
+        ArrayList<Operand> args = new ArrayList<>();
         ArrayList<Operator> op = new ArrayList<>();
         if (operator.length > 0) {
-            Operant value = null;
+            Operand value = null;
             // FOR WEIGHT = 1 --> PRODUCT AND DIVISIONS
             boolean none1 = false;
             boolean sameWeight = false;
@@ -119,7 +119,7 @@ public class ValueFormula extends CellValue {
             printIteratorOp(op);
             printIteratorOperant(args);
 
-            ArrayList<Operant> last_args = new ArrayList<>();
+            ArrayList<Operand> last_args = new ArrayList<>();
             ArrayList<Operator> last_op = new ArrayList<>();
             none1 = false;
             sameWeight = false;
@@ -150,11 +150,11 @@ public class ValueFormula extends CellValue {
             }
             printIteratorOperant(last_args);
             if (last_args.size() > 1) {
-                Operant[] values = new Operant[last_args.size()];
+                Operand[] values = new Operand[last_args.size()];
                 for (int i = 0; i < last_args.size(); i++) {
-                    values[i] = (Operant) last_args.get(i);
+                    values[i] = (Operand) last_args.get(i);
                 }
-                return new OperantFunction(values);
+                return new OperandFunction(values);
             } else {
                 return last_args.get(0);
             }
@@ -165,7 +165,7 @@ public class ValueFormula extends CellValue {
     }
 
     private void printIteratorOperant(ArrayList list) {
-        Iterator<Operant> it = list.iterator();
+        Iterator<Operand> it = list.iterator();
         while (it.hasNext()) {
             System.out.print(it.next().print());
         }
@@ -181,7 +181,7 @@ public class ValueFormula extends CellValue {
 
     }
 
-    private void printList(Operant[] operant) {
+    private void printList(Operand[] operant) {
         for (int i = 0; i < operant.length; i++) {
             System.out.println("\tArgument - Pos: " + i + " with value " + (operant[i].print()));
         }

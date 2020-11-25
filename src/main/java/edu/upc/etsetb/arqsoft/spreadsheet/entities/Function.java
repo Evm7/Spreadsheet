@@ -7,7 +7,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.model.ArgumentFunction;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.NoParseableArguments;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.OperantFunction;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.OperandFunction;
 
 /**
  *
@@ -16,5 +16,5 @@ import edu.upc.etsetb.arqsoft.spreadsheet.model.OperantFunction;
 public interface Function {
     Double[] parseArguments() throws NoParseableArguments;
     
-    Operant computeFormula(OperantFunction args);
+    Operand computeFormula(OperandFunction args);
 }
