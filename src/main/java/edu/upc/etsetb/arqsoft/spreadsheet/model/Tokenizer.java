@@ -25,9 +25,8 @@ public class Tokenizer {
 
     }
 
-    public void add(String regex, TokenType token) {
-        tokenInfos.add(
-                new TokenInfo(Pattern.compile("^(" + regex + ")"), token));
+    public void add(String regex, TokenType token, int precedence) {
+        tokenInfos.add(new TokenInfo(Pattern.compile("^(" + regex + ")"), token, precedence));
     }
 
     public void tokenize(String str) {
@@ -42,7 +41,7 @@ public class Tokenizer {
                     match = true;
 
                     String tok = m.group().trim();
-                    tokens.add(new Token(info.token, tok));
+                    tokens.add(new Token(info.token, tok, info.precedence));
 
                     s = m.replaceFirst("");
                     break;
@@ -54,6 +53,10 @@ public class Tokenizer {
             }
         }
     }
+    
+    public Token createToken(TokenType token, String sequence, int precedence){
+        return new Token(token, sequence, precedence);
+    }
 
     public LinkedList<Token> getTokens() {
         return tokens;
@@ -64,11 +67,13 @@ public class Tokenizer {
 
         public final TokenType token;
         public String sequence;
+        public final int precedence;
 
-        public Token(TokenType token, String sequence) {
+        public Token(TokenType token, String sequence, int precedence) {
             super();
             this.token = token;
             this.sequence = sequence;
+            this.precedence = precedence;
         }
 
         public void modifySequence(String sequence) {
@@ -80,11 +85,13 @@ public class Tokenizer {
 
         public final Pattern regex;
         public final TokenType token;
+        public final int precedence;
 
-        public TokenInfo(Pattern regex, TokenType token) {
+        public TokenInfo(Pattern regex, TokenType token, int precedence) {
             super();
             this.regex = regex;
             this.token = token;
+            this.precedence = precedence;
         }
     }
 

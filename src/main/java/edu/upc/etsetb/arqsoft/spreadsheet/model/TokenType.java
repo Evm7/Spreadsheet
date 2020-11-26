@@ -55,7 +55,7 @@ public enum TokenType {
             case 12:
                 return ";";
             case 13:
-                return ";";
+                return ":";
             default:
                 return "null";
         }
