@@ -66,6 +66,18 @@ public class CellImpl {
         }
     }
 
+    public void recomputeValue() {
+        if (this.cellcontent instanceof ContentFormula) {
+            this.value = new ValueNumber((ContentFormula) this.cellcontent);
+        } else if (this.cellcontent instanceof ContentNumber) {
+            this.value = new ValueNumber((ContentNumber) this.cellcontent);
+        } else if (this.cellcontent instanceof ContentText) {
+            this.value = new ValueText((ContentText) this.cellcontent);
+        } else {
+            this.value = new CellValue();
+        }
+    }
+
     public void show() {
         System.out.println("Cell " + this.coordinates.print() + " is " + this.cellcontent.getType() + " with value " + printValue());
     }

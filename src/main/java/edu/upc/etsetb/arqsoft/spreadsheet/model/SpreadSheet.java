@@ -6,9 +6,12 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +31,8 @@ public class SpreadSheet {
     public static FormulaEvaluator parser = new FormulaEvaluator();
     private final Importer importer;
     private final Exporter exporter;
-    protected Map<CellCoordinate, List<CellCoordinate>> references;
+    private Map<CellCoordinate, List<CellCoordinate>> references;
+    private List<CellCoordinate> just_updated;
 
     public SpreadSheet(String name, int length) {
         this.name = name;
@@ -36,6 +40,7 @@ public class SpreadSheet {
         importer = new Importer();
         exporter = new Exporter();
         references = new HashMap<>();
+        just_updated = new ArrayList<>();
     }
 
     public int[] getMaxLength() {
@@ -60,7 +65,7 @@ public class SpreadSheet {
         this.max_column = length;
     }
 
-    public CellImpl createCell(int column, int row, String content) {
+    public CellImpl createCell(int column, int row, String content) throws DoubleDependenciesException {
         System.out.println("Creating cell for " + column + " and " + row);
         complete_cells(column, row);
         CellImpl cell = new CellImpl(column, row, content);
@@ -69,10 +74,22 @@ public class SpreadSheet {
         return cell;
     }
 
-    private void addCell(CellImpl cell, int column, int row) {
+    private void addCell(CellImpl cell, int column, int row) throws DoubleDependenciesException {
         System.out.println("You are adding to column " + column + " and row " + row);
+        CellImpl previous = checkEmpty(column, row);
+        if (previous != null && (previous.getType_of_content() == TypeOfContent.FORMULA)) {
+            this.references.remove(previous.coordinates);
+        }
         this.spreadsheet[column][row] = cell;
         addToMap(cell);
+        just_updated = new ArrayList<>();
+
+        try {
+            updateSpreadSheet(cell);
+        } catch (DoubleDependenciesException ex) {
+            addCell(previous, column, row);
+            throw ex;
+        }
     }
 
     public CellImpl checkEmpty(int column, int raw) {
@@ -128,16 +145,37 @@ public class SpreadSheet {
     public void exportSpreadSheet(File file) {
         exporter.exportSpreadSheet(file, this.spreadsheet);
     }
-    
-    private void addToMap(CellImpl cell){
-        if (cell.cellcontent instanceof ContentFormula){
+
+    private void addToMap(CellImpl cell) {
+        if (cell.cellcontent instanceof ContentFormula) {
             List<Argument> arguments = (((ContentFormula) cell.cellcontent).getArguments());
+            List<CellCoordinate> references_cell = new ArrayList<>();
             for (Argument argument : arguments) {
-                argument.get
-                
+                references_cell.addAll(argument.getReferences());
             }
-r
-            references.put(cell.coordinates, );
+
+            references.put(cell.coordinates, references_cell);
         }
+    }
+
+    private void updateSpreadSheet(CellImpl edited) throws DoubleDependenciesException {
+        if (just_updated.contains(edited.coordinates)) {
+            throw new DoubleDependenciesException("Error when updating, cell " + edited.coordinates.print() + " depends on itself.");
+        }
+        just_updated.add(edited.coordinates);
+        // Check if any formula depend on that edited cell
+        for (Map.Entry<CellCoordinate, List<CellCoordinate>> entry : references.entrySet()) {
+            List<CellCoordinate> value = entry.getValue();
+            if (value.contains(edited.coordinates)) {
+                CellCoordinate key = entry.getKey();
+                CellImpl updated = this.spreadsheet[key.getColumn()][key.getRow()];
+                updated.recomputeValue();
+                updateSpreadSheet(updated);
+            }
+        }
+    }
+
+    private void doubleDependencies(CellCoordinate toUpdate) {
+
     }
 }

@@ -6,6 +6,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.model.CellImpl;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.DoubleDependenciesException;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -81,14 +84,22 @@ public class Controller {
         String value;
         if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
             value = this.view.askQuestion("Which value do you want to introduce in [" + position[0] + row + "] ?");
-            model.createCell(column, row, value);
+            try {
+                model.createCell(column, row, value);
+            } catch (DoubleDependenciesException ex) {
+                this.view.display("Error: " + ex.getMessage());
+            }
         } else {
             value = this.view.askQuestion("Do you want to modify cell in [" + position[0] + row + "] : " + cell.printValue() + "? [y/n]");
             if (value.equals("n")) {
                 return;
             } else {
                 value = this.view.askQuestion("Which value do you want to introduce?");
-                model.createCell(column, row, value);
+                try {
+                    model.createCell(column, row, value);
+                } catch (DoubleDependenciesException ex) {
+                this.view.display("Error: " + ex.getMessage());
+                }
             }
         }
     }

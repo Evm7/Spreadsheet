@@ -6,6 +6,8 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -35,6 +37,12 @@ public class Argument implements Term {
     @Override
     public String isType() {
         return "Argument";
+    }
+    
+    public List<CellCoordinate> getReferences(){
+        List<CellCoordinate> references = new ArrayList<>();
+        references.add(parsePlace(this.arg));
+        return references;
     }
 
     protected CellCoordinate parsePlace(String parsing) {

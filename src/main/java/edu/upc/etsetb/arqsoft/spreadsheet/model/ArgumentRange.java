@@ -6,6 +6,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class ArgumentRange extends Argument {
 
         CellCoordinate coordinateTop = super.parsePlace(terms[0]);
         CellCoordinate coordinateBottom = super.parsePlace(terms[1]);
-        
+
         List<CellCoordinate> inBetween = inBetween(coordinateTop, coordinateBottom);
 
         for (CellCoordinate coordinate : inBetween) {
@@ -40,12 +41,12 @@ public class ArgumentRange extends Argument {
     private List<CellCoordinate> inBetween(CellCoordinate top, CellCoordinate bottom) {
 
         List<CellCoordinate> coordinates = new LinkedList<>();
-        for (int i = bottom.getColumn(); i < top.getColumn(); i++) {
-            for (int j = bottom.getRow(); j < top.getRow(); j++) {
-                  coordinates.add(new CellCoordinate(i, j));
+        for (int i = bottom.getColumn(); i <= top.getColumn(); i++) {
+            for (int j = bottom.getRow(); j <= top.getRow(); j++) {
+                coordinates.add(new CellCoordinate(i, j));
             }
         }
-        
+
         return coordinates;
     }
 
@@ -54,4 +55,14 @@ public class ArgumentRange extends Argument {
         return arg;
     }
 
+    @Override
+    public List<CellCoordinate> getReferences() {
+        String[] terms = this.arg.split(":");
+        List<Term> range = new LinkedList<Term>();
+
+        CellCoordinate coordinateTop = super.parsePlace(terms[0]);
+        CellCoordinate coordinateBottom = super.parsePlace(terms[1]);
+
+        return inBetween(coordinateTop, coordinateBottom);
+    }
 }

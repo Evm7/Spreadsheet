@@ -5,6 +5,8 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -28,6 +30,13 @@ public class ArgumentIndividual extends Argument {
     @Override
     public String getSource() {
         return arg;
+    }
+
+    @Override
+    public List<CellCoordinate> getReferences(){
+        List<CellCoordinate> references = new ArrayList<>();
+        references.add(parsePlace(this.arg));
+        return references;
     }
 
 }
