@@ -20,12 +20,12 @@ import java.util.List;
 public class SpreadSheet {
 
     private String name;
-    private CellImpl[][] spreadsheet;   // [column][row]
+    public static CellImpl[][] spreadsheet;   // [column][row]
     private int max_column;
     private int max_row;
     public static FormulaEvaluator parser = new FormulaEvaluator();
-    private Importer importer;
-    private Exporter exporter;
+    private final Importer importer;
+    private final Exporter exporter;
 
     public SpreadSheet(String name, int length) {
         this.name = name;
@@ -44,7 +44,7 @@ public class SpreadSheet {
     public CellImpl getCell(int column, int row) {
         return this.spreadsheet[column][row];
     }
-
+    
     private void initializeSpreadSheet(int length) {
         this.spreadsheet = new CellImpl[length][length];
         for (int row = 0; row < length; row++) {

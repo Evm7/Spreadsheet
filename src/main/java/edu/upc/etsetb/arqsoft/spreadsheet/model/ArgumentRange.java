@@ -15,19 +15,38 @@ import java.util.List;
  */
 public class ArgumentRange extends Argument {
 
-
     public ArgumentRange(String arg) {
         super(arg);// When the argument refers to more than one cell in a range --> ex:  A1:B3
     }
 
     @Override
     public OperandFunction getValue() {
-        List<Term> example = new LinkedList<Term>();
-        example.add(new OperandNumber(3.0));
-        example.add(new OperandNumber(6.0));
-        example.add(new OperandNumber(12.0));
-        System.out.println("3;6;12");
-        return new OperandFunction(example);
+        String[] terms = this.arg.split(":");
+        List<Term> range = new LinkedList<Term>();
+
+        CellCoordinate coordinateTop = super.parsePlace(terms[0]);
+        CellCoordinate coordinateBottom = super.parsePlace(terms[1]);
+        
+        List<CellCoordinate> inBetween = inBetween(coordinateTop, coordinateBottom);
+
+        for (CellCoordinate coordinate : inBetween) {
+            CellValue value = super.getCellValue(coordinate);
+            range.add(new OperandNumber((Double) value.getValue()));
+        }
+        return new OperandFunction(range);
+
+    }
+
+    private List<CellCoordinate> inBetween(CellCoordinate top, CellCoordinate bottom) {
+
+        List<CellCoordinate> coordinates = new LinkedList<>();
+        for (int i = bottom.getColumn(); i < top.getColumn(); i++) {
+            for (int j = bottom.getRow(); j < top.getRow(); j++) {
+                  coordinates.add(new CellCoordinate(i, j));
+            }
+        }
+        
+        return coordinates;
     }
 
     @Override

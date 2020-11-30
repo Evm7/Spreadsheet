@@ -22,12 +22,15 @@ public class ArgumentFunction extends Argument {
 
     @Override
     public OperandFunction getValue() {
-        List<Term> example = new LinkedList<Term>();
-        example.add(new OperandNumber(4.0));
-        example.add(new OperandNumber(1.0));
-        example.add(new OperandNumber(2.0));
-        System.out.println("4;1;2");
-        return new OperandFunction(example);
+        String[] terms = this.arg.split(";");
+        List<Term> function = new LinkedList<Term>();
+
+        for (String term : terms) {
+            CellCoordinate coordinate = super.parsePlace(term);
+            CellValue value = super.getCellValue(coordinate);
+            function.add(new OperandNumber((Double) value.getValue()));
+        }
+        return new OperandFunction(function);
     }
 
     @Override

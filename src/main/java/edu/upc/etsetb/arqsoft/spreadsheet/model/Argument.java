@@ -13,7 +13,7 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
  */
 public class Argument implements Term {
 
-    String arg;  
+    String arg;
 
     public Argument(String arg) {
         this.arg = arg;
@@ -21,9 +21,9 @@ public class Argument implements Term {
 
     @Override
     public String print() {
-        return arg; 
+        return arg;
     }
-    
+
     public Term getValue() {
         return new OperandNumber(Double.parseDouble(arg));
     }
@@ -36,7 +36,17 @@ public class Argument implements Term {
     public String isType() {
         return "Argument";
     }
+
+    protected CellCoordinate parsePlace(String parsing) {
+        String[] num = parsing.split("?=[a-zA-Z]");
+        CellCoordinate coordiante = new CellCoordinate(num[0].toCharArray(), Integer.parseInt(num[1]));
+        return coordiante;
+    }  
     
-    
+    protected CellValue getCellValue(CellCoordinate coordinate){
+        int column = coordinate.getColumn();
+        int row = coordinate.getRow();
+        return (SpreadSheet.spreadsheet[column][row]).value; 
+    }
 
 }

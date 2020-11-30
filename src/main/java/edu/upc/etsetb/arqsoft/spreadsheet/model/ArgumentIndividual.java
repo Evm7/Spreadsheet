@@ -5,6 +5,8 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author estev
@@ -18,7 +20,9 @@ public class ArgumentIndividual extends Argument {
 
     @Override
     public OperandNumber getValue() {
-        return new OperandNumber(Double.parseDouble("2.0"));
+        CellCoordinate coordinate = super.parsePlace(this.arg);
+        CellValue value = super.getCellValue(coordinate);
+        return new OperandNumber((Double) value.getValue());
     }
 
     @Override
