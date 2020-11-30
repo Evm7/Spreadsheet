@@ -27,7 +27,7 @@ public class CellImpl {
         TypeOfContent typeOfContent = parseContent(content);
         if (typeOfContent == TypeOfContent.FORMULA) {
             this.cellcontent = new ContentFormula(content);
-            this.value = new ValueFormula((ContentFormula) this.cellcontent);
+            this.value = new ValueNumber((ContentFormula) this.cellcontent);
         }
         else if(typeOfContent == TypeOfContent.NUMBER){
             this.cellcontent = new ContentNumber(content);

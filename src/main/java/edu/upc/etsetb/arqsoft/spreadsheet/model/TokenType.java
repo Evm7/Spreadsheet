@@ -23,6 +23,7 @@ public enum TokenType {
     WHITE_SPACE,
     EQUAL,
     SEMICOLON,
+    RANGE,
     COLON;
 
     @Override
@@ -55,6 +56,8 @@ public enum TokenType {
             case 12:
                 return ";";
             case 13:
+                return this.name();
+            case 14:
                 return ":";
             default:
                 return "null";

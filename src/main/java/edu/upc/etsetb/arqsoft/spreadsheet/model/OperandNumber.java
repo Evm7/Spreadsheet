@@ -5,13 +5,13 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 
 /**
  *
  * @author estev
  */
-public class OperandNumber implements Operand {
+public class OperandNumber implements Term {
 
     Double operant;
 
@@ -19,13 +19,16 @@ public class OperandNumber implements Operand {
         this.operant = operant;
     }
 
-
     public Double getValue() {
         return this.operant;
     }
 
-    @Override
     public String print() {
-        return ""+ this.operant;
+        return "" + this.operant;
+    }
+
+    @Override
+    public String isType() {
+        return "OperandNumber";
     }
 }

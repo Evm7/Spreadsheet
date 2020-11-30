@@ -5,21 +5,22 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operator;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import javafx.util.Pair;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 
 /**
  *
  * @author estev
  */
 public class ValueFormula extends CellValue {
+    
+    //SHOULD NOT BE USED REGARDING PROFESSOR COMMENTS
+    /*
     private Double value;
 
     public ValueFormula(ContentFormula content) {
@@ -38,11 +39,11 @@ public class ValueFormula extends CellValue {
     }
     
      public Double computeFormula(Pair<Argument[], Operator[]>[] pairs) {
-        Operand[] values_op = new Operand[pairs.length];
+        Term[] values_op = new Term[pairs.length];
         int i = 0;
         for (Pair pair : pairs) {
             System.out.println(i + ".- Computing Formula ");
-            Operand[] operant = rearrangeArguments(values_op, (Argument[]) pair.getKey());
+            Term[] operant = rearrangeArguments(values_op, (Argument[]) pair.getKey());
             values_op[i] = calculateFormula(operant, (Operator[]) pair.getValue());
             System.out.println("Result is " + values_op[i].print());
             i++;
@@ -51,10 +52,10 @@ public class ValueFormula extends CellValue {
         return ((OperandNumber) values_op[values_op.length-1]).getValue();
     }
 
-    private Operand[] rearrangeArguments(Operand[] values, Argument[] arguments) {
+    private Term[] rearrangeArguments(Term[] values, Argument[] arguments) {
         String source;
-        Operand[] operants = new Operand[arguments.length];
-        Operand value;
+        Term[] operants = new Term[arguments.length];
+        Term value;
         String name;
         boolean modified = false;
         for (int i = 0; i < arguments.length; i++) {
@@ -66,7 +67,7 @@ public class ValueFormula extends CellValue {
                 if (source.contains(name)) {
                     value = values[Integer.parseInt(source.replaceAll("[A-Z_]", ""))];
                     System.out.println("Value is " + value.print());
-                    Operand result = entry.getValue().computeFormula((OperandFunction) value);
+                    Term result = entry.getValue().computeFormula((OperandFunction) value);
                     operants[i] = result;
                     modified = true;
                 }
@@ -192,6 +193,6 @@ public class ValueFormula extends CellValue {
             System.out.println("\tOperator - Pos: " + i + " with sign " + operator[i].getSign() + "  ");
         }
     }
-    
+    */
 
 }

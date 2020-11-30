@@ -5,12 +5,12 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
-
 /**
  *
  * @author estev
  */
-public interface Argument {
-    Operand getValue();
-    String getSource();
+public interface Term {
+    String print();
+    String isType();  // Argument  | OperandFunction | OperandNumber | OperatorImpl
+    Object getValue();
 }

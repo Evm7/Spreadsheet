@@ -16,6 +16,10 @@ public class ValueNumber extends CellValue {
     public ValueNumber(ContentNumber content) {
         this.value = Double.parseDouble(content.getContent());
     }
+    
+    public ValueNumber(ContentFormula content) {
+        this.value = SpreadSheet.parser.evaluatePostFix(content.getTerms());
+    }
 
     @Override
     public Double getValue() {

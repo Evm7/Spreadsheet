@@ -19,7 +19,7 @@ public class SpreadSheet {
     private CellImpl[][] spreadsheet;   // [column][row]
     private int max_column;
     private int max_row;
-    public static FormulaParser parser = new FormulaParser();
+    public static FormulaEvaluator parser = new FormulaEvaluator();
     
     public SpreadSheet(String name, int length) {
         this.name = name;

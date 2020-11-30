@@ -5,18 +5,15 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
-
 /**
  *
  * @author estev
  */
-public class ArgumentIndividual implements Argument {
-
-    String arg;  // One the argument refers to individial cell --> ex: A1
+public class ArgumentIndividual extends Argument {
 
     public ArgumentIndividual(String arg) {
-        this.arg = arg;
+        super(arg);     // One the argument refers to individial cell --> ex: A1
+
     }
 
     @Override

@@ -5,23 +5,27 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
  * @author estev
  */
-public class ArgumentRange implements Argument {
+public class ArgumentRange extends Argument {
 
-    String arg; // When the argument refers to more than one cell in a range --> ex:  A1:B3
 
     public ArgumentRange(String arg) {
-        this.arg = arg;
+        super(arg);// When the argument refers to more than one cell in a range --> ex:  A1:B3
     }
 
     @Override
     public OperandFunction getValue() {
-        OperandNumber[] example = new OperandNumber[]{new OperandNumber(3.0),new OperandNumber(6.0),new OperandNumber(12.0)};
+        List<Term> example = new LinkedList<Term>();
+        example.add(new OperandNumber(3.0));
+        example.add(new OperandNumber(6.0));
+        example.add(new OperandNumber(12.0));
         System.out.println("3;6;12");
         return new OperandFunction(example);
     }

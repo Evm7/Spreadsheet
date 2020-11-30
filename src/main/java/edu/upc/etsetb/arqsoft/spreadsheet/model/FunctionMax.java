@@ -5,9 +5,9 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
+import java.util.List;
 
 /**
  *
@@ -25,8 +25,8 @@ public class FunctionMax implements Function{
 
     @Override
     public OperandNumber computeFormula(OperandFunction args) {
-        OperandNumber[] values = args.getValue();
-        OperandNumber result = values[0];
+        List<OperandNumber> values = args.getValue();
+        OperandNumber result = values.get(0);
         for (OperandNumber v: values){
             if ((Double) result.getValue() < (Double) v.getValue()){
                 result = v;

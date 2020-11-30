@@ -5,25 +5,38 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 
 /**
  *
  * @author estev
  */
-public class ArgumentValue extends Argument {
+public class Argument implements Term {
 
-    public ArgumentValue(String arg) {
-        super(arg); // When the argument refers to a determined value --> ex: 3
+    String arg;  
 
-    }
-
-    public OperandNumber getValue() {
-        return new OperandNumber(Double.parseDouble(arg));
+    public Argument(String arg) {
+        this.arg = arg;
     }
 
     @Override
+    public String print() {
+        return arg; 
+    }
+    
+    public Term getValue() {
+        return new OperandNumber(Double.parseDouble(arg));
+    }
+
     public String getSource() {
         return arg;
     }
+
+    @Override
+    public String isType() {
+        return "Argument";
+    }
+    
+    
 
 }

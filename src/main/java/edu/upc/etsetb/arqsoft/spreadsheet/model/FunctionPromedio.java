@@ -5,9 +5,9 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
+import java.util.List;
 
 /**
  *
@@ -26,12 +26,12 @@ public class FunctionPromedio implements Function{
 
     @Override
     public OperandNumber computeFormula(OperandFunction args) {
-        OperandNumber[] values = args.getValue();
+        List<OperandNumber> values = args.getValue();
         Double result = new Double(0);
         for (OperandNumber v: values){
             result = result + (Double) (v.getValue());
         }
-        return new OperandNumber(result/values.length);
+        return new OperandNumber(result/values.size());
     }
     
     

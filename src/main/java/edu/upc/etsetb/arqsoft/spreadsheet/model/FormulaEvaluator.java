@@ -5,7 +5,14 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import jdk.nashorn.internal.runtime.ParserException;
 
 /**
@@ -15,12 +22,13 @@ import jdk.nashorn.internal.runtime.ParserException;
 public class FormulaEvaluator {
 
     Tokenizer tokenizer;
-    Parser parser;
+    Parser parser_formula;
+    public static HashMap<String, Function> functions;
 
     public FormulaEvaluator() {
         tokenizer = new Tokenizer();
         // Add the tokens to our series.
-        tokenizer.add("SUMA|MIN|MAX|PROMEDIO|suma|min|max|promedio", TokenType.FORMULA, 0); // function
+        tokenizer.add("SUMA|MIN|MAX|PROMEDIO|suma|min|max|promedio", TokenType.FORMULA, 5); // function
         tokenizer.add("\\(", TokenType.OPEN_BRACKET, 0); // open bracket
         tokenizer.add("\\)", TokenType.CLOSE_BRACKET, 0); // close bracket
         tokenizer.add("\\+", TokenType.PLUS, 1); // plus
@@ -35,93 +43,159 @@ public class FormulaEvaluator {
         tokenizer.add("\\=", TokenType.EQUAL, 0); // equal
         tokenizer.add("\\;", TokenType.SEMICOLON, 4); // semicolon
         tokenizer.add("\\:", TokenType.COLON, 5); // colon
+        tokenizer.add("\\:", TokenType.RANGE, 5); // range
 
-        parser = new Parser();
+        parser_formula = new Parser();
+
+        functions = new HashMap<>();
+        functions.put("MAX", new FunctionMax());
+        functions.put("MIN", new FunctionMin());
+        functions.put("PROMEDIO", new FunctionPromedio());
+        functions.put("SUMA", new FunctionSuma());
     }
 
-    public void parseFormula(String formula) {
+    public List<Term> parseFormula(String formula) {
+        formula = formula.replaceAll(" ", "");
+        //formula = formula.replaceFirst("=", "");
         try {
             System.out.println("[INFO] .. Tokenizing formula : " + formula);
             tokenizer.tokenize(formula);
 
-            System.out.println("[INFO] .. Evaluating Grammar");
-            LinkedList<Tokenizer.Token> tokens = parser.evaluateGrammar(tokenizer.getTokens());
-            for (Tokenizer.Token tok : tokens) {
-                System.out.println("" + tok.token + " " + tok.sequence + " precedence " + tok.precedence);
-            }
-
-            System.out.println("[INFO] .. Creating PostFix (Shaunting Yard Algorithm)");
-            tokens = parser.shuntingYard(tokens);
-            for (Tokenizer.Token tok : tokens) {
-                System.out.print(tok.sequence + "   ");
-            }
-            System.out.println();
-            System.out.println("[INFO] .. Evaluating PostFix");
-            Double result = evaluatePostFix(tokens);
-            System.out.println("[RESULT] .. Result is " + result);
-
         } catch (ParserException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println("[INFO] .. Evaluating Grammar");
+        LinkedList<Tokenizer.Token> tokens = parser_formula.evaluateGrammar(tokenizer.getTokens());
+        tokens.pop(); // To remove the initial equal
+        for (Tokenizer.Token tok : tokens) {
+            System.out.print(" [ " + tok.token + " ] ");
+        }
+
+        System.out.println("[INFO] .. Creating PostFix (Shaunting Yard Algorithm)");
+        tokens = parser_formula.shuntingYard(tokens);
+        for (Tokenizer.Token tok : tokens) {
+            System.out.print(tok.sequence + "   ");
+        }
+        List<Term> terms = convertTokenToOTerm(tokens);
+        for (Term tok : terms) {
+            System.out.print(tok.print() + "   ");
+        }
+        return terms;
     }
 
-    private Double evaluatePostFix(LinkedList<Tokenizer.Token> tokens) {
-        Tokenizer.Token first = null;
-        Tokenizer.Token second = null;
-
-        LinkedList<Tokenizer.Token> queue = new LinkedList<Tokenizer.Token>();  // for values
-
+    private List<Term> convertTokenToOTerm(LinkedList<Tokenizer.Token> tokens) {
+        List<Term> terms = new LinkedList<Term>();
+        int facts = 0;
         for (Tokenizer.Token tok : tokens) {
-            System.out.println("\t[evaluatePostFix] using token " + tok.token);
-            if (isValue(tok)) {
+            TokenType type = tok.token;
+            switch (type) {
+                case REAL_NUMBER:
+                    terms.add(new OperandNumber(Double.parseDouble(tok.sequence)));
+                    break;
+                case CELL:
+                    terms.add(new ArgumentIndividual(tok.sequence));
+                    break;
+                case RANGE:
+                    terms.add(new ArgumentRange(tok.sequence));
+                    break;
+                case FORMULA:
+                    terms.add(new OperatorFunction(tok.sequence, facts));
+                    facts = 0;
+                    break;
+                case PLUS:
+                    terms.add(new OperatorImpl(tok.sequence));
+                    break;
+                case MINUS:
+                    terms.add(new OperatorImpl(tok.sequence));
+                    break;
+                case DIVIDE:
+                    terms.add(new OperatorImpl(tok.sequence));
+                    break;
+                case MULT:
+                    terms.add(new OperatorImpl(tok.sequence));
+                    break;
+                case RAISED:
+                    terms.add(new OperatorImpl(tok.sequence));
+                    break;
+                case SEMICOLON:
+                    facts++;
+                    break;
+            }
+        }
+        return terms;
+    }
+
+    public Double evaluatePostFix(List<Term> terms) {
+        System.out.println();
+        System.out.println("[INFO] .. Evaluating PostFix");
+        Term first = null;
+        Term second = null;
+
+        LinkedList<Term> queue = new LinkedList<Term>();  // for values
+
+        for (Term term : terms) {
+            System.out.println("\t[evaluatePostFix] using term " + term.print());
+            String type = term.isType();
+            if ((type != "OperatorImpl") && (type != "OperatorFunction")) {  // Argument  | OperandFunction | OperandNumber | OperatorImpl | OperatorFunction
                 System.out.println("\t\tAdding to queue as value");
-                queue.add(tok);
-            } else if (isOperator(tok)) {
-                System.out.println("\tThe token is an operator");
+                queue.add(term);
+            } else if (type == "OperatorImpl") {
+                System.out.println("\tThe term is an operator");
                 second = queue.removeLast();
                 first = queue.removeLast();
-                queue.add(tokenizer.createToken(TokenType.REAL_NUMBER, "" + operate(first, second, tok), 0));
+                queue.add(operate(first, second, (OperatorImpl) term));
+            } else if (type == "OperatorFunction") {
+                queue = operateFunction(queue, (OperatorFunction) term);
             }
             System.out.print("\t[INFO] Queue List is:   ");
             printList(queue);
         }
-        return Double.parseDouble(queue.getLast().sequence);
+
+        return Double.parseDouble(queue.getLast().print());
+
     }
 
-    private void printList(LinkedList<Tokenizer.Token> tokens) {
-        for (Tokenizer.Token tok : tokens) {
-            System.out.print(tok.sequence + "   ");
+    private void printList(LinkedList<Term> terms) {
+        for (Term term : terms) {
+            System.out.print(term.print() + "   ");
         }
         System.out.println();
     }
 
-    private Double operate(Tokenizer.Token first, Tokenizer.Token second, Tokenizer.Token operator) {
-        Double first_value = getValue(first);
-        Double second_value = getValue(second);
-        if (operator.token == TokenType.MINUS) {
-            return first_value - second_value;
-        } else if (operator.token == TokenType.DIVIDE) {
-            return first_value / second_value;
-        } else if (operator.token == TokenType.PLUS) {
-            return first_value + second_value;
-        } else if (operator.token == TokenType.MULT) {
-            return first_value * second_value;
-        } else if (operator.token == TokenType.RAISED) {
-            return Math.pow(first_value, second_value);
+    private OperandNumber operate(Term first, Term second, OperatorImpl operator) {
+        System.out.println("\t\t\tWe are computing: " + first.print() + " " + operator.print() + " " + second.print());
+        OperandNumber first_val;
+        OperandNumber second_val;
+        if (first instanceof OperandNumber) {
+            first_val = (OperandNumber) first;
         } else {
-            System.out.println("OPERATOR IS " + operator.token);
-            return 0.0;
+            first_val = (OperandNumber) first.getValue();
         }
+
+        if (second instanceof OperandNumber) {
+            second_val = (OperandNumber) second;
+        } else {
+            second_val = (OperandNumber) second.getValue();
+        }
+        return operator.computeOperation(first_val, second_val);
     }
 
-    private Double getValue(Tokenizer.Token tok_value) {
-        Double value;
-        if (tok_value.token == TokenType.REAL_NUMBER) {
-            value = Double.parseDouble(tok_value.sequence);
-        } else {
-            value = 3.75;
+    private LinkedList<Term> operateFunction(LinkedList<Term> queue, OperatorFunction operator) {
+        System.out.println("\t\t\tWe are computing a formula " + operator.print());
+        List<Term> operands = new LinkedList<Term>();
+        int index = operator.getTerms() + 1;
+        System.out.println("\t\t\tNumber of items are " + index);
+
+        for (int count = 0; count < index; count++) {
+            Term term = queue.remove(queue.size() - 1);
+            operands.add(term);
+            System.out.print("[ " + term.print() + " ]  ");
         }
-        return value;
+        System.out.println();
+        OperandNumber num = ((OperatorFunction) operator).computeOperation(new OperandFunction(operands));
+        queue.add(num);
+        return queue;
+
     }
 
     private boolean isOperator(Tokenizer.Token token) {
@@ -140,16 +214,20 @@ public class FormulaEvaluator {
 
         String easy_suma = "=SUMA(A2:A5)";
         String difficult = "=-1 + A1*((SUMA(A2:B5;PROMEDIO(B6:D8);C1;27)/4.5)+(D6-D8))";
-        String error0 = "=*5+-4(/5)+";
-        String easy_2 = "3 + 4 * (2 - 1)"; // 3 4 2 1 − × +
-        String easy_3 = "10 + 3 * 5 / (16 - 4)";
-        String easy_4 = "(300+23)*(43-21)/(84+7)"; //  300 23 + 43 21 - * 84 7 + /   
-        String easy_5 = "(4+8)*(6-5)/((3-2)*(2+2))"; //  4 8 + 6 5 - * 3 2 – 2 2 + * /  
-        String easy_6 = "";
-        String easy_7 = "";
+        String difficult2 = "=SUMA(A2:B5;C1;27)";
 
+        String error0 = "=*5+-4(/5)+";
+        String easy_2 = "=3 + 4 * (2 - 1)"; // 3 4 2 1 − × +  || 7
+        String easy_3 = "=10 + 3 * 5 / (16 - 4)"; // 10   3   5   *   16   4   -   /   +    || 11.25
+        String easy_4 = "=(300+23)*(43-21)/(84+7)"; //  300 23 + 43 21 - * 84 7 + /    || 78.0789
+        String easy_5 = "=(4+8)*(6-5)/((3-2)*(2+2))"; //  4 8 + 6 5 - * 3 2 – 2 2 + * /  || 3
+        String easy_6 = "=SUMA(A2:A5) + 5 ";
+        String easy_7 = "SUMA ( MAX ( 2;3 ) / 3 *2; 1 )"; // 2 3 MAX 3 / 2 * 1 SUMA
+
+        //CellImpl cell = new CellImpl(0, 0, easy_2);
         FormulaEvaluator parser = new FormulaEvaluator();
-        parser.parseFormula(easy_suma);
+        List<Term> terms = parser.parseFormula(difficult);
+        parser.evaluatePostFix(terms);
     }
 
 }

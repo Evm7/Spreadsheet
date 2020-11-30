@@ -34,7 +34,7 @@ public class Parser {
 
                 stack.add(token);
             } else if (toStack(token)) {
-                System.out.println("\t\tOpperant to stack found "+ token.token);
+                System.out.println("\t\tOpperant to stack found " + token.token);
                 if (stack.isEmpty()) {
                     System.out.println("\t\t\tAdding to stack as stack is empty");
 
@@ -71,6 +71,15 @@ public class Parser {
                 if (topStack.token == TokenType.OPEN_BRACKET) {
                     System.out.println("\t\t\tRemoving Open Bracket from Stack");
                     stack.remove(topStack);
+                }
+                topStack = stack.getLast();
+                if (topStack.token == TokenType.FORMULA) {
+                    stack.remove(topStack);
+                    queue.add(topStack);
+                    System.out.println("\t\t\tFORMULA FOUND: Adding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
+                }
+                if (stack.isEmpty()) {
+                    break;
                 }
             }
             System.out.print("\t[INFO] Stack List is:   ");
@@ -129,7 +138,10 @@ public class Parser {
             }
             if (prev == null) {
                 continue;
-            }// CHEKING STARTER GRAMMAR --> ONLY VALUES, OPEN BRACKETS OR +- REAL_NUMBER ALLOWED
+            }else if(curr.token == TokenType.EQUAL){
+                indexes.add(i);
+            }
+            // CHEKING STARTER GRAMMAR --> ONLY VALUES, OPEN BRACKETS OR +- REAL_NUMBER ALLOWED
             else if (isStarter(prev)) {
                 if (!isValue(curr, false)) {
                     // USED WHEN WE WANT TO INPUT VALUE : -1 --> THEN VALUE IS ACTUALLY "-1", NO SUBTRACTION IS NEEDED
@@ -147,8 +159,15 @@ public class Parser {
                 }
 
             } // COLON ONLY USED BETWEEN CELLS
-            else if (((prev.token != TokenType.CELL) || (next.token != TokenType.CELL)) && (curr.token == TokenType.COLON)) {
-                System.out.println("ERROR! Colon can only be located between cell values");
+            else if (curr.token == TokenType.COLON) {
+                if ((prev.token != TokenType.CELL) || (next.token != TokenType.CELL)) {
+                    System.out.println("ERROR! Colon can only be located between cell values");
+                } else {
+                    indexes.add(i - 1);
+                    indexes.add(i);
+                    next.update(TokenType.RANGE, prev.sequence + curr.sequence + next.sequence, 5);
+
+                }
             } // OPERATORS ONLY BETWEEN VALUES
             else if (isOperator(curr) && !(isValue(prev, true) && isValue(next, false))) {
                 System.out.println("ERROR! Operator " + curr.sequence + " should be placed between values");
@@ -163,9 +182,7 @@ public class Parser {
 
             }
         }
-        for (int i = 0;
-                i < indexes.size();
-                i++) {
+        for (int i = 0; i < indexes.size(); i++) {
             tokens.remove(indexes.get(i) - i);
         }
         return tokens;
@@ -180,7 +197,7 @@ public class Parser {
     }
 
     private boolean isValue(Tokenizer.Token token, boolean before) {
-        return ((token.token == TokenType.FORMULA && !before) || (token.token == TokenType.CELL) || (token.token == TokenType.REAL_NUMBER) || (token.token == TokenType.OPEN_BRACKET && !before) || (token.token == TokenType.CLOSE_BRACKET && before));
+        return ((token.token == TokenType.FORMULA && !before) || (token.token == TokenType.CELL) || (token.token == TokenType.REAL_NUMBER) || (token.token == TokenType.RANGE) || (token.token == TokenType.OPEN_BRACKET && !before) || (token.token == TokenType.CLOSE_BRACKET && before));
     }
 
     private boolean toStack(Tokenizer.Token token) {
@@ -190,7 +207,7 @@ public class Parser {
 
     private boolean toQueue(Tokenizer.Token token) {
         TokenType type = token.token;
-        return (type == TokenType.REAL_NUMBER || type == TokenType.CELL);
+        return (type == TokenType.REAL_NUMBER || type == TokenType.CELL || type == TokenType.RANGE);
     }
 
     private boolean leftAssociative(Tokenizer.Token token) {

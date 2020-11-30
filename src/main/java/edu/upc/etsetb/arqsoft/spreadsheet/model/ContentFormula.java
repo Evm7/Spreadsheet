@@ -5,16 +5,9 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operator;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import javafx.util.Pair;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import java.util.List;
+
 
 /**
  *
@@ -23,26 +16,19 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
 public class ContentFormula extends CellContent {
 
     private String formula;
-    private Pair<Argument[], Operator[]>[] pairs;
+    private List<Term> terms;
 
     public ContentFormula(String formula) {
         super(TypeOfContent.FORMULA, formula);
         this.formula = formula;
-        this.pairs = new FormulaParser().parseFormula(formula);
+        this.terms = new FormulaEvaluator().parseFormula(formula);  // SHOULD USE A FORMULA EVALUATOR ALREADY STIPULATED IN SPREADSHEET, JUST FOR TESTING
     }
 
     private boolean checkFormula() {
         return true;
     }
 
-    public void setPairs(Pair<Argument[], Operator[]>[] pairs) {
-        this.pairs = pairs;
+    public List<Term> getTerms() {
+        return terms;
     }
-
-    public Pair<Argument[], Operator[]>[] getPairs() {
-        return pairs;
-    }
-    
-     
-
 }

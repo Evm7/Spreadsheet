@@ -5,14 +5,13 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operator;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 
 /**
  *
  * @author estev
  */
-public class OperatorImpl implements Operator {
+public class OperatorImpl implements Term {
 
     private int weight;
     public String sign;
@@ -28,33 +27,43 @@ public class OperatorImpl implements Operator {
         }
     }
 
-    @Override
     public int getWeight() {
         return this.weight;
     }
 
-    public String getSign() {
+    public String print() {
         return sign;
     }
 
-    @Override
-    public Operand computeOperation(Operand arg1, Operand arg2) {
+    public OperandNumber computeOperation(OperandNumber arg1, OperandNumber arg2) {
         Double value = null;
-        if (this.sign == "/") {
+        if (this.sign.equals("/")) {
             value = (Double) (arg1.getValue()) / (Double) (arg2.getValue());
 
-        } else if (this.sign == "*") {
+        } else if (this.sign.equals("*")) {
             value = (Double) (arg1.getValue()) * (Double) (arg2.getValue());
 
-        } else if (this.sign == "+") {
+        } else if (this.sign.equals("+")) {
             value = (Double) (arg1.getValue()) + (Double) (arg2.getValue());
 
-        } else if (this.sign == "-") {
+        } else if (this.sign.equals("-")) {
             value = (Double) (arg1.getValue()) - (Double) (arg2.getValue());
+        } else if (this.sign.equals("^")) {
+            value = Math.pow((Double) (arg1.getValue()), (Double) (arg2.getValue()));
 
-        } else if (this.sign == ";") {
-            value = value = (Double) (arg1.getValue());
+        } else if (this.sign.equals(";")) {
+            value =  arg1.getValue();
         }
         return new OperandNumber(value);
+    }
+
+    @Override
+    public String isType() {
+        return "OperatorImpl";
+    }
+    
+        @Override
+    public String getValue() {
+        return sign;
     }
 }

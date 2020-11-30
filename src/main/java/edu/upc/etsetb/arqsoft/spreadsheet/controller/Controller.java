@@ -16,14 +16,14 @@ import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
  *
  * @author estev
  */
-public class System {
+public class Controller {
 
     private SpreadSheet model;
     private View view;
     private int max_length;
     private String name;
 
-    public System() {
+    public Controller() {
         this.view = new View();
         name = this.view.askQuestion("What is your name?");
         max_length = Integer.parseInt(this.view.askQuestion("How many cells to start?"));

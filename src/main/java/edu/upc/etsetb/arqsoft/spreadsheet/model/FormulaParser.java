@@ -5,9 +5,9 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operator;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Argument;
+
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,10 +19,12 @@ import javafx.util.Pair;
  * @author estev
  */
 public class FormulaParser {
+    // CURRENTLY THIS CLASS IS NOT USED AT ALL
 
+    
     String[] FUNCTIONS;
-    public static HashMap<String, Operator> operators;
-    public static HashMap<String, Function> functions;
+    public static HashMap<String, Term> operators;
+    public static HashMap<String, Function> functions2;
 
     public FormulaParser() {
         FUNCTIONS = new String[]{"SUMA", "MIN", "MAX", "PROMEDIO"};
@@ -33,11 +35,11 @@ public class FormulaParser {
         operators.put("-", new OperatorImpl("-"));
         operators.put("+", new OperatorImpl("+"));
         
-        functions = new HashMap<>();
-        functions.put("MAX", new FunctionMax());
-        functions.put("MIN", new FunctionMin());
-        functions.put("PROMEDIO", new FunctionPromedio());
-        functions.put("SUMA", new FunctionSuma());
+        functions2 = new HashMap<>();
+        functions2.put("MAX", new FunctionMax());
+        functions2.put("MIN", new FunctionMin());
+        functions2.put("PROMEDIO", new FunctionPromedio());
+        functions2.put("SUMA", new FunctionSuma());
 
     }
 
@@ -73,7 +75,7 @@ public class FormulaParser {
     }
 
     // TO UNDERSTAND WHAT IS IN THE FORMULA:
-    private Pair<Argument[], Operator[]> computePartial(String partial) {
+    private Pair<Argument[], Term[]> computePartial(String partial) {
         partial = partial.replace("(", "").replace(")", "");
         String[] words_argum = partial.split("[^\\w:_]+");
         Argument[] arguments = new Argument[words_argum.length];
@@ -83,7 +85,7 @@ public class FormulaParser {
             i++;
         }
         String word_operator = partial.replaceAll("[\\w:_]", "");
-        Operator[] operators_list = new Operator[word_operator.length()];
+        Term[] operators_list = new Term[word_operator.length()];
         i=0;
         for (char w : word_operator.toCharArray()) {
             operators_list[i] = operators.get(w+"");

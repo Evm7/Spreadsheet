@@ -53,8 +53,8 @@ public class Tokenizer {
             }
         }
     }
-    
-    public Token createToken(TokenType token, String sequence, int precedence){
+
+    public Token createToken(TokenType token, String sequence, int precedence) {
         return new Token(token, sequence, precedence);
     }
 
@@ -65,9 +65,9 @@ public class Tokenizer {
 
     public class Token {
 
-        public final TokenType token;
+        public TokenType token;
         public String sequence;
-        public final int precedence;
+        public int precedence;
 
         public Token(TokenType token, String sequence, int precedence) {
             super();
@@ -78,6 +78,12 @@ public class Tokenizer {
 
         public void modifySequence(String sequence) {
             this.sequence = sequence;
+        }
+
+        public void update(TokenType token, String sequence, int precedence) {
+            this.token = token;
+            this.sequence = sequence;
+            this.precedence = precedence;
         }
     }
 

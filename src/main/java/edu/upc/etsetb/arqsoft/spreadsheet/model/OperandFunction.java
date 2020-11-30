@@ -9,45 +9,53 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Operand;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 
 /**
  *
  * @author estev
  */
-public class OperandFunction implements Operand {
+public class OperandFunction implements Term {
 
-    Operand[] operants;
+    List<Term> operants;
 
-    public OperandFunction(Operand[] operants) {
+    public OperandFunction(List<Term> operants) {
         this.operants = operants;
     }
 
-    public OperandNumber[] getValue() {
+    public List<OperandNumber> getValue() {
         return flatten(this);
     }
-    
-    private OperandNumber[] flatten(OperandFunction fun){
+
+    private List<OperandNumber> flatten(OperandFunction fun) {
         List<OperandNumber> flatList = new ArrayList<OperandNumber>();
-        for(Operand op : fun.operants){
-            if(op instanceof OperandNumber){
+        for (Term op : fun.operants) {
+            if (op instanceof OperandNumber) {
                 flatList.add((OperandNumber) op);
-            }else{
-                flatList.addAll(Arrays.asList(flatten((OperandFunction) op)));
+            } else if (op instanceof ArgumentFunction) {
+                flatList.addAll(flatten(((ArgumentFunction) op).getValue()));
+            } else if (op instanceof ArgumentRange) {
+                flatList.addAll(flatten(((ArgumentRange) op).getValue()));
+            }else if (op instanceof ArgumentIndividual) {
+                flatList.add(((ArgumentIndividual) op).getValue());
+            }else {
+                flatList.addAll(flatten((OperandFunction) op));
             }
         }
-        return flatList.toArray(new OperandNumber[flatList.size()]);
+        return flatList;
     }
 
-
-
-    @Override
     public String print() {
         String res = "[";
-        for (Operand op : operants) {
+        for (Term op : operants) {
             res = res + op.print() + " ; ";
         }
         return res + "]";
+    }
+
+    @Override
+    public String isType() {
+        return "OperandFunction";
     }
 
 }
