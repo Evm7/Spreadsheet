@@ -6,8 +6,8 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  *
@@ -30,5 +30,15 @@ public class ContentFormula extends CellContent {
 
     public List<Term> getTerms() {
         return terms;
+    }
+
+    public List<Argument> getArguments() {
+        List<Argument> arguments = new ArrayList<>();
+        for (Term term : terms) {
+            if (term.isType().equals("Argument")) {
+                arguments.add((Argument) term);
+            }
+        }
+        return arguments;
     }
 }

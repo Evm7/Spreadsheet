@@ -39,7 +39,7 @@ public class Controller {
         int option;
         do {
             option = showMenu();
-        } while (option != 3);
+        } while (option != 4);
     }
 
     private int showMenu() {

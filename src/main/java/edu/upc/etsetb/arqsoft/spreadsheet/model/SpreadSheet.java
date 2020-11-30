@@ -6,7 +6,9 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -26,12 +28,14 @@ public class SpreadSheet {
     public static FormulaEvaluator parser = new FormulaEvaluator();
     private final Importer importer;
     private final Exporter exporter;
+    protected Map<CellCoordinate, List<CellCoordinate>> references;
 
     public SpreadSheet(String name, int length) {
         this.name = name;
         initializeSpreadSheet(length);
         importer = new Importer();
         exporter = new Exporter();
+        references = new HashMap<>();
     }
 
     public int[] getMaxLength() {
@@ -44,7 +48,7 @@ public class SpreadSheet {
     public CellImpl getCell(int column, int row) {
         return this.spreadsheet[column][row];
     }
-    
+
     private void initializeSpreadSheet(int length) {
         this.spreadsheet = new CellImpl[length][length];
         for (int row = 0; row < length; row++) {
@@ -68,6 +72,7 @@ public class SpreadSheet {
     private void addCell(CellImpl cell, int column, int row) {
         System.out.println("You are adding to column " + column + " and row " + row);
         this.spreadsheet[column][row] = cell;
+        addToMap(cell);
     }
 
     public CellImpl checkEmpty(int column, int raw) {
@@ -108,19 +113,31 @@ public class SpreadSheet {
         this.max_column = dim[0];
         this.max_row = dim[1];
         this.spreadsheet = new CellImpl[max_column][max_row];
-           for (int row = 0; row < max_row; row++) {
-               CellImpl[] row_cells = imported.get(row);
-                for (int column = 0; column < max_column; column++) {
-                    if (this.max_column <= row_cells.length) {
-                        this.spreadsheet[column][row] = row_cells[column];
-                    } else {
-                        this.spreadsheet[column][row] = new CellImpl(column, row, "");
-                    }
+        for (int row = 0; row < max_row; row++) {
+            CellImpl[] row_cells = imported.get(row);
+            for (int column = 0; column < max_column; column++) {
+                if (this.max_column <= row_cells.length) {
+                    this.spreadsheet[column][row] = row_cells[column];
+                } else {
+                    this.spreadsheet[column][row] = new CellImpl(column, row, "");
                 }
             }
+        }
     }
 
     public void exportSpreadSheet(File file) {
         exporter.exportSpreadSheet(file, this.spreadsheet);
+    }
+    
+    private void addToMap(CellImpl cell){
+        if (cell.cellcontent instanceof ContentFormula){
+            List<Argument> arguments = (((ContentFormula) cell.cellcontent).getArguments());
+            for (Argument argument : arguments) {
+                argument.get
+                
+            }
+r
+            references.put(cell.coordinates, );
+        }
     }
 }

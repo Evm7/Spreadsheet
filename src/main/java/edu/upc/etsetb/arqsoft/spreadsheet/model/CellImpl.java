@@ -5,6 +5,9 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author estev

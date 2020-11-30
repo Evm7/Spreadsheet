@@ -33,6 +33,7 @@ public class OperandFunction implements Term {
             if (op instanceof OperandNumber) {
                 flatList.add((OperandNumber) op);
             } else if (op instanceof ArgumentFunction) {
+                System.out.println("I am an argument function");
                 flatList.addAll(flatten(((ArgumentFunction) op).getValue()));
             } else if (op instanceof ArgumentRange) {
                 flatList.addAll(flatten(((ArgumentRange) op).getValue()));
