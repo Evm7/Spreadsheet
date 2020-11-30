@@ -24,7 +24,7 @@ public class Exporter {
             String line = "";
             for (CellImpl[] row : spreadsheet) {
                 line = convertRowToLine(row);
-                myWriter.write(line);
+                myWriter.write(line+"\n");
             }
             myWriter.close();
         } catch (IOException e) {

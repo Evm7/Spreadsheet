@@ -1,0 +1,3 @@
+3;=A1;;
+2;=SUMA(A1,A2);;
+PROMEDIO;=PROMEDIO(A1:B2);;

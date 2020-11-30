@@ -40,8 +40,7 @@ public class View {
     }
 
     public void printTabloid(SpreadSheet cells) {
-        printasu(cells);
-                
+               
         int[] max = cells.getMaxLength();
         max_column = max[0];
         max_raw = max[1];
@@ -92,7 +91,7 @@ public class View {
         return col;
     }
     
-    private void printasu(SpreadSheet sheet){
+    private void printaAll(SpreadSheet sheet){
         int[] max = sheet.getMaxLength();
         int max_col = max[0];
         int max_row = max[1];

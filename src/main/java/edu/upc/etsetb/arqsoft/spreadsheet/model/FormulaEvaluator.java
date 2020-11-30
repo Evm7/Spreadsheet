@@ -150,8 +150,15 @@ public class FormulaEvaluator {
             System.out.print("\t[INFO] Queue List is:   ");
             printList(queue);
         }
-
-        return Double.parseDouble(queue.getLast().print());
+        Term result = queue.getLast();
+        if (result instanceof OperandNumber){
+            return ((OperandNumber) result).getValue();
+        }else if (result instanceof ArgumentIndividual){
+            return ((ArgumentIndividual)result).getValue().getValue();
+        }else{
+            System.out.println("I dont know why we are here "+ result.print());
+            return 0.0;
+        }
 
     }
 

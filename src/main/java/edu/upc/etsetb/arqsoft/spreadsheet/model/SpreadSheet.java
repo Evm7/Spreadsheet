@@ -18,14 +18,14 @@ import java.util.logging.Logger;
  * @author estev
  *
  * IT IS IMPORTANT TOT TAKE INTO ACCOUNT THAT SPREADSHEET IS A MATTRIX THAT GOES
- * FROM [0--> MAX_COLUMN-1][0-->MAX_RAW-1] However, when creating the cells, a
+ * FROM [0-->MAX_RAW-1][0--> MAX_COLUMN-1] However, when creating the cells, a
  * cell [0][0] have the position A1. A0 does no exists. Therefore, in order to
  * do the creation of cells, remind that SpreadSheet.Row = Cell.Row-1
  */
 public class SpreadSheet {
 
     private String name;
-    public static CellImpl[][] spreadsheet;   // [column][row]
+    public static CellImpl[][] spreadsheet;   // [row][column]
     private int max_column;
     private int max_row;
     public static FormulaEvaluator parser = new FormulaEvaluator();
@@ -51,14 +51,14 @@ public class SpreadSheet {
     }
 
     public CellImpl getCell(int column, int row) {
-        return this.spreadsheet[column][row];
+        return this.spreadsheet[row][column];
     }
 
     private void initializeSpreadSheet(int length) {
         this.spreadsheet = new CellImpl[length][length];
         for (int row = 0; row < length; row++) {
             for (int column = 0; column < length; column++) {
-                this.spreadsheet[column][row] = new CellImpl(column, row + 1, "");
+                this.spreadsheet[row][column] = new CellImpl(column, row + 1, "");
             }
         }
         this.max_row = length;
@@ -66,21 +66,18 @@ public class SpreadSheet {
     }
 
     public CellImpl createCell(int column, int row, String content) throws DoubleDependenciesException {
-        System.out.println("Creating cell for " + column + " and " + row);
         complete_cells(column, row);
         CellImpl cell = new CellImpl(column, row, content);
         addCell(cell, column, row - 1);
-        cell.show();
         return cell;
     }
 
     private void addCell(CellImpl cell, int column, int row) throws DoubleDependenciesException {
-        System.out.println("You are adding to column " + column + " and row " + row);
         CellImpl previous = checkEmpty(column, row);
         if (previous != null && (previous.getType_of_content() == TypeOfContent.FORMULA)) {
             this.references.remove(previous.coordinates);
         }
-        this.spreadsheet[column][row] = cell;
+        this.spreadsheet[row][column] = cell;
         addToMap(cell);
         just_updated = new ArrayList<>();
 
@@ -104,18 +101,21 @@ public class SpreadSheet {
     private void complete_cells(int num_column, int num_row) {
         if ((this.max_column < num_column) || (this.max_row < num_row)) {
             CellImpl[][] copy = this.spreadsheet.clone();
-            int new_size_column = Math.max(num_column, this.max_column);
+            int new_size_column = Math.max(num_column+1, this.max_column);
             int new_size_row = Math.max(num_row, this.max_row);
 
-            System.out.println("The new size column is the new size col: " + new_size_column + " + row:" + new_size_row);
-
-            this.spreadsheet = new CellImpl[new_size_column][new_size_row];
+            this.spreadsheet = new CellImpl[new_size_row][new_size_column];
             for (int row = 0; row < new_size_row; row++) {
                 for (int column = 0; column < new_size_column; column++) {
                     if (this.max_column > column) {
-                        this.spreadsheet[column][row] = copy[column][row];
+                        if (this.max_row > row) {
+                            this.spreadsheet[row][column] = copy[row][column];
+                        } else {
+                            this.spreadsheet[row][column] = new CellImpl(column, row, "");
+
+                        }
                     } else {
-                        this.spreadsheet[column][row] = new CellImpl(column, row, "");
+                        this.spreadsheet[row][column] = new CellImpl(column, row, "");
                     }
                 }
             }
@@ -134,9 +134,9 @@ public class SpreadSheet {
             CellImpl[] row_cells = imported.get(row);
             for (int column = 0; column < max_column; column++) {
                 if (this.max_column <= row_cells.length) {
-                    this.spreadsheet[column][row] = row_cells[column];
+                    this.spreadsheet[row][column] = row_cells[column];
                 } else {
-                    this.spreadsheet[column][row] = new CellImpl(column, row, "");
+                    this.spreadsheet[row][column] = new CellImpl(column, row, "");
                 }
             }
         }
@@ -168,7 +168,7 @@ public class SpreadSheet {
             List<CellCoordinate> value = entry.getValue();
             if (value.contains(edited.coordinates)) {
                 CellCoordinate key = entry.getKey();
-                CellImpl updated = this.spreadsheet[key.getColumn()][key.getRow()];
+                CellImpl updated = this.spreadsheet[key.getRow()][key.getColumn()];
                 updated.recomputeValue();
                 updateSpreadSheet(updated);
             }

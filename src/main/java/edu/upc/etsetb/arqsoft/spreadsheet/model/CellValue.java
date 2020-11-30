@@ -14,7 +14,7 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 class CellValue implements Value{
 
     public Object getValue() {
-        return null;
+        return "";
     }
 
     public CellValue() {

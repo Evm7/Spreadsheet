@@ -46,15 +46,16 @@ public class Argument implements Term {
     }
 
     protected CellCoordinate parsePlace(String parsing) {
-        String[] num = parsing.split("?=[a-zA-Z]");
-        CellCoordinate coordiante = new CellCoordinate(num[0].toCharArray(), Integer.parseInt(num[1]));
+        String row = parsing.replaceAll("[a-zA-Z]", "");
+        String col = parsing.replaceAll("[0-9]", "");
+        CellCoordinate coordiante = new CellCoordinate(col.toCharArray(), Integer.parseInt(row));
         return coordiante;
     }  
     
     protected CellValue getCellValue(CellCoordinate coordinate){
         int column = coordinate.getColumn();
         int row = coordinate.getRow();
-        return (SpreadSheet.spreadsheet[column][row]).value; 
+        return (SpreadSheet.spreadsheet[row-1][column]).value; 
     }
 
 }

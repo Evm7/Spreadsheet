@@ -80,7 +80,6 @@ public class Controller {
             return;
         }
         CellImpl cell = getCell(column, row);
-        cell.show();
         String value;
         if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
             value = this.view.askQuestion("Which value do you want to introduce in [" + position[0] + row + "] ?");
@@ -98,7 +97,7 @@ public class Controller {
                 try {
                     model.createCell(column, row, value);
                 } catch (DoubleDependenciesException ex) {
-                this.view.display("Error: " + ex.getMessage());
+                    this.view.display("Error: " + ex.getMessage());
                 }
             }
         }
