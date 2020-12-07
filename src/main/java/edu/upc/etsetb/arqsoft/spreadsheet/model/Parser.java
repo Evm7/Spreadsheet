@@ -15,9 +15,17 @@ import java.util.List;
  */
 public class Parser {
 
+    /**
+     *
+     */
     public Parser() {
     }
 
+    /**
+     *
+     * @param tokens
+     * @return
+     */
     public LinkedList<Tokenizer.Token> shuntingYard(LinkedList<Tokenizer.Token> tokens) {
         LinkedList<Tokenizer.Token> queue = new LinkedList<Tokenizer.Token>();  // for values
         LinkedList<Tokenizer.Token> stack = new LinkedList<Tokenizer.Token>();  // for operators
@@ -103,6 +111,11 @@ public class Parser {
         System.out.println();
     }
 
+    /**
+     *
+     * @param tokens
+     * @return
+     */
     public LinkedList<Tokenizer.Token> evaluateGrammar(LinkedList<Tokenizer.Token> tokens) {
         Tokenizer.Token prev = null;
         Tokenizer.Token curr = null;

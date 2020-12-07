@@ -23,8 +23,15 @@ public class FormulaEvaluator {
 
     Tokenizer tokenizer;
     Parser parser_formula;
+
+    /**
+     *
+     */
     public static HashMap<String, Function> functions;
 
+    /**
+     *
+     */
     public FormulaEvaluator() {
         tokenizer = new Tokenizer();
         // Add the tokens to our series.
@@ -54,6 +61,11 @@ public class FormulaEvaluator {
         functions.put("SUMA", new FunctionSuma());
     }
 
+    /**
+     *
+     * @param formula
+     * @return
+     */
     public List<Term> parseFormula(String formula) {
         formula = formula.replaceAll(" ", "");
         //formula = formula.replaceFirst("=", "");
@@ -125,6 +137,11 @@ public class FormulaEvaluator {
         return terms;
     }
 
+    /**
+     *
+     * @param terms
+     * @return
+     */
     public Double evaluatePostFix(List<Term> terms) {
         System.out.println();
         System.out.println("[INFO] .. Evaluating PostFix");

@@ -15,16 +15,29 @@ import java.util.List;
  */
 public class FunctionMax implements Function{
     
+    /**
+     *
+     */
     public FunctionMax() {
     }
     
+    /**
+     *
+     * @return
+     * @throws NoParseableArguments
+     */
     @Override
     public Double[] parseArguments() throws NoParseableArguments{
         throw new NoParseableArguments("Not supported yet."); 
     }
 
+    /**
+     *
+     * @param args
+     * @return
+     */
     @Override
-    public OperandNumber computeFormula(OperandFunction args) {
+    public OperandNumber computeFunction(OperandFunction args) {
         List<OperandNumber> values = args.getValue();
         OperandNumber result = values.get(0);
         for (OperandNumber v: values){

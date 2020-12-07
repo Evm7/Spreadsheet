@@ -16,10 +16,18 @@ import java.util.List;
  */
 public class ArgumentRange extends Argument {
 
+    /**
+     *
+     * @param arg
+     */
     public ArgumentRange(String arg) {
         super(arg);// When the argument refers to more than one cell in a range --> ex:  A1:B3
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public OperandFunction getValue() {
         String[] terms = this.arg.split(":");
@@ -50,11 +58,19 @@ public class ArgumentRange extends Argument {
         return coordinates;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getSource() {
         return arg;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<CellCoordinate> getReferences() {
         String[] terms = this.arg.split(":");

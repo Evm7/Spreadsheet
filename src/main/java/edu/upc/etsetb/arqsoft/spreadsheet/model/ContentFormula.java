@@ -18,6 +18,10 @@ public class ContentFormula extends CellContent {
     private String formula;
     private List<Term> terms;
 
+    /**
+     *
+     * @param formula
+     */
     public ContentFormula(String formula) {
         super(TypeOfContent.FORMULA, formula);
         this.formula = formula;
@@ -28,10 +32,18 @@ public class ContentFormula extends CellContent {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Term> getTerms() {
         return terms;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Argument> getArguments() {
         List<Argument> arguments = new ArrayList<>();
         for (Term term : terms) {

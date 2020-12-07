@@ -20,11 +20,18 @@ public class Importer {
     int max_row;
     int max_col;
 
+    /**
+     *
+     */
     public Importer() {
         max_row = 0;
         max_row = 0;
     }
 
+    /**
+     *
+     * @return
+     */
     public int[] getDimensions() {
         int[] max = new int[2];
         max[0] = max_row;
@@ -32,6 +39,11 @@ public class Importer {
         return max;
     }
 
+    /**
+     *
+     * @param file
+     * @return
+     */
     public List<CellImpl[]> importSpreadSheet(File file) {
         ArrayList<CellImpl[]> spreadsheet = new ArrayList<>();
         max_row = 0;

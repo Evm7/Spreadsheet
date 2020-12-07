@@ -13,19 +13,35 @@ public class ValueText extends CellValue {
 
     private String value;
 
+    /**
+     *
+     * @param content
+     */
     public ValueText(ContentText content) {
         this.value = content.getContent();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getValue() {
         return value;
     }
 
+    /**
+     *
+     * @param value
+     */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String print() {
         return this.value;

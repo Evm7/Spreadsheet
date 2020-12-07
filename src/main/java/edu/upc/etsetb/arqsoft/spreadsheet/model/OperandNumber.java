@@ -15,18 +15,34 @@ public class OperandNumber implements Term {
 
     Double operant;
 
+    /**
+     *
+     * @param operant
+     */
     public OperandNumber(Double operant) {
         this.operant = operant;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getValue() {
         return this.operant;
     }
 
+    /**
+     *
+     * @return
+     */
     public String print() {
         return "" + this.operant;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String isType() {
         return "OperandNumber";

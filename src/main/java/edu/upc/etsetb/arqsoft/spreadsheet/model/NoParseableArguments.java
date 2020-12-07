@@ -11,7 +11,10 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  */
 public class NoParseableArguments extends Exception {
 
-    
+    /**
+     *
+     * @param string
+     */
     public NoParseableArguments(String string) {
         super(string);
     }

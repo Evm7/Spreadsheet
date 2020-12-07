@@ -19,16 +19,29 @@ public class Tokenizer {
     private LinkedList<TokenInfo> tokenInfos;
     private LinkedList<Token> tokens;
 
+    /**
+     *
+     */
     public Tokenizer() {
         tokenInfos = new LinkedList<TokenInfo>();
         tokens = new LinkedList<Token>();
 
     }
 
+    /**
+     *
+     * @param regex
+     * @param token
+     * @param precedence
+     */
     public void add(String regex, TokenType token, int precedence) {
         tokenInfos.add(new TokenInfo(Pattern.compile("^(" + regex + ")"), token, precedence));
     }
 
+    /**
+     *
+     * @param str
+     */
     public void tokenize(String str) {
         String s = new String(str);
         s = s.replaceAll(" ", "");
@@ -54,21 +67,52 @@ public class Tokenizer {
         }
     }
 
+    /**
+     *
+     * @param token
+     * @param sequence
+     * @param precedence
+     * @return
+     */
     public Token createToken(TokenType token, String sequence, int precedence) {
         return new Token(token, sequence, precedence);
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<Token> getTokens() {
         return tokens;
 
     }
 
+    /**
+     *
+     */
     public class Token {
 
+        /**
+         *
+         */
         public TokenType token;
+
+        /**
+         *
+         */
         public String sequence;
+
+        /**
+         *
+         */
         public int precedence;
 
+        /**
+         *
+         * @param token
+         * @param sequence
+         * @param precedence
+         */
         public Token(TokenType token, String sequence, int precedence) {
             super();
             this.token = token;
@@ -76,10 +120,20 @@ public class Tokenizer {
             this.precedence = precedence;
         }
 
+        /**
+         *
+         * @param sequence
+         */
         public void modifySequence(String sequence) {
             this.sequence = sequence;
         }
 
+        /**
+         *
+         * @param token
+         * @param sequence
+         * @param precedence
+         */
         public void update(TokenType token, String sequence, int precedence) {
             this.token = token;
             this.sequence = sequence;

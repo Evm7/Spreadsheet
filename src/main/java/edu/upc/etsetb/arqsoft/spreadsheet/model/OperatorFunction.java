@@ -17,28 +17,54 @@ public class OperatorFunction implements Term {
     private String formula;
     private int num_terms;
 
+    /**
+     *
+     * @param type
+     * @param num_terms
+     */
     public OperatorFunction(String type, int num_terms) {
         this.formula = type;
         this.num_terms = num_terms;
     }
 
+    /**
+     *
+     * @return
+     */
     public String print() {
         return formula;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getTerms(){
         return num_terms;
     }
 
+    /**
+     *
+     * @param arg
+     * @return
+     */
     public OperandNumber computeOperation(OperandFunction arg) {
         Function function = FormulaEvaluator.functions.get(this.formula);
-        return function.computeFormula(arg);
+        return function.computeFunction(arg);
     }
 
+    /**
+     *
+     * @return
+     */
     public String isType() {
         return "OperatorFunction";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getValue() {
         return formula;

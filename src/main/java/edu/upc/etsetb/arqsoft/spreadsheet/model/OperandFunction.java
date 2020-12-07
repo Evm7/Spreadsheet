@@ -19,10 +19,18 @@ public class OperandFunction implements Term {
 
     List<Term> operants;
 
+    /**
+     *
+     * @param operants
+     */
     public OperandFunction(List<Term> operants) {
         this.operants = operants;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<OperandNumber> getValue() {
         return flatten(this);
     }
@@ -43,6 +51,10 @@ public class OperandFunction implements Term {
         return flatList;
     }
 
+    /**
+     *
+     * @return
+     */
     public String print() {
         String res = "[";
         for (Term op : operants) {
@@ -51,6 +63,10 @@ public class OperandFunction implements Term {
         return res + "]";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String isType() {
         return "OperandFunction";

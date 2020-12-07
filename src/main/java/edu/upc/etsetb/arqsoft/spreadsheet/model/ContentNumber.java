@@ -11,6 +11,10 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  */
 public class ContentNumber extends CellContent{
     
+    /**
+     *
+     * @param value
+     */
     public ContentNumber(String value) {
         super(TypeOfContent.NUMBER, value);
     }

@@ -15,11 +15,19 @@ import java.util.regex.Pattern;
  */
 public class ArgumentIndividual extends Argument {
 
+    /**
+     *
+     * @param arg
+     */
     public ArgumentIndividual(String arg) {
         super(arg);     // One the argument refers to individial cell --> ex: A1
 
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public OperandNumber getValue() {
         CellCoordinate coordinate = super.parsePlace(this.arg);
@@ -27,11 +35,19 @@ public class ArgumentIndividual extends Argument {
         return new OperandNumber((Double) value.getValue());
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getSource() {
         return arg;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<CellCoordinate> getReferences(){
         List<CellCoordinate> references = new ArrayList<>();

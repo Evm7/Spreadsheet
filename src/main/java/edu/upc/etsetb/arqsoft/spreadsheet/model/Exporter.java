@@ -15,9 +15,17 @@ import java.io.IOException;
  */
 public class Exporter {
 
+    /**
+     *
+     */
     public Exporter() {
     }
 
+    /**
+     *
+     * @param file
+     * @param spreadsheet
+     */
     public void exportSpreadSheet(File file, CellImpl[][] spreadsheet) {
         try {
             FileWriter myWriter = new FileWriter(file);

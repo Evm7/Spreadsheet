@@ -6,11 +6,32 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
 /**
+ * Interface which groups the different Terms that form the Content of a
+ * Formula.
  *
  * @author estev
  */
 public interface Term {
+
+    /**
+     * Prints the Term
+     *
+     * @return String
+     */
     String print();
-    String isType();  // Argument  | OperandFunction | OperandNumber | OperatorImpl
+
+    /**
+     * Shows the Type of term we are refering to as String Argument |
+     * OperandFunction | OperandNumber | OperatorImpl
+     *
+     * @return
+     */
+    String isType();
+
+    /**
+     * Gets the value of the Term.
+     *
+     * @return
+     */
     Object getValue();
 }

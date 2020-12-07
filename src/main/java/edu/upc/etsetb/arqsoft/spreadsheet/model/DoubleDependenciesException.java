@@ -11,7 +11,10 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  */
 public class DoubleDependenciesException extends Exception {
 
-    
+    /**
+     *
+     * @param string
+     */
     public DoubleDependenciesException(String string) {
         super(string);
     }

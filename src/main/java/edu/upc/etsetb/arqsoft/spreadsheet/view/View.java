@@ -9,9 +9,8 @@ import edu.upc.etsetb.arqsoft.spreadsheet.model.CellImpl;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import java.util.Scanner;
 
-
-
 /**
+ * Class in charge of contacting with the user and obtain the answers.
  *
  * @author estev
  */
@@ -21,26 +20,51 @@ public class View {
     private int max_raw;
     private Scanner scanner;
 
+    /**
+     * Constructor of the View class which initialize the Scanner.
+     */
     public View() {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Constructor of the View class which initialize the Scanner and sets the
+     * max dimensions to display
+     *
+     * @param max_column
+     * @param max_raw
+     */
     public View(int max_column, int max_raw) {
         this.scanner = new Scanner(System.in);
         this.max_column = max_column;
         this.max_raw = max_raw;
     }
 
+    /**
+     * Establish the Maximum Number of Columns to Display
+     *
+     * @param max_column
+     */
     public void setMax_column(int max_column) {
         this.max_column = max_column;
     }
 
+    /**
+     * Establish the Maximum Number of Rows to Display
+     *
+     * @param max_raw
+     */
     public void setMax_raw(int max_raw) {
         this.max_raw = max_raw;
     }
 
+    /**
+     * Print the SpreadSheet passed as argument.
+     *
+     * @param cells
+     */
     public void printTabloid(SpreadSheet cells) {
-               
+
         int[] max = cells.getMaxLength();
         max_column = max[0];
         max_raw = max[1];
@@ -55,51 +79,79 @@ public class View {
                         // Refer correctly the column names
                         System.out.print("\t");
                     }
-                    System.out.print(getColumn(j+1) + "\t");
+                    System.out.print(getColumn(j + 1) + "\t");
                 } else {
-                    System.out.print(cells.getCell(j, i-1).printValue() + "\t");
+                    System.out.print(cells.getCell(j, i - 1).printValue() + "\t");
                 }
             }
             System.out.println();
         }
     }
 
-    private void printCell(CellImpl cell, boolean lastColumn, boolean lastRow) {
+    /**
+     * Print the value of the cell pased as argument
+     *
+     * @param cell: cell to print its value.
+     */
+    private void printCell(CellImpl cell) {
         System.out.print(cell.printValue());
     }
 
+    /**
+     * Ask a question passed as argument to the user. Returns the answer given.
+     *
+     * @param question
+     * @return
+     */
     public String askQuestion(String question) {
         System.out.println(question);
         String answer = scanner.nextLine();  // Read user input
         return answer;
     }
 
+    /**
+     * Display the String passed as argument to inform the user.
+     *
+     * @param display
+     */
     public void display(String display) {
         System.out.println(display);
     }
 
+    /**
+     * Obtain the Reference of the Column in the Abecedary way.
+     *
+     * @param number: integer with the number position of the cell.
+     * @return column as string in Abecedary (1--> A, 2-->B, ...)
+     */
     public String getColumn(int number) {
         int number_of_letters = number;
         String col = "";
         int module;
 
         while (number_of_letters > 0) {
-            module = (number_of_letters - 1) % ('Z' - 'A'+1);
+            module = (number_of_letters - 1) % ('Z' - 'A' + 1);
             col = String.valueOf((char) ('A' + module) + col);
-            number_of_letters = (int) ((number_of_letters - module) / ('Z' - 'A'+1));
+            number_of_letters = (int) ((number_of_letters - module) / ('Z' - 'A' + 1));
         }
         return col;
     }
-    
-    private void printaAll(SpreadSheet sheet){
+
+    /**
+     * Print all the SpreadSheet. Used for debugging
+     *
+     * @param sheet: SpreadhSheet to print.
+     * @return column as string in Abecedary (1--> A, 2-->B, ...)
+     */
+    private void printaAll(SpreadSheet sheet) {
         int[] max = sheet.getMaxLength();
         int max_col = max[0];
         int max_row = max[1];
-        CellImpl cell ;
-        for(int i=0; i<max_col; i++){
-            for(int j = 0; j< max_row; j++){
-                cell  = sheet.getCell(i, j);
-                System.out.println(" For column "+ i +" and row " + j+ " we have:");
+        CellImpl cell;
+        for (int i = 0; i < max_col; i++) {
+            for (int j = 0; j < max_row; j++) {
+                cell = sheet.getCell(i, j);
+                System.out.println(" For column " + i + " and row " + j + " we have:");
                 cell.show();
             }
         }

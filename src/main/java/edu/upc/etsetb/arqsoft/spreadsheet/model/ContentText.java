@@ -11,6 +11,10 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  */
 public class ContentText extends CellContent{
     
+    /**
+     *
+     * @param text
+     */
     public ContentText(String text) {
         super(TypeOfContent.TEXT, text);
         

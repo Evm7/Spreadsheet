@@ -5,7 +5,6 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 
-
 /**
  *
  * @author estev
@@ -13,6 +12,8 @@ package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 public class Main {
 
     /**
+     * Main class for the execution of the program.
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -21,9 +22,6 @@ public class Main {
         Controller controller = new Controller();
         controller.run();
 
-
-
-      
     }
 
 }

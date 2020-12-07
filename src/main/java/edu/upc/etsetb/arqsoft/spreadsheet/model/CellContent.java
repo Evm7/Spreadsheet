@@ -13,15 +13,28 @@ public class CellContent {
     private TypeOfContent type_of_content;
     private String content;
 
+    /**
+     *
+     * @param type_of_content
+     * @param content
+     */
     public CellContent(TypeOfContent type_of_content, String content) {
         this.type_of_content = type_of_content;
         this.content = content;
     }
     
+    /**
+     *
+     * @return
+     */
     public TypeOfContent getType(){
         return type_of_content;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getContent(){
         return content;
     }

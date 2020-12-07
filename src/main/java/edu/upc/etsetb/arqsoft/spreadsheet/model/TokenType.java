@@ -10,22 +10,86 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  * @author estev
  */
 public enum TokenType {
+
+    /**
+     *
+     */
     FORMULA,
+
+    /**
+     *
+     */
     OPEN_BRACKET,
+
+    /**
+     *
+     */
     CLOSE_BRACKET,
+
+    /**
+     *
+     */
     PLUS,
+
+    /**
+     *
+     */
     MINUS,
+
+    /**
+     *
+     */
     MULT,
+
+    /**
+     *
+     */
     DIVIDE,
+
+    /**
+     *
+     */
     RAISED,
+
+    /**
+     *
+     */
     REAL_NUMBER,
+
+    /**
+     *
+     */
     CELL,
+
+    /**
+     *
+     */
     WHITE_SPACE,
+
+    /**
+     *
+     */
     EQUAL,
+
+    /**
+     *
+     */
     SEMICOLON,
+
+    /**
+     *
+     */
     RANGE,
+
+    /**
+     *
+     */
     COLON;
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         switch (this.ordinal()) {

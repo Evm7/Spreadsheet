@@ -25,15 +25,28 @@ import java.util.logging.Logger;
 public class SpreadSheet {
 
     private String name;
+
+    /**
+     *
+     */
     public static CellImpl[][] spreadsheet;   // [row][column]
     private int max_column;
     private int max_row;
+
+    /**
+     *
+     */
     public static FormulaEvaluator parser = new FormulaEvaluator();
     private final Importer importer;
     private final Exporter exporter;
     private Map<CellCoordinate, List<CellCoordinate>> references;
     private List<CellCoordinate> just_updated;
 
+    /**
+     *
+     * @param name
+     * @param length
+     */
     public SpreadSheet(String name, int length) {
         this.name = name;
         initializeSpreadSheet(length);
@@ -43,6 +56,10 @@ public class SpreadSheet {
         just_updated = new ArrayList<>();
     }
 
+    /**
+     *
+     * @return
+     */
     public int[] getMaxLength() {
         int[] max = new int[2];
         max[0] = max_column;
@@ -50,6 +67,12 @@ public class SpreadSheet {
         return max;
     }
 
+    /**
+     *
+     * @param column
+     * @param row
+     * @return
+     */
     public CellImpl getCell(int column, int row) {
         return this.spreadsheet[row][column];
     }
@@ -65,6 +88,14 @@ public class SpreadSheet {
         this.max_column = length;
     }
 
+    /**
+     *
+     * @param column
+     * @param row
+     * @param content
+     * @return
+     * @throws DoubleDependenciesException
+     */
     public CellImpl createCell(int column, int row, String content) throws DoubleDependenciesException {
         complete_cells(column, row);
         CellImpl cell = new CellImpl(column, row, content);
@@ -89,6 +120,12 @@ public class SpreadSheet {
         }
     }
 
+    /**
+     *
+     * @param column
+     * @param raw
+     * @return
+     */
     public CellImpl checkEmpty(int column, int raw) {
         try {
             CellImpl cell = this.spreadsheet[column][raw];
@@ -124,6 +161,10 @@ public class SpreadSheet {
         }
     }
 
+    /**
+     *
+     * @param file
+     */
     public void importSpreadSheet(File file) {
         List<CellImpl[]> imported = importer.importSpreadSheet(file);
         int[] dim = importer.getDimensions();
@@ -142,6 +183,10 @@ public class SpreadSheet {
         }
     }
 
+    /**
+     *
+     * @param file
+     */
     public void exportSpreadSheet(File file) {
         exporter.exportSpreadSheet(file, this.spreadsheet);
     }

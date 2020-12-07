@@ -15,22 +15,47 @@ import java.util.Map;
 public class CellImpl {
 
     /**
-     * @param args the command line arguments
      */
     protected CellCoordinate coordinates;
+
+    /**
+     *
+     */
     protected CellContent cellcontent;
+
+    /**
+     *
+     */
     protected CellValue value;
 
+    /**
+     *
+     * @param column
+     * @param row
+     * @param content
+     */
     public CellImpl(int column, int row, String content) {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, true);
     }
 
+    /**
+     *
+     * @param column
+     * @param row
+     * @param content
+     * @param computeFormula
+     */
     public CellImpl(int column, int row, String content, boolean computeFormula) {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, computeFormula);
     }
 
+    /**
+     *
+     * @param content
+     * @param computeFormula
+     */
     public void updateCell(String content, boolean computeFormula) {
         TypeOfContent typeOfContent = parseContent(content);
         if (typeOfContent == TypeOfContent.FORMULA) {
@@ -50,6 +75,11 @@ public class CellImpl {
         }
     }
 
+    /**
+     *
+     * @param content
+     * @return
+     */
     public TypeOfContent parseContent(String content) {
         if (content.equals("")) {
             return TypeOfContent.EMPTY;
@@ -66,6 +96,9 @@ public class CellImpl {
         }
     }
 
+    /**
+     *
+     */
     public void recomputeValue() {
         if (this.cellcontent instanceof ContentFormula) {
             this.value = new ValueNumber((ContentFormula) this.cellcontent);
@@ -78,18 +111,33 @@ public class CellImpl {
         }
     }
 
+    /**
+     *
+     */
     public void show() {
         System.out.println("Cell " + this.coordinates.print() + " is " + this.cellcontent.getType() + " with value " + printValue());
     }
 
+    /**
+     *
+     * @return
+     */
     public String printValue() {
         return "" + value.getValue();
     }
 
+    /**
+     *
+     * @return
+     */
     public TypeOfContent getType_of_content() {
         return cellcontent.getType();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getContent() {
         return this.cellcontent.getContent();
     }

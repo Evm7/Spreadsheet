@@ -6,9 +6,10 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
 /**
+ * Interface with the different Contents of a Cell.
  *
  * @author estev
  */
 public interface Content {
-    
+
 }

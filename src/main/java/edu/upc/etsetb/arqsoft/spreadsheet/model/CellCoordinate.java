@@ -11,19 +11,41 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
  */
 public class CellCoordinate {
 
+    /**
+     *
+     */
     protected char[] column;
+
+    /**
+     *
+     */
     protected int row;
 
+    /**
+     *
+     * @param column
+     * @param row
+     */
     public CellCoordinate(char[] column, int row) {
         this.column = column;
         this.row = row;
     }
     
+    /**
+     *
+     * @param column
+     * @param row
+     */
     public CellCoordinate(int column, int row) {
         this.column = intToChar(column);
         this.row = row;
     }
     
+    /**
+     *
+     * @param column
+     * @return
+     */
     public char[] intToChar(int column) {
         int number_of_letters = column+1;
         String col = "";
@@ -36,10 +58,18 @@ public class CellCoordinate {
         return col.toCharArray();
     }
     
+    /**
+     *
+     * @return
+     */
     public String print(){
         return "["+ new String(column)+","+row+"]";
     }
     
+    /**
+     *
+     * @return
+     */
     public int getColumn(){
         String column = new String(this.column);
         int column_num=0;
@@ -49,6 +79,10 @@ public class CellCoordinate {
         return column_num-1;
     }
     
+    /**
+     *
+     * @return
+     */
     public int getRow(){
         return row;
     }

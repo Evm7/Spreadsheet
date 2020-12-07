@@ -14,8 +14,16 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 public class OperatorImpl implements Term {
 
     private int weight;
+
+    /**
+     *
+     */
     public String sign;
 
+    /**
+     *
+     * @param sign
+     */
     public OperatorImpl(String sign) {
         this.sign = sign;
         if ((this.sign == "/") || (this.sign == "*")) {
@@ -27,14 +35,28 @@ public class OperatorImpl implements Term {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int getWeight() {
         return this.weight;
     }
 
+    /**
+     *
+     * @return
+     */
     public String print() {
         return sign;
     }
 
+    /**
+     *
+     * @param arg1
+     * @param arg2
+     * @return
+     */
     public OperandNumber computeOperation(OperandNumber arg1, OperandNumber arg2) {
         Double value = null;
         if (this.sign.equals("/")) {
@@ -57,12 +79,20 @@ public class OperatorImpl implements Term {
         return new OperandNumber(value);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String isType() {
         return "OperatorImpl";
     }
     
-        @Override
+    /**
+     *
+     * @return
+     */
+    @Override
     public String getValue() {
         return sign;
     }

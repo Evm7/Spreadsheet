@@ -12,13 +12,11 @@ import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
+ * Contrains the Controller of the program which manages the View and the Model.
+ * Operates into the model depending of the answer that View obtains from the
+ * user.
  *
  * @author estev
  */
@@ -29,6 +27,11 @@ public class Controller {
     private int max_length;
     private String name;
 
+    /**
+     * Class in charge of operating the model depending on the Inputs from the
+     * user obtained from teh view. It is the main class, which initialize View
+     * and Model and manage the whole Project.
+     */
     public Controller() {
         this.view = new View();
         name = this.view.askQuestion("What is your name?");
@@ -38,6 +41,9 @@ public class Controller {
         this.view.printTabloid(model);
     }
 
+    /**
+     * Loop iteration that shows the menu whereas user does not exit.
+     */
     public void run() {
         int option;
         do {
@@ -45,6 +51,10 @@ public class Controller {
         } while (option != 4);
     }
 
+    /**
+     * Ask through view class the next step for the user, and calls the model to
+     * do the answered step.
+     */
     private int showMenu() {
         String option = this.view.askQuestion("What do you want to do now?:\n\t1-Edit Cell\n\t2-Import Spreadsheet\n\t3-Export Spreadsheet\n\t4-Exit");
         switch (option) {
@@ -69,6 +79,10 @@ public class Controller {
         return Integer.parseInt(option);
     }
 
+    /**
+     * Edits the value of a cell or insert if none. Asks for the coordinates and
+     * content of the cell and calls model to compute the internal next steps.
+     */
     private void addValue() {
         String[] position = this.view.askQuestion("Where do you want your value? (column-raw)").split("-");
         int column, row;
@@ -103,6 +117,26 @@ public class Controller {
         }
     }
 
+    /**
+     * Get the Cell from the SpreadSheet located in coordinates passed as
+     * argument.
+     *
+     * @param column: int with the column coordinate
+     * @param row: int with the row coordinate
+     *
+     * @return the cell or Null if does not exists.
+     */
+    private CellImpl getCell(int column, int row) {
+        return (this.model.checkEmpty(column, row - 1));
+    }
+
+    /**
+     * Gets the int number of the coordinate from an String Column
+     *
+     * @param column : passes the column as an String. Ex: AB
+     * @return int refering to the coordinate of the column in the SpreadSheet.
+     * Ex: 27
+     */
     private int getIntColumn(String column) {
         int column_num = 0;
         for (int i = 0; i < column.length(); i++) {
@@ -111,6 +145,14 @@ public class Controller {
         return column_num - 1;
     }
 
+    /**
+     * Gets the String Alphabetical column of the coordinate from an int Column
+     * Number
+     *
+     * @param column : passes the column as an int. Ex: 27
+     * @return String refering to the coordinate of the column in the
+     * SpreadSheet. Ex: AB
+     */
     private String getStrColumn(int number) {
         int number_of_letters = number;
         String col = "";
@@ -124,6 +166,10 @@ public class Controller {
         return col;
     }
 
+    /**
+     * Exports the SpreadSheet to a S2V file. Asks for the path to save the file
+     * to. Manage errors if path does not exist.
+     */
     private void exportSpreadSheet() {
         this.view.display("Exporting Spreadhseet to S2V file ...");
         String path_file;
@@ -151,6 +197,10 @@ public class Controller {
         this.model.exportSpreadSheet(file);
     }
 
+    /**
+     * Imports an SpreadSheet from a S2V file. Asks for the path to import the
+     * file from. Manage errors if path does not exist.
+     */
     private void importSpreadSheet() {
         this.view.display("Import Spreadsheet from S2V file ...");
         String path_file;
@@ -171,12 +221,11 @@ public class Controller {
         this.model.importSpreadSheet(file);
     }
 
+    /**
+     * Function to reproduce all the steps when user chose to exit the program.
+     */
     private void exit() {
         this.view.display("See you, " + this.name + "!");
-    }
-
-    private CellImpl getCell(int column, int raw) {
-        return (this.model.checkEmpty(column, raw - 1));
     }
 
 }

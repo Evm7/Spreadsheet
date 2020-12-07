@@ -12,5 +12,24 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Content;
  * @author estev
  */
 public enum TypeOfContent implements Content {
-    FORMULA,NUMBER,TEXT,EMPTY
+
+    /**
+     *
+     */
+    FORMULA,
+
+    /**
+     *
+     */
+    NUMBER,
+
+    /**
+     *
+     */
+    TEXT,
+
+    /**
+     *
+     */
+    EMPTY
 }
