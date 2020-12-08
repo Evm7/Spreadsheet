@@ -10,21 +10,23 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Class used to execute the Shunting Yard Algorithm and evaluate its grammar.
  *
  * @author estev
  */
 public class Parser {
 
     /**
-     *
+     * Empty Constructor
      */
     public Parser() {
     }
 
     /**
+     * Computes the Shunting Yard algorithm for a list of tokens.
      *
-     * @param tokens
-     * @return
+     * @param tokens tokenized directly from the formula inputed by the user
+     * @return list of tokens sorted depending on Shunting Yard Algorithm
      */
     public LinkedList<Tokenizer.Token> shuntingYard(LinkedList<Tokenizer.Token> tokens) {
         LinkedList<Tokenizer.Token> queue = new LinkedList<Tokenizer.Token>();  // for values
@@ -49,7 +51,7 @@ public class Parser {
                     stack.add(token);
                 } else {
                     topStack = stack.getLast();
-                    while ((topStack != null) && isOperator(topStack) && ((topStack.precedence > token.precedence) || ((topStack.precedence == token.precedence) && leftAssociative(token))) && (topStack.token != TokenType.OPEN_BRACKET)) {
+                    while ((topStack != null) && isOperator(topStack) && ((topStack.precedence > token.precedence) || ((topStack.precedence == token.precedence) && isOperator(token))) && (topStack.token != TokenType.OPEN_BRACKET)) {
                         stack.remove(topStack);
                         queue.add(topStack);
                         System.out.println("\t\t\tAdding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
@@ -104,6 +106,11 @@ public class Parser {
         return queue;
     }
 
+    /**
+     * Used for debugging. Print lIst of tokens.
+     *
+     * @param tokens
+     */
     private void printList(LinkedList<Tokenizer.Token> tokens) {
         for (Tokenizer.Token tok : tokens) {
             System.out.print(tok.sequence + "   ");
@@ -112,6 +119,29 @@ public class Parser {
     }
 
     /**
+     * Evaluates the grammar of the list of tokens.
+     *
+     * Userd to check if the user has inputted a formula which does not have a
+     * Proper Mathematical format. i. Check that number of OPEN BRACKETS equals
+     * the number of CLOSED BRACKETS.
+     *
+     * ii. Check if the brackets are closed before being opened .
+     *
+     * iii. If there is a MINUS or PLUS token before a REAL VALUE and after OPEN
+     * BRACKETS or starting the formula, unify both tokens to REAL VALUE with
+     * the corresponding sign.
+     *
+     * iv. Check that COLON can only be used between CELL token.
+     *
+     * v. Check that operators can only be used between CELL , REAL NUMBER,
+     * brackets or FORMULA.
+     *
+     * vi. Check if formula is followed by OPEN BRACKET.
+     *
+     * vii. Before closing a bracket only a CELL, REAL NUMBER or CLOSE BRACKET
+     * accepted.
+     *
+     * viii. Before opening a bracket there can not be a CELL or REAL NUMBER.
      *
      * @param tokens
      * @return
@@ -151,10 +181,9 @@ public class Parser {
             }
             if (prev == null) {
                 continue;
-            }else if(curr.token == TokenType.EQUAL){
+            } else if (curr.token == TokenType.EQUAL) {
                 indexes.add(i);
-            }
-            // CHEKING STARTER GRAMMAR --> ONLY VALUES, OPEN BRACKETS OR +- REAL_NUMBER ALLOWED
+            } // CHEKING STARTER GRAMMAR --> ONLY VALUES, OPEN BRACKETS OR +- REAL_NUMBER ALLOWED
             else if (isStarter(prev)) {
                 if (!isValue(curr, false)) {
                     // USED WHEN WE WANT TO INPUT VALUE : -1 --> THEN VALUE IS ACTUALLY "-1", NO SUBTRACTION IS NEEDED
@@ -201,31 +230,62 @@ public class Parser {
         return tokens;
     }
 
+    /**
+     * Check wheteher a token can be the first character of a formula. Starters
+     * are tokens of type: Null, OpenBracket or Equal
+     *
+     * @param token
+     * @return boolean if it is an Starter
+     */
     private boolean isStarter(Tokenizer.Token token) {
         return ((token == null || token.token == TokenType.OPEN_BRACKET || token.token == TokenType.EQUAL));
     }
 
+    /**
+     * Check wheteher a token is an Operator Operators are tokens of type: +, -,
+     * *, /, ^
+     *
+     * @param token
+     * @return boolean if it is an Starter
+     */
     private boolean isOperator(Tokenizer.Token token) {
         return ((token.token == TokenType.PLUS) || (token.token == TokenType.MINUS) || (token.token == TokenType.MULT) || (token.token == TokenType.DIVIDE) || (token.token == TokenType.RAISED));
     }
 
+    /**
+     * Check wheteher a token can be the a Value. Values are tokens of type:
+     * Formula, Cell, Real Number, Range, ), (
+     *
+     * @param token
+     * @param before Sometimes it is considered value if
+     * @return boolean if checking NEXT Token after the Current (False) or
+     * Previous One (True)
+     */
     private boolean isValue(Tokenizer.Token token, boolean before) {
         return ((token.token == TokenType.FORMULA && !before) || (token.token == TokenType.CELL) || (token.token == TokenType.REAL_NUMBER) || (token.token == TokenType.RANGE) || (token.token == TokenType.OPEN_BRACKET && !before) || (token.token == TokenType.CLOSE_BRACKET && before));
     }
 
+    /**
+     * Check wheteher a token should be added to Stack or not. To Stack we add
+     * tokens of type: Operator, Semicolon or Colon
+     *
+     * @param token
+     * @return boolean if it can be placed to Stack
+     */
     private boolean toStack(Tokenizer.Token token) {
         TokenType type = token.token;
         return (isOperator(token) || type == TokenType.SEMICOLON || type == TokenType.COLON);
     }
 
+    /**
+     * Check wheteher a token should be added to Queue or not. To Queue we add
+     * tokens of type: Real Number, Cell or Range
+     *
+     * @param token
+     * @return boolean if it can be placed to Queue
+     */
     private boolean toQueue(Tokenizer.Token token) {
         TokenType type = token.token;
         return (type == TokenType.REAL_NUMBER || type == TokenType.CELL || type == TokenType.RANGE);
     }
-
-    private boolean leftAssociative(Tokenizer.Token token) {
-        TokenType type = token.token;
-        return isOperator(token);
-    }
-
 }

@@ -1,0 +1,10 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix} Project of the ARQSOFT Subject in the MATT Master's Degree.
+${licensePrefix} The goal of the project is to build some of the core components
+${licensePrefix} of a spreadsheet, which can be used through a textual interface.
+${licensePrefix} Developed by Esteve Valls Mascaró
+<#if licenseLast??>
+${licenseLast}
+</#if>

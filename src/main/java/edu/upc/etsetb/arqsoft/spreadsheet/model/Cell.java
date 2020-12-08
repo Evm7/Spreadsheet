@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -9,49 +10,58 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Class of the Cell of the SpreadSheet. Each Cell contains a uniq
+ * CellCoordinate and also a CellContent and CellValue.
  *
  * @author estev
  */
-public class CellImpl {
+public class Cell {
 
     /**
+     * Coordinate of the Cell in the SpreadSheet.
      */
     protected CellCoordinate coordinates;
 
     /**
-     *
+     * Content of the Cell.
      */
     protected CellContent cellcontent;
 
     /**
-     *
+     * Value of the Cell.
      */
     protected CellValue value;
 
     /**
+     * Constructor of the Cell when passing the column, row, and content.
+     * Initialize the Cell and computes all the updateCell use case.
      *
      * @param column
      * @param row
      * @param content
      */
-    public CellImpl(int column, int row, String content) {
+    public Cell(int column, int row, String content) {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, true);
     }
 
     /**
+     * Constructor of the Cell when passing the column, row, and content.
+     * Initialize the Cell and computes all the updateCell use case.
      *
      * @param column
      * @param row
      * @param content
-     * @param computeFormula
+     * @param computeFormula: when updating, used to prevent overflow.
      */
-    public CellImpl(int column, int row, String content, boolean computeFormula) {
+    public Cell(int column, int row, String content, boolean computeFormula) {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, computeFormula);
     }
 
     /**
+     * Update the Cell by passing a new content. Parses the Cell and creates the
+     * determined CellContent and CellValue
      *
      * @param content
      * @param computeFormula
@@ -76,6 +86,7 @@ public class CellImpl {
     }
 
     /**
+     * Checks wheteher the content refers to a Text, Number or Formula
      *
      * @param content
      * @return
@@ -97,7 +108,9 @@ public class CellImpl {
     }
 
     /**
-     *
+     * Compute value of the Cell without updating the Content. Used when
+     * Updating the whole SpreadSheet to recompute Values after modifying cells
+     * refered in formulas.
      */
     public void recomputeValue() {
         if (this.cellcontent instanceof ContentFormula) {
@@ -112,13 +125,14 @@ public class CellImpl {
     }
 
     /**
-     *
+     * Only used in Debugging Print a description of the Cell.
      */
     public void show() {
         System.out.println("Cell " + this.coordinates.print() + " is " + this.cellcontent.getType() + " with value " + printValue());
     }
 
     /**
+     * Returns the Value of the Cell as String
      *
      * @return
      */
@@ -127,6 +141,7 @@ public class CellImpl {
     }
 
     /**
+     * Returns the Type of Content of the Cell
      *
      * @return
      */
@@ -135,6 +150,7 @@ public class CellImpl {
     }
 
     /**
+     * Returns the content of the Cell.
      *
      * @return
      */

@@ -1,14 +1,17 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 
 /**
- *
+ * Class which implements Term Interface
+ * Used to Operate Terms explicit by the Content:
+ * Functions can be: +, -, *, /, ^
  * @author estev
  */
 public class OperatorImpl implements Term {
@@ -16,12 +19,12 @@ public class OperatorImpl implements Term {
     private int weight;
 
     /**
-     *
+     * Sign of the Operator: +, -, *, /, ^, ;
      */
     public String sign;
 
     /**
-     *
+     * Initialize the weight of the term depending on Operator, used to compute PostFixExpression
      * @param sign
      */
     public OperatorImpl(String sign) {
@@ -36,7 +39,7 @@ public class OperatorImpl implements Term {
     }
 
     /**
-     *
+     * Get the weight of the Term
      * @return
      */
     public int getWeight() {
@@ -44,7 +47,7 @@ public class OperatorImpl implements Term {
     }
 
     /**
-     *
+     * Print the sign
      * @return
      */
     public String print() {
@@ -52,9 +55,9 @@ public class OperatorImpl implements Term {
     }
 
     /**
-     *
-     * @param arg1
-     * @param arg2
+     * Compute the operation between the two Terms of both sides of the Operator
+     * @param arg1 left Term
+     * @param arg2 right Term
      * @return
      */
     public OperandNumber computeOperation(OperandNumber arg1, OperandNumber arg2) {
@@ -80,7 +83,7 @@ public class OperatorImpl implements Term {
     }
 
     /**
-     *
+     * Get the Type of Term
      * @return
      */
     @Override
@@ -89,7 +92,7 @@ public class OperatorImpl implements Term {
     }
     
     /**
-     *
+     * Get the Sign of the Operator. Same to print()
      * @return
      */
     @Override

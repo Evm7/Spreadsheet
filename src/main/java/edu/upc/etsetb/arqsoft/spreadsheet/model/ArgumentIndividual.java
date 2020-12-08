@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -10,22 +11,22 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- *
+ * SubClass of Argument which refers to an Individual Cell. Ex: A1
  * @author estev
  */
 public class ArgumentIndividual extends Argument {
 
     /**
-     *
+     *  Constructor of Argument Individual
      * @param arg
      */
     public ArgumentIndividual(String arg) {
-        super(arg);     // One the argument refers to individial cell --> ex: A1
+        super(arg);   
 
     }
 
     /**
-     *
+     * Obtains the Value of the Cell the Individual Argument is refering to
      * @return
      */
     @Override
@@ -35,18 +36,11 @@ public class ArgumentIndividual extends Argument {
         return new OperandNumber((Double) value.getValue());
     }
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String getSource() {
-        return arg;
-    }
 
     /**
+     * Obtains the coordinate of the cell refered by the Argument Individual
      *
-     * @return
+     * @return The list of CellCoordinates just contains one CellCoordinate
      */
     @Override
     public List<CellCoordinate> getReferences(){

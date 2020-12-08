@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -10,19 +11,19 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 import java.util.List;
 
 /**
- *
+ * Class of the Promedio Function which implements the Function Interface
  * @author estev
  */
 public class FunctionPromedio implements Function{
     
     /**
-     *
+     * Constructor of the Function PROMEDIO
      */
     public FunctionPromedio() {
     }
     
     /**
-     *
+     * Parses the Arguments of the Functions
      * @return
      * @throws NoParseableArguments
      */
@@ -32,7 +33,8 @@ public class FunctionPromedio implements Function{
     }
 
     /**
-     *
+     * Computes the Promedio Function to all the operands passed as parameters.
+     * Return the arithmetic mean of the Values of the operands passed as parameters.
      * @param args
      * @return
      */

@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 import jdk.nashorn.internal.runtime.ParserException;
 
 /**
+ * Class used to tokenize a formula depending on the TokenTypes.
  *
  * @author estev
  */
@@ -20,7 +22,8 @@ public class Tokenizer {
     private LinkedList<Token> tokens;
 
     /**
-     *
+     * Initialize the Lists that will contain the information of the token and
+     * the tokens itself.
      */
     public Tokenizer() {
         tokenInfos = new LinkedList<TokenInfo>();
@@ -29,16 +32,19 @@ public class Tokenizer {
     }
 
     /**
+     * Used to add a new Token parsed into tokenInfos
      *
-     * @param regex
-     * @param token
-     * @param precedence
+     * @param regex Part of the Formula Content that is used to create the Token
+     * @param token Type of the Token: TokenType Class
+     * @param precedence integer which indicates the weight or precedence to
+     * then compute the Shaunting Yard ALgorithm
      */
     public void add(String regex, TokenType token, int precedence) {
         tokenInfos.add(new TokenInfo(Pattern.compile("^(" + regex + ")"), token, precedence));
     }
 
     /**
+     * Tokenizes an string through matching regex
      *
      * @param str
      */
@@ -68,6 +74,7 @@ public class Tokenizer {
     }
 
     /**
+     * Used to Create a Token from its type, sequence and precedence.
      *
      * @param token
      * @param sequence
@@ -79,6 +86,7 @@ public class Tokenizer {
     }
 
     /**
+     * Get the List of tokens
      *
      * @return
      */
@@ -88,26 +96,28 @@ public class Tokenizer {
     }
 
     /**
-     *
+     * Internal Class of Token, contains the type of the token, the String
+     * sequence referenced by the token and its precedence.
      */
     public class Token {
 
         /**
-         *
+         * Type of the Token
          */
         public TokenType token;
 
         /**
-         *
+         * Reference of the String which creates the Token
          */
         public String sequence;
 
         /**
-         *
+         * Weight of the Token
          */
         public int precedence;
 
         /**
+         * Constructor of the Token
          *
          * @param token
          * @param sequence
@@ -121,6 +131,7 @@ public class Tokenizer {
         }
 
         /**
+         * Modifies the Sequence of the Token.
          *
          * @param sequence
          */
@@ -129,6 +140,7 @@ public class Tokenizer {
         }
 
         /**
+         * Updates the whole token
          *
          * @param token
          * @param sequence
@@ -141,6 +153,11 @@ public class Tokenizer {
         }
     }
 
+    /**
+     * Contains the information of the general tokens. Pattern that needs to
+     * follow a sequence to be considered a TokenType, and precedence assign to
+     * that TokenType.
+     */
     private class TokenInfo {
 
         public final Pattern regex;

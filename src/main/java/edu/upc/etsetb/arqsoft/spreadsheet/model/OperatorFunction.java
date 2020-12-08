@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -9,7 +10,9 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
 
 /**
- *
+ * Class which implements Term Interface
+ * Used to Operate a Function explicit by the Content:
+ * Reflects operators that implement Function Interface
  * @author estev
  */
 public class OperatorFunction implements Term {
@@ -18,7 +21,7 @@ public class OperatorFunction implements Term {
     private int num_terms;
 
     /**
-     *
+     * Constructor of the OperatorFunction which initialize the type of Function and Num of Terms
      * @param type
      * @param num_terms
      */
@@ -28,7 +31,7 @@ public class OperatorFunction implements Term {
     }
 
     /**
-     *
+     * Print the type of formula SUMA; MIN; MAX; PROMEDIO
      * @return
      */
     public String print() {
@@ -36,7 +39,7 @@ public class OperatorFunction implements Term {
     }
     
     /**
-     *
+     * Get the number of terms
      * @return
      */
     public int getTerms(){
@@ -44,7 +47,7 @@ public class OperatorFunction implements Term {
     }
 
     /**
-     *
+     * Compute the Function specified due to the OperandFunction 
      * @param arg
      * @return
      */
@@ -54,7 +57,7 @@ public class OperatorFunction implements Term {
     }
 
     /**
-     *
+     * Get the Type of Term
      * @return
      */
     public String isType() {
@@ -62,7 +65,7 @@ public class OperatorFunction implements Term {
     }
 
     /**
-     *
+     * Get the Value of the operand. Same as print:  SUMA; MIN; MAX; PROMEDIO
      * @return
      */
     @Override

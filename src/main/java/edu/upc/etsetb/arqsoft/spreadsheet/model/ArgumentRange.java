@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -11,20 +12,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * SubClass of Argument which refers to a Range of Cells. Ex: A1:B3
  *
  * @author estev
  */
 public class ArgumentRange extends Argument {
 
     /**
+     * Constructor of Argument Range
      *
      * @param arg
      */
     public ArgumentRange(String arg) {
-        super(arg);// When the argument refers to more than one cell in a range --> ex:  A1:B3
+        super(arg);
     }
 
     /**
+     * Obtains the values of the Range Argument is refering to. ArgumentRange
+     * can only be used inside a Function, therefore, return an OperandFunction.
      *
      * @return
      */
@@ -46,6 +51,14 @@ public class ArgumentRange extends Argument {
 
     }
 
+    /**
+     * Obtains the List of Coordintaes that are in the Range between the Top
+     * Cell Coordinate and the Bottom Cell Coordinate
+     *
+     * @param top
+     * @param bottom
+     * @return
+     */
     private List<CellCoordinate> inBetween(CellCoordinate top, CellCoordinate bottom) {
 
         List<CellCoordinate> coordinates = new LinkedList<>();
@@ -59,15 +72,7 @@ public class ArgumentRange extends Argument {
     }
 
     /**
-     *
-     * @return
-     */
-    @Override
-    public String getSource() {
-        return arg;
-    }
-
-    /**
+     * Obtains the coordinates of the cells refered by the Argument Range
      *
      * @return
      */

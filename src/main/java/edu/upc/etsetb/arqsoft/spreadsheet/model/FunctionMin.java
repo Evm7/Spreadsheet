@@ -1,28 +1,28 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 import java.util.List;
 
 /**
- *
+ * Class of the Min Function which implements the Function Interface
  * @author estev
  */
 public class FunctionMin implements Function{
     
     /**
-     *
+     * Constructor of the Function MIN
      */
     public FunctionMin() {
     }
     
     /**
-     *
+     * Parses the Arguments of the Functions
      * @return
      * @throws NoParseableArguments
      */
@@ -32,7 +32,8 @@ public class FunctionMin implements Function{
     }
 
     /**
-     *
+     * Computes the Min Function to all the operands passed as parameters.
+     * Return the Minimum Value of all the Values of the operands passed as parameters.
      * @param args
      * @return
      */

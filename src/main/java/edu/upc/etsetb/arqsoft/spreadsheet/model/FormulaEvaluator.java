@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -16,6 +17,8 @@ import java.util.List;
 import jdk.nashorn.internal.runtime.ParserException;
 
 /**
+ * Class used to Evaluate a Formula: tokenize, parse, evaluate grammar, compute
+ * Shanting Yard Algorithm and compute Post Fix Expression
  *
  * @author estev
  */
@@ -25,12 +28,15 @@ public class FormulaEvaluator {
     Parser parser_formula;
 
     /**
-     *
+     * Contains an static function with all the functions that implement
+     * Interface Function. Used to compute the Operator and Operand Function
      */
     public static HashMap<String, Function> functions;
 
     /**
-     *
+     * Constructor which initialize the TokenInfo to tokenize for the formula.
+     * Also initialize the Parser of the Formula and the Functions. Allow
+     * scalability to add new tokens or functions.
      */
     public FormulaEvaluator() {
         tokenizer = new Tokenizer();
@@ -62,9 +68,12 @@ public class FormulaEvaluator {
     }
 
     /**
+     * Parses a Formula by Tokenizing, evaluating the Grammar and creating the
+     * Post Fix Expression. Uses the help of the Parser.
      *
      * @param formula
-     * @return
+     * @return a List of Terms that are contained in the Formula as Post Fix
+     * expression
      */
     public List<Term> parseFormula(String formula) {
         formula = formula.replaceAll(" ", "");
@@ -95,6 +104,12 @@ public class FormulaEvaluator {
         return terms;
     }
 
+    /**
+     * Converts a List of Tokens to a list of Terms.
+     *
+     * @param tokens
+     * @return List of Terms
+     */
     private List<Term> convertTokenToOTerm(LinkedList<Tokenizer.Token> tokens) {
         List<Term> terms = new LinkedList<Term>();
         int facts = 0;
@@ -138,9 +153,11 @@ public class FormulaEvaluator {
     }
 
     /**
+     * Evaluate the Post Fix Expression to compute the value depending on a List
+     * of Terms passed as parameters.
      *
      * @param terms
-     * @return
+     * @return A value as Double
      */
     public Double evaluatePostFix(List<Term> terms) {
         System.out.println();
@@ -168,24 +185,25 @@ public class FormulaEvaluator {
             printList(queue);
         }
         Term result = queue.getLast();
-        if (result instanceof OperandNumber){
+        if (result instanceof OperandNumber) {
             return ((OperandNumber) result).getValue();
-        }else if (result instanceof ArgumentIndividual){
-            return ((ArgumentIndividual)result).getValue().getValue();
-        }else{
-            System.out.println("I dont know why we are here "+ result.print());
+        } else if (result instanceof ArgumentIndividual) {
+            return ((ArgumentIndividual) result).getValue().getValue();
+        } else {
+            System.out.println("Error " + result.print());
             return 0.0;
         }
 
     }
 
-    private void printList(LinkedList<Term> terms) {
-        for (Term term : terms) {
-            System.out.print(term.print() + "   ");
-        }
-        System.out.println();
-    }
-
+    /**
+     * Operates two Terms when the operator is a OperatorImpl
+     *
+     * @param first OperandNumber or ArgumentIndividual
+     * @param second OperandNumber or ArgumentIndividual
+     * @param operator OperatorImpl
+     * @return
+     */
     private OperandNumber operate(Term first, Term second, OperatorImpl operator) {
         System.out.println("\t\t\tWe are computing: " + first.print() + " " + operator.print() + " " + second.print());
         OperandNumber first_val;
@@ -204,6 +222,16 @@ public class FormulaEvaluator {
         return operator.computeOperation(first_val, second_val);
     }
 
+    /**
+     * Operates a list of Terms for when the operator is a Function. Creates an
+     * OperandFunction from the list of Terms and Operates the terms that
+     * Function contains in getTerms().
+     *
+     * @param queue List of Terms remaining in the queue of the PostFix
+     * Expression
+     * @param operator OperatorFunction
+     * @return New List of Terms that remains after the Operation.
+     */
     private LinkedList<Term> operateFunction(LinkedList<Term> queue, OperatorFunction operator) {
         System.out.println("\t\t\tWe are computing a formula " + operator.print());
         List<Term> operands = new LinkedList<Term>();
@@ -222,15 +250,43 @@ public class FormulaEvaluator {
 
     }
 
+    /**
+     * Check whether the Token is Operator or not. An Operator is considered
+     * when token is type: +, -, *, /, ^
+     *
+     * @param token
+     * @return True if Operator
+     */
     private boolean isOperator(Tokenizer.Token token) {
         return ((token.token == TokenType.PLUS) || (token.token == TokenType.MINUS) || (token.token == TokenType.MULT) || (token.token == TokenType.DIVIDE) || (token.token == TokenType.RAISED));
     }
 
+    /**
+     * Check whether the Token is Value or Not. A Token is considered a value
+     * when token is type: Formula, cell or real number
+     *
+     * @param token
+     * @return True if Operator
+     */
     private boolean isValue(Tokenizer.Token token) {
         return ((token.token == TokenType.FORMULA) || (token.token == TokenType.CELL) || (token.token == TokenType.REAL_NUMBER));
     }
 
     /**
+     * Used for debugging. Prints the list of terms.
+     *
+     * @param terms
+     */
+    private void printList(LinkedList<Term> terms) {
+        for (Term term : terms) {
+            System.out.print(term.print() + "   ");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Used for Debugging with different type of functions
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {

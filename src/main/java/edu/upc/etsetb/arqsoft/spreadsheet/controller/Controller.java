@@ -1,11 +1,12 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.model.CellImpl;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.DoubleDependenciesException;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
@@ -93,7 +94,7 @@ public class Controller {
             view.display("Value was not correctly introduced");
             return;
         }
-        CellImpl cell = getCell(column, row);
+        Cell cell = getCell(column, row);
         String value;
         if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
             value = this.view.askQuestion("Which value do you want to introduce in [" + position[0] + row + "] ?");
@@ -126,7 +127,7 @@ public class Controller {
      *
      * @return the cell or Null if does not exists.
      */
-    private CellImpl getCell(int column, int row) {
+    private Cell getCell(int column, int row) {
         return (this.model.checkEmpty(column, row - 1));
     }
 

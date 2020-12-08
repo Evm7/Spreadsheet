@@ -1,18 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 
 /**
- *
+ * Class which implements Term Interface
+ * Contains a list of Operands that are used to compute a Function
  * @author estev
  */
 public class OperandFunction implements Term {
@@ -20,7 +20,7 @@ public class OperandFunction implements Term {
     List<Term> operants;
 
     /**
-     *
+     * Constructor which creates a Term container for a List of Terms
      * @param operants
      */
     public OperandFunction(List<Term> operants) {
@@ -28,13 +28,20 @@ public class OperandFunction implements Term {
     }
 
     /**
-     *
+     * Get Value returns a List of OperandNumber
      * @return
      */
     public List<OperandNumber> getValue() {
         return flatten(this);
     }
 
+    /**
+     * Used to flatten the List of Terms into a List of Operand Numbers.
+     * If the List of Terms contains another OperandFunction, also Flatten 
+     * recursively the OperandFunction
+     * @param fun
+     * @return 
+     */
     private List<OperandNumber> flatten(OperandFunction fun) {
         List<OperandNumber> flatList = new ArrayList<OperandNumber>();
         for (Term op : fun.operants) {
@@ -52,7 +59,7 @@ public class OperandFunction implements Term {
     }
 
     /**
-     *
+     * gets as String the List of terms. For debugging use.
      * @return
      */
     public String print() {
@@ -64,7 +71,7 @@ public class OperandFunction implements Term {
     }
 
     /**
-     *
+     * Return the OperandFunction type.
      * @return
      */
     @Override

@@ -1,25 +1,39 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 
 /**
+ * Super Class implementing the Value InterFace
  *
  * @author estev
  */
-class CellValue implements Value{
+class CellValue implements Value {
 
+    /**
+     * Constructor empty.
+     */
+    public CellValue() {
+    }
+
+    /**
+     * Get the Value of the Cell
+     *
+     * @return
+     */
     public Object getValue() {
         return "";
     }
 
-    public CellValue() {
-    }
-
+    /**
+     * Returns the value as String.
+     * @return 
+     */
     public String print() {
         return "";
     }

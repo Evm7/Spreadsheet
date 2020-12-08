@@ -1,12 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 /**
- *
+ * Super Class containing the Content of the Cell. 
+ * Each Cell shall contain a Content.
+ * The Content of the Cell is exactly the input of the user to that cell.
  * @author estev
  */
 public class CellContent {
@@ -14,7 +17,7 @@ public class CellContent {
     private String content;
 
     /**
-     *
+     * Constructor of the class which contains the type_of_content and the String of the content inserted by the user
      * @param type_of_content
      * @param content
      */
@@ -24,7 +27,7 @@ public class CellContent {
     }
     
     /**
-     *
+     * Getter of the Type of Content
      * @return
      */
     public TypeOfContent getType(){
@@ -32,7 +35,7 @@ public class CellContent {
     }
     
     /**
-     *
+     * Getter of the Content
      * @return
      */
     public String getContent(){

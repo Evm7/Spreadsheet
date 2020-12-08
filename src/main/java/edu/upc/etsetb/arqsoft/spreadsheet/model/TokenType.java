@@ -1,93 +1,94 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 /**
- *
+ * Class that contains all the possible Types of Tokens
  * @author estev
  */
 public enum TokenType {
 
     /**
-     *
+     * When found: SUMA, MAX, MIN, PROMEDIO
      */
     FORMULA,
 
     /**
-     *
+     * When found: (
      */
     OPEN_BRACKET,
 
     /**
-     *
+     * When found: )
      */
     CLOSE_BRACKET,
 
     /**
-     *
+     * When found:  +
      */
     PLUS,
 
     /**
-     *
+     * When found: -
      */
     MINUS,
 
     /**
-     *
+     * When found: *
      */
     MULT,
 
     /**
-     *
+     * When found: /
      */
     DIVIDE,
 
     /**
-     *
+     * When found: ^
      */
     RAISED,
 
     /**
-     *
+     * When found any number
      */
     REAL_NUMBER,
 
     /**
-     *
+     * When found: CHARNUMBER --> A1
      */
     CELL,
 
     /**
-     *
+     * When found: " "
      */
     WHITE_SPACE,
 
     /**
-     *
+     * When found: =
      */
     EQUAL,
 
     /**
-     *
+     * When found: ;
      */
     SEMICOLON,
 
     /**
-     *
+     * When found two cells --> A1:A2
      */
     RANGE,
 
     /**
-     *
+     * When found: ":"
      */
     COLON;
 
     /**
-     *
+     * Assign the representation of the Token Type, used for Debugging.
      * @return
      */
     @Override

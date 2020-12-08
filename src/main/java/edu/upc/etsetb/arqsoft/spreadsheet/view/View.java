@@ -5,7 +5,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.view;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.model.CellImpl;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import java.util.Scanner;
 
@@ -93,7 +93,7 @@ public class View {
      *
      * @param cell: cell to print its value.
      */
-    private void printCell(CellImpl cell) {
+    private void printCell(Cell cell) {
         System.out.print(cell.printValue());
     }
 
@@ -147,7 +147,7 @@ public class View {
         int[] max = sheet.getMaxLength();
         int max_col = max[0];
         int max_row = max[1];
-        CellImpl cell;
+        Cell cell;
         for (int i = 0; i < max_col; i++) {
             for (int j = 0; j < max_row; j++) {
                 cell = sheet.getCell(i, j);

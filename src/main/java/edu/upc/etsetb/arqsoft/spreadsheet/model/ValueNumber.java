@@ -1,11 +1,14 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 /**
+ * Contains the Value of a Cell which is explicitly a Number. Used for Formula
+ * and Number Contents.
  *
  * @author estev
  */
@@ -14,14 +17,16 @@ public class ValueNumber extends CellValue {
     private Double value;
 
     /**
+     * Constructor that initialize a Value of Number if the content is Number
      *
      * @param content
      */
     public ValueNumber(ContentNumber content) {
         this.value = Double.parseDouble(content.getContent());
     }
-    
+
     /**
+     * Constructor that initialize a Value of Number if the content is Formula
      *
      * @param content
      */
@@ -30,6 +35,7 @@ public class ValueNumber extends CellValue {
     }
 
     /**
+     * Get the value as Double
      *
      * @return
      */
@@ -39,6 +45,7 @@ public class ValueNumber extends CellValue {
     }
 
     /**
+     * Stablish a precise value
      *
      * @param value
      */
@@ -47,6 +54,7 @@ public class ValueNumber extends CellValue {
     }
 
     /**
+     * Gets the String representation of the value
      *
      * @return
      */

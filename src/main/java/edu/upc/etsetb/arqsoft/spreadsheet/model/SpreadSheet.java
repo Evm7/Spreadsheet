@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -10,8 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,7 +28,7 @@ public class SpreadSheet {
     /**
      *
      */
-    public static CellImpl[][] spreadsheet;   // [row][column]
+    public static Cell[][] spreadsheet;   // [row][column]
     private int max_column;
     private int max_row;
 
@@ -73,15 +72,15 @@ public class SpreadSheet {
      * @param row
      * @return
      */
-    public CellImpl getCell(int column, int row) {
+    public Cell getCell(int column, int row) {
         return this.spreadsheet[row][column];
     }
 
     private void initializeSpreadSheet(int length) {
-        this.spreadsheet = new CellImpl[length][length];
+        this.spreadsheet = new Cell[length][length];
         for (int row = 0; row < length; row++) {
             for (int column = 0; column < length; column++) {
-                this.spreadsheet[row][column] = new CellImpl(column, row + 1, "");
+                this.spreadsheet[row][column] = new Cell(column, row + 1, "");
             }
         }
         this.max_row = length;
@@ -96,15 +95,15 @@ public class SpreadSheet {
      * @return
      * @throws DoubleDependenciesException
      */
-    public CellImpl createCell(int column, int row, String content) throws DoubleDependenciesException {
+    public Cell createCell(int column, int row, String content) throws DoubleDependenciesException {
         complete_cells(column, row);
-        CellImpl cell = new CellImpl(column, row, content);
+        Cell cell = new Cell(column, row, content);
         addCell(cell, column, row - 1);
         return cell;
     }
 
-    private void addCell(CellImpl cell, int column, int row) throws DoubleDependenciesException {
-        CellImpl previous = checkEmpty(column, row);
+    private void addCell(Cell cell, int column, int row) throws DoubleDependenciesException {
+        Cell previous = checkEmpty(column, row);
         if (previous != null && (previous.getType_of_content() == TypeOfContent.FORMULA)) {
             this.references.remove(previous.coordinates);
         }
@@ -126,9 +125,9 @@ public class SpreadSheet {
      * @param raw
      * @return
      */
-    public CellImpl checkEmpty(int column, int raw) {
+    public Cell checkEmpty(int column, int raw) {
         try {
-            CellImpl cell = this.spreadsheet[column][raw];
+            Cell cell = this.spreadsheet[column][raw];
             return cell;
         } catch (ArrayIndexOutOfBoundsException ex) {
             return null;
@@ -137,22 +136,22 @@ public class SpreadSheet {
 
     private void complete_cells(int num_column, int num_row) {
         if ((this.max_column < num_column) || (this.max_row < num_row)) {
-            CellImpl[][] copy = this.spreadsheet.clone();
+            Cell[][] copy = this.spreadsheet.clone();
             int new_size_column = Math.max(num_column+1, this.max_column);
             int new_size_row = Math.max(num_row, this.max_row);
 
-            this.spreadsheet = new CellImpl[new_size_row][new_size_column];
+            this.spreadsheet = new Cell[new_size_row][new_size_column];
             for (int row = 0; row < new_size_row; row++) {
                 for (int column = 0; column < new_size_column; column++) {
                     if (this.max_column > column) {
                         if (this.max_row > row) {
                             this.spreadsheet[row][column] = copy[row][column];
                         } else {
-                            this.spreadsheet[row][column] = new CellImpl(column, row, "");
+                            this.spreadsheet[row][column] = new Cell(column, row, "");
 
                         }
                     } else {
-                        this.spreadsheet[row][column] = new CellImpl(column, row, "");
+                        this.spreadsheet[row][column] = new Cell(column, row, "");
                     }
                 }
             }
@@ -166,18 +165,18 @@ public class SpreadSheet {
      * @param file
      */
     public void importSpreadSheet(File file) {
-        List<CellImpl[]> imported = importer.importSpreadSheet(file);
+        List<Cell[]> imported = importer.importSpreadSheet(file);
         int[] dim = importer.getDimensions();
         this.max_column = dim[0];
         this.max_row = dim[1];
-        this.spreadsheet = new CellImpl[max_column][max_row];
+        this.spreadsheet = new Cell[max_column][max_row];
         for (int row = 0; row < max_row; row++) {
-            CellImpl[] row_cells = imported.get(row);
+            Cell[] row_cells = imported.get(row);
             for (int column = 0; column < max_column; column++) {
                 if (this.max_column <= row_cells.length) {
                     this.spreadsheet[row][column] = row_cells[column];
                 } else {
-                    this.spreadsheet[row][column] = new CellImpl(column, row, "");
+                    this.spreadsheet[row][column] = new Cell(column, row, "");
                 }
             }
         }
@@ -191,7 +190,7 @@ public class SpreadSheet {
         exporter.exportSpreadSheet(file, this.spreadsheet);
     }
 
-    private void addToMap(CellImpl cell) {
+    private void addToMap(Cell cell) {
         if (cell.cellcontent instanceof ContentFormula) {
             List<Argument> arguments = (((ContentFormula) cell.cellcontent).getArguments());
             List<CellCoordinate> references_cell = new ArrayList<>();
@@ -203,7 +202,7 @@ public class SpreadSheet {
         }
     }
 
-    private void updateSpreadSheet(CellImpl edited) throws DoubleDependenciesException {
+    private void updateSpreadSheet(Cell edited) throws DoubleDependenciesException {
         if (just_updated.contains(edited.coordinates)) {
             throw new DoubleDependenciesException("Error when updating, cell " + edited.coordinates.print() + " depends on itself.");
         }
@@ -213,7 +212,7 @@ public class SpreadSheet {
             List<CellCoordinate> value = entry.getValue();
             if (value.contains(edited.coordinates)) {
                 CellCoordinate key = entry.getKey();
-                CellImpl updated = this.spreadsheet[key.getRow()][key.getColumn()];
+                Cell updated = this.spreadsheet[key.getRow()][key.getColumn()];
                 updated.recomputeValue();
                 updateSpreadSheet(updated);
             }

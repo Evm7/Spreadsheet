@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Project of the ARQSOFT Subject in the MATT Master's Degree.
+ *  The goal of the project is to build some of the core components
+ *  of a spreadsheet, which can be used through a textual interface.
+ *  Developed by Esteve Valls Mascaró
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
+ * Class which manages the importing of the SpreadSheet
  *
  * @author estev
  */
@@ -21,7 +23,7 @@ public class Importer {
     int max_col;
 
     /**
-     *
+     * Empty constructor for the Importer.
      */
     public Importer() {
         max_row = 0;
@@ -29,7 +31,7 @@ public class Importer {
     }
 
     /**
-     *
+     * Get the Max Columns and Max Rows of the File SpreadSheet
      * @return
      */
     public int[] getDimensions() {
@@ -40,12 +42,15 @@ public class Importer {
     }
 
     /**
-     *
-     * @param file
+     * Function used to import  SpreadSheet from a file passed as a parameter.
+     * Format used is C2v.
+     * Iterates through all the lines and transform each to List of Cells (as Row) 
+     * Then groups and creates file.
+     * @param file from which the SpreadSheet is imported
      * @return
      */
-    public List<CellImpl[]> importSpreadSheet(File file) {
-        ArrayList<CellImpl[]> spreadsheet = new ArrayList<>();
+    public List<Cell[]> importSpreadSheet(File file) {
+        ArrayList<Cell[]> spreadsheet = new ArrayList<>();
         max_row = 0;
         max_col = 0;
         int row = 0;
@@ -62,25 +67,39 @@ public class Importer {
             e.printStackTrace();
         }
         max_row = row;
-       
+
         return spreadsheet;
     }
 
-    private CellImpl[] createRowfromLine(String line, int row) {
+    /**
+     * Function that creates  a List of Cell (row of SpreadSheet) from a file line
+     * 
+     * @param line of the File
+     * @param row position of the Row in the SpreadSheet
+     * @return the Row of the SpreadSheet containing the several Cells in the specific Row
+     */
+    private Cell[] createRowfromLine(String line, int row) {
         String[] cells_content = line.split(";");
-        CellImpl[] cells_row = new CellImpl[cells_content.length];
+        Cell[] cells_row = new Cell[cells_content.length];
         int column = 0;
         for (String cell_content : cells_content) {
-            cells_row[column] = createRowfromContent(column, row, cell_content);
+            cells_row[column] = createCellfromContent(column, row, cell_content);
             column++;
         }
         max_col = Math.max(column, max_col);
         return cells_row;
     }
 
-    private CellImpl createRowfromContent(int column, int row, String content) {
+    /**
+     * Creates a Cell from the Content in S2V format.
+     * @param column x position of the Cell
+     * @param row y position of the Cell
+     * @param content which is imported from the file for that specific cell
+     * @return 
+     */
+    private Cell createCellfromContent(int column, int row, String content) {
         content.replaceAll(",", ";");
-        return new CellImpl(column, row, content, false);
+        return new Cell(column, row, content, false);
     }
 
 }
