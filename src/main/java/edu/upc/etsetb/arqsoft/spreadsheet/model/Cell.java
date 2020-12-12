@@ -6,6 +6,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class Cell {
     /**
      * Value of the Cell.
      */
-    protected CellValue value;
+    public CellValue value;
 
     /**
      * Constructor of the Cell when passing the column, row, and content.
@@ -156,5 +157,14 @@ public class Cell {
      */
     public String getContent() {
         return this.cellcontent.getContent();
+    }
+    
+    /**
+     * Returns the value of the Cell.
+     *
+     * @return
+     */
+    public Value getValue() {
+        return this.value;
     }
 }

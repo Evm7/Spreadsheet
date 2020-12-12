@@ -6,11 +6,11 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.model.Argument;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.OperandFunction;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.OperandNumber;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.OperatorFunction;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.OperatorImpl;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandFunction;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandNumber;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperatorFunction;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperatorImpl;
 
 /**
  *

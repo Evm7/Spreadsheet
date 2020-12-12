@@ -4,10 +4,12 @@
  *  of a spreadsheet, which can be used through a textual interface.
  *  Developed by Esteve Valls Mascaró
  */
-package edu.upc.etsetb.arqsoft.spreadsheet.model;
+package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.CellCoordinate;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.CellValue;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

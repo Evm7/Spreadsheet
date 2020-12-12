@@ -13,7 +13,7 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
  *
  * @author estev
  */
-class CellValue implements Value {
+public class CellValue implements Value {
 
     /**
      * Constructor empty.

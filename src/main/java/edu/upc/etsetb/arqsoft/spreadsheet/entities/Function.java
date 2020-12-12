@@ -7,8 +7,8 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.model.NoParseableArguments;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.OperandFunction;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.OperandNumber;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandFunction;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandNumber;
 
 /**
  * Interface with Function of the SpreadSheet

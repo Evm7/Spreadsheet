@@ -6,6 +6,8 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.FormulaEvaluator;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import java.util.ArrayList;
 import java.util.List;

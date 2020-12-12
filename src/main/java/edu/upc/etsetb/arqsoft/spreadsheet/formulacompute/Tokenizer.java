@@ -4,7 +4,7 @@
  *  of a spreadsheet, which can be used through a textual interface.
  *  Developed by Esteve Valls Mascaró
  */
-package edu.upc.etsetb.arqsoft.spreadsheet.model;
+package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
 import java.util.LinkedList;
 import java.util.regex.Matcher;
