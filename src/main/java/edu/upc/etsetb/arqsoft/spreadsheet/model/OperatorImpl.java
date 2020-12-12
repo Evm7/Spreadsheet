@@ -7,11 +7,12 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 
 /**
- * Class which implements Term Interface
- * Used to Operate Terms explicit by the Content:
- * Functions can be: +, -, *, /, ^
+ * Class which implements Term Interface Used to Operate Terms explicit by the
+ * Content: Functions can be: +, -, *, /, ^
+ *
  * @author estev
  */
 public class OperatorImpl implements Term {
@@ -24,7 +25,9 @@ public class OperatorImpl implements Term {
     public String sign;
 
     /**
-     * Initialize the weight of the term depending on Operator, used to compute PostFixExpression
+     * Initialize the weight of the term depending on Operator, used to compute
+     * PostFixExpression
+     *
      * @param sign
      */
     public OperatorImpl(String sign) {
@@ -40,6 +43,7 @@ public class OperatorImpl implements Term {
 
     /**
      * Get the weight of the Term
+     *
      * @return
      */
     public int getWeight() {
@@ -48,6 +52,7 @@ public class OperatorImpl implements Term {
 
     /**
      * Print the sign
+     *
      * @return
      */
     public String print() {
@@ -56,6 +61,7 @@ public class OperatorImpl implements Term {
 
     /**
      * Compute the operation between the two Terms of both sides of the Operator
+     *
      * @param arg1 left Term
      * @param arg2 right Term
      * @return
@@ -77,26 +83,33 @@ public class OperatorImpl implements Term {
             value = Math.pow((Double) (arg1.getValue()), (Double) (arg2.getValue()));
 
         } else if (this.sign.equals(";")) {
-            value =  arg1.getValue();
+            value = arg1.getValue();
         }
         return new OperandNumber(value);
     }
 
     /**
      * Get the Type of Term
+     *
      * @return
      */
     @Override
     public String isType() {
         return "OperatorImpl";
     }
-    
+
     /**
      * Get the Sign of the Operator. Same to print()
+     *
      * @return
      */
     @Override
     public String getValue() {
         return sign;
+    }
+
+    @Override
+    public void acceptVisitor(Visitor v) {
+        v.visitOperatorImpl(this);
     }
 }

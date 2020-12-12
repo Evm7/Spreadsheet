@@ -8,11 +8,12 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 
 /**
- * Class which implements Term Interface
- * Used to Operate a Function explicit by the Content:
- * Reflects operators that implement Function Interface
+ * Class which implements Term Interface Used to Operate a Function explicit by
+ * the Content: Reflects operators that implement Function Interface
+ *
  * @author estev
  */
 public class OperatorFunction implements Term {
@@ -21,7 +22,9 @@ public class OperatorFunction implements Term {
     private int num_terms;
 
     /**
-     * Constructor of the OperatorFunction which initialize the type of Function and Num of Terms
+     * Constructor of the OperatorFunction which initialize the type of Function
+     * and Num of Terms
+     *
      * @param type
      * @param num_terms
      */
@@ -32,22 +35,25 @@ public class OperatorFunction implements Term {
 
     /**
      * Print the type of formula SUMA; MIN; MAX; PROMEDIO
+     *
      * @return
      */
     public String print() {
         return formula;
     }
-    
+
     /**
      * Get the number of terms
+     *
      * @return
      */
-    public int getTerms(){
+    public int getTerms() {
         return num_terms;
     }
 
     /**
-     * Compute the Function specified due to the OperandFunction 
+     * Compute the Function specified due to the OperandFunction
+     *
      * @param arg
      * @return
      */
@@ -58,6 +64,7 @@ public class OperatorFunction implements Term {
 
     /**
      * Get the Type of Term
+     *
      * @return
      */
     public String isType() {
@@ -65,11 +72,17 @@ public class OperatorFunction implements Term {
     }
 
     /**
-     * Get the Value of the operand. Same as print:  SUMA; MIN; MAX; PROMEDIO
+     * Get the Value of the operand. Same as print: SUMA; MIN; MAX; PROMEDIO
+     *
      * @return
      */
     @Override
     public String getValue() {
         return formula;
+    }
+
+    @Override
+    public void acceptVisitor(Visitor v) {
+        v.visitOperatorFunction(this);
     }
 }

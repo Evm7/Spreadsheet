@@ -7,6 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 
 /**
  * Class which implements Term Interface
@@ -51,5 +52,10 @@ public class OperandNumber implements Term {
     @Override
     public String isType() {
         return "OperandNumber";
+    }
+    
+        @Override
+    public void acceptVisitor(Visitor v) {
+        v.visitOperandNumber(this);
     }
 }

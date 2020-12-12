@@ -7,6 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +94,11 @@ public class Argument implements Term {
         int column = coordinate.getColumn();
         int row = coordinate.getRow();
         return (SpreadSheet.spreadsheet[row - 1][column]).value;
+    }
+
+    @Override
+    public void acceptVisitor(Visitor v) {
+        v.visitArgument(this);
     }
 
 }

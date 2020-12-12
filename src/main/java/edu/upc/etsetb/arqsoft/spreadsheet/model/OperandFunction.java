@@ -9,18 +9,21 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
 import java.util.ArrayList;
 import java.util.List;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 
 /**
- * Class which implements Term Interface
- * Contains a list of Operands that are used to compute a Function
+ * Class which implements Term Interface Contains a list of Operands that are
+ * used to compute a Function
+ *
  * @author estev
  */
 public class OperandFunction implements Term {
-
+    
     List<Term> operants;
 
     /**
      * Constructor which creates a Term container for a List of Terms
+     *
      * @param operants
      */
     public OperandFunction(List<Term> operants) {
@@ -29,6 +32,7 @@ public class OperandFunction implements Term {
 
     /**
      * Get Value returns a List of OperandNumber
+     *
      * @return
      */
     public List<OperandNumber> getValue() {
@@ -36,11 +40,12 @@ public class OperandFunction implements Term {
     }
 
     /**
-     * Used to flatten the List of Terms into a List of Operand Numbers.
-     * If the List of Terms contains another OperandFunction, also Flatten 
-     * recursively the OperandFunction
+     * Used to flatten the List of Terms into a List of Operand Numbers. If the
+     * List of Terms contains another OperandFunction, also Flatten recursively
+     * the OperandFunction
+     *
      * @param fun
-     * @return 
+     * @return
      */
     private List<OperandNumber> flatten(OperandFunction fun) {
         List<OperandNumber> flatList = new ArrayList<OperandNumber>();
@@ -49,9 +54,9 @@ public class OperandFunction implements Term {
                 flatList.add((OperandNumber) op);
             } else if (op instanceof ArgumentRange) {
                 flatList.addAll(flatten(((ArgumentRange) op).getValue()));
-            }else if (op instanceof ArgumentIndividual) {
+            } else if (op instanceof ArgumentIndividual) {
                 flatList.add(((ArgumentIndividual) op).getValue());
-            }else {
+            } else {
                 flatList.addAll(flatten((OperandFunction) op));
             }
         }
@@ -60,6 +65,7 @@ public class OperandFunction implements Term {
 
     /**
      * gets as String the List of terms. For debugging use.
+     *
      * @return
      */
     public String print() {
@@ -72,11 +78,17 @@ public class OperandFunction implements Term {
 
     /**
      * Return the OperandFunction type.
+     *
      * @return
      */
     @Override
     public String isType() {
         return "OperandFunction";
     }
-
+    
+    @Override
+    public void acceptVisitor(Visitor v) {
+        v.visitOperandFunction(this);
+    }
+    
 }

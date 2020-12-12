@@ -35,4 +35,10 @@ public interface Term {
      * @return
      */
     Object getValue();
+    
+    /**
+     * Visitor pattern
+     * @param v
+     */
+    void acceptVisitor(Visitor v);
 }

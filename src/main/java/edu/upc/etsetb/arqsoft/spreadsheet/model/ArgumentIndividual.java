@@ -6,27 +6,31 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 /**
  * SubClass of Argument which refers to an Individual Cell. Ex: A1
+ *
  * @author estev
  */
 public class ArgumentIndividual extends Argument {
 
     /**
-     *  Constructor of Argument Individual
+     * Constructor of Argument Individual
+     *
      * @param arg
      */
     public ArgumentIndividual(String arg) {
-        super(arg);   
+        super(arg);
 
     }
 
     /**
      * Obtains the Value of the Cell the Individual Argument is refering to
+     *
      * @return
      */
     @Override
@@ -36,17 +40,21 @@ public class ArgumentIndividual extends Argument {
         return new OperandNumber((Double) value.getValue());
     }
 
-
     /**
      * Obtains the coordinate of the cell refered by the Argument Individual
      *
      * @return The list of CellCoordinates just contains one CellCoordinate
      */
     @Override
-    public List<CellCoordinate> getReferences(){
+    public List<CellCoordinate> getReferences() {
         List<CellCoordinate> references = new ArrayList<>();
         references.add(parsePlace(this.arg));
         return references;
+    }
+
+    @Override
+    public void acceptVisitor(Visitor v) {
+        v.visitArgument(this);
     }
 
 }

@@ -7,6 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,5 +86,10 @@ public class ArgumentRange extends Argument {
         CellCoordinate coordinateBottom = super.parsePlace(terms[1]);
 
         return inBetween(coordinateTop, coordinateBottom);
+    }
+    
+        @Override
+    public void acceptVisitor(Visitor v) {
+        v.visitArgument(this);
     }
 }
