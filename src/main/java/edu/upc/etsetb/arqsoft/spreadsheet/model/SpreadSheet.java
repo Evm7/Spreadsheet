@@ -40,8 +40,7 @@ public class SpreadSheet {
     public static FormulaEvaluator parser = new FormulaEvaluator();
     private final Importer importer;
     private final Exporter exporter;
-    private Map<CellCoordinate, List<CellCoordinate>> references;
-    private List<CellCoordinate> just_updated;
+
 
     /**
      *
@@ -53,8 +52,7 @@ public class SpreadSheet {
         initializeSpreadSheet(length);
         importer = new Importer();
         exporter = new Exporter();
-        references = new HashMap<>();
-        just_updated = new ArrayList<>();
+
     }
 
     /**
@@ -106,21 +104,7 @@ public class SpreadSheet {
 
     private void addCell(Cell cell, int column, int row) throws DoubleDependenciesException {
         Cell previous = checkEmpty(column, row);
-        if (previous != null && (previous.getType_of_content() == TypeOfContent.FORMULA)) {
-            this.references.remove(previous.coordinates);
-        }
         this.spreadsheet[row][column] = cell;
-        /*
-        addToMap(cell);
-        just_updated = new ArrayList<>();
-
-        try {
-            updateSpreadSheet(cell);
-        } catch (DoubleDependenciesException ex) {
-            addCell(previous, column, row);
-            throw ex;
-        }
-        */
     }
 
     /**
@@ -192,35 +176,6 @@ public class SpreadSheet {
      */
     public void exportSpreadSheet(File file) {
         exporter.exportSpreadSheet(file, this.spreadsheet);
-    }
-
-    private void addToMap(Cell cell) {
-        if (cell.cellcontent instanceof ContentFormula) {
-            List<Argument> arguments = (((ContentFormula) cell.cellcontent).getArguments());
-            List<CellCoordinate> references_cell = new ArrayList<>();
-            for (Argument argument : arguments) {
-                references_cell.addAll(argument.getReferences());
-            }
-
-            references.put(cell.coordinates, references_cell);
-        }
-    }
-
-    private void updateSpreadSheet(Cell edited) throws DoubleDependenciesException {
-        if (just_updated.contains(edited.coordinates)) {
-            throw new DoubleDependenciesException("Error when updating, cell " + edited.coordinates.print() + " depends on itself.");
-        }
-        just_updated.add(edited.coordinates);
-        // Check if any formula depend on that edited cell
-        for (Map.Entry<CellCoordinate, List<CellCoordinate>> entry : references.entrySet()) {
-            List<CellCoordinate> value = entry.getValue();
-            if (value.contains(edited.coordinates)) {
-                CellCoordinate key = entry.getKey();
-                Cell updated = this.spreadsheet[key.getRow()][key.getColumn()];
-                updated.recomputeValue();
-                updateSpreadSheet(updated);
-            }
-        }
     }
 
     private void doubleDependencies(CellCoordinate toUpdate) {
