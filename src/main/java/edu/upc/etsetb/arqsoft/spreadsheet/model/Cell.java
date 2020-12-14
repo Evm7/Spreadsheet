@@ -7,8 +7,12 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Class of the Cell of the SpreadSheet. Each Cell contains a uniq
@@ -16,7 +20,7 @@ import java.util.Map;
  *
  * @author estev
  */
-public class Cell {
+public class Cell extends Observable implements Observer {
 
     /**
      * Coordinate of the Cell in the SpreadSheet.
@@ -72,6 +76,7 @@ public class Cell {
         if (typeOfContent == TypeOfContent.FORMULA) {
             this.cellcontent = new ContentFormula(content);
             if (computeFormula) {
+                addAllObservers();
                 this.value = new ValueNumber((ContentFormula) this.cellcontent);
             }
         } else if (typeOfContent == TypeOfContent.NUMBER) {
@@ -84,6 +89,9 @@ public class Cell {
             this.cellcontent = new CellContent(TypeOfContent.EMPTY, "");
             this.value = new CellValue();
         }
+
+        setChanged();
+        notifyObservers();
     }
 
     /**
@@ -123,6 +131,9 @@ public class Cell {
         } else {
             this.value = new CellValue();
         }
+
+        setChanged();
+        notifyObservers();
     }
 
     /**
@@ -158,7 +169,7 @@ public class Cell {
     public String getContent() {
         return this.cellcontent.getContent();
     }
-    
+
     /**
      * Returns the value of the Cell.
      *
@@ -166,5 +177,35 @@ public class Cell {
      */
     public Value getValue() {
         return this.value;
+    }
+
+    /**
+     * Used to add all as Observers all cells that this Cell depends on.
+     * Only called when adding a new content Formula to the Cell
+     */
+    public void addAllObservers() {
+        List<Argument> arguments = ((ContentFormula) (this.cellcontent)).getArguments();
+        List<CellCoordinate> references_cell = new ArrayList<>();
+        for (Argument argument : arguments) {
+            references_cell.addAll(argument.getReferences());
+        }
+        for (CellCoordinate coord : references_cell) {
+            int column = coord.getColumn();
+            int row = coord.getRow();
+            (SpreadSheet.spreadsheet[row - 1][column]).addObserver(this);
+        }
+    }
+
+    /**
+     * Overriding upadte method from Observer Interface.
+     * 
+     * Called when the Cell Arguments of a Observable Formula are updated.
+     * @param o
+     * @param o1 
+     */
+    @Override
+    public void update(java.util.Observable o, Object o1) {
+        System.out.println("UPDATE OBSERVER: called over object "+ o1);
+        recomputeValue();
     }
 }

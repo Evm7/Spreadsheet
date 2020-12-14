@@ -110,6 +110,7 @@ public class SpreadSheet {
             this.references.remove(previous.coordinates);
         }
         this.spreadsheet[row][column] = cell;
+        /*
         addToMap(cell);
         just_updated = new ArrayList<>();
 
@@ -119,6 +120,7 @@ public class SpreadSheet {
             addCell(previous, column, row);
             throw ex;
         }
+        */
     }
 
     /**
@@ -127,9 +129,9 @@ public class SpreadSheet {
      * @param raw
      * @return
      */
-    public Cell checkEmpty(int column, int raw) {
+    public Cell checkEmpty(int column, int row) {
         try {
-            Cell cell = this.spreadsheet[column][raw];
+            Cell cell = this.spreadsheet[row][column];
             return cell;
         } catch (ArrayIndexOutOfBoundsException ex) {
             return null;
