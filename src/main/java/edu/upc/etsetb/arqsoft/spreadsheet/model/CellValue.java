@@ -27,7 +27,7 @@ public class CellValue implements Value {
      * @return
      */
     public Object getValue() {
-        return "";
+        return 0.0;
     }
 
     /**

@@ -25,7 +25,7 @@ public class Controller {
 
     private SpreadSheet model;
     private View view;
-    private int max_length;
+    private int max_length=0;
     private String name;
 
     /**
@@ -36,6 +36,74 @@ public class Controller {
     public Controller() {
         this.view = new View();
         name = this.view.askQuestion("What is your name?");
+        model = new SpreadSheet(name, max_length);
+    }
+
+    /**
+     * Loop iteration that shows the menu whereas user does not exit.
+     */
+    public void run() {
+        String option;
+        do {
+            option = showMenu();
+        } while (option != "Exit");
+    }
+
+    /**
+     * Ask through view class the next step for the user, and calls the model to
+     * do the answered step.
+     */
+    private String showMenu() {
+        String option = this.view.askQuestion("What do you want to do now?:\n\t1-Read commands from File (command RF)\n\t2-Create a New Spreadsheet(command C)\n\t3-Edit Cell (command E)\n\t4-Load a Spreadsheet from a file (command L)\n\t5-Save the Spreadsheet to a file (command S)\n\t6-Exit (command Exit)");
+        switch (option) {
+            case "1":
+            case "RF":
+                readCommandsFromFile();
+                break;
+            case "2":
+            case "C":
+                createNewSpreadSheet();
+                break;
+            case "3":
+            case "E":
+                addContent();
+                break;
+            case "4":
+            case "L":
+                importSpreadSheet();
+                break;
+            case "5":
+            case "S":
+                exportSpreadSheet();
+                break;
+            case "6":
+            case "Exit":
+                exit();
+                return "Exit";
+            default:
+                // code block
+                this.view.printTabloid(model);
+                this.view.display("Error in menu option selection. Please try again.");
+                return "0";
+        }
+        this.view.printTabloid(model);
+
+        return option;
+    }
+
+    /**
+     * This command shall instruct the program to read the rest of the commands
+     * from a text file instead the keyboard. This command shall have one
+     * argument: the text file pathname.
+     */
+    private void readCommandsFromFile() {
+
+    }
+
+    /**
+     * This command shall create a new empty SpreadSheet
+     */
+    private void createNewSpreadSheet() {
         max_length = Integer.parseInt(this.view.askQuestion("How many cells to start?"));
         model = new SpreadSheet(name, max_length);
         this.view.display("Let's start, " + name + " :");
@@ -43,61 +111,26 @@ public class Controller {
     }
 
     /**
-     * Loop iteration that shows the menu whereas user does not exit.
-     */
-    public void run() {
-        int option;
-        do {
-            option = showMenu();
-        } while (option != 4);
-    }
-
-    /**
-     * Ask through view class the next step for the user, and calls the model to
-     * do the answered step.
-     */
-    private int showMenu() {
-        String option = this.view.askQuestion("What do you want to do now?:\n\t1-Edit Cell\n\t2-Import Spreadsheet\n\t3-Export Spreadsheet\n\t4-Exit");
-        switch (option) {
-            case "1":
-                addValue();
-                this.view.printTabloid(model);
-                break;
-            case "2":
-                importSpreadSheet();
-                break;
-            case "3":
-                exportSpreadSheet();
-                break;
-            case "4":
-                exit();
-                break;
-            default:
-                // code block
-                this.view.display("Error in menu option selection. Please try again.");
-                return 0;
-        }
-        return Integer.parseInt(option);
-    }
-
-    /**
      * Edits the value of a cell or insert if none. Asks for the coordinates and
      * content of the cell and calls model to compute the internal next steps.
      */
-    private void addValue() {
-        String[] position = this.view.askQuestion("Where do you want your value? (column-raw)").split("-");
+    private void addContent() {
+        if (this.max_length ==0){
+            createNewSpreadSheet();
+        }
+        String[] position = this.view.askQuestion("Where do you want your Content? (column-raw)").split("-");
         int column, row;
         try {
             column = getIntColumn(position[0]);
             row = Integer.parseInt(position[1]);
         } catch (IndexOutOfBoundsException ex) {
-            view.display("Value was not correctly introduced");
+            view.display("Content was not correctly introduced");
             return;
         }
         Cell cell = getCell(column, row);
         String value;
         if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
-            value = this.view.askQuestion("Which value do you want to introduce in [" + position[0] + row + "] ?");
+            value = this.view.askQuestion("Which content do you want to introduce in [" + position[0] + row + "] ?");
             try {
                 model.createCell(column, row, value);
             } catch (DoubleDependenciesException ex) {
@@ -108,9 +141,9 @@ public class Controller {
             if (value.equals("n")) {
                 return;
             } else {
-                value = this.view.askQuestion("Which value do you want to introduce?");
+                value = this.view.askQuestion("Which content do you want to introduce?");
                 try {
-                    model.createCell(column, row, value);
+                    model.editCell(column, row, value);
                 } catch (DoubleDependenciesException ex) {
                     this.view.display("Error: " + ex.getMessage());
                 }

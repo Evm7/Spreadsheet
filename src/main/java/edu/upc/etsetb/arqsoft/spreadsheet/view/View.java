@@ -94,7 +94,11 @@ public class View {
      * @param cell: cell to print its value.
      */
     private void printCell(Cell cell) {
-        System.out.print(cell.printValue());
+        if (cell == null) {
+            System.out.print("" + "\t");
+        } else {
+            System.out.print(cell.printValue() + "\t");
+        }
     }
 
     /**

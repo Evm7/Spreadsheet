@@ -77,6 +77,8 @@ public class Cell extends Observable implements Observer {
             if (computeFormula) {
                 addAllObservers();
                 this.value = new ValueNumber((ContentFormula) this.cellcontent);
+            }else{
+                this.value = new CellValue();
             }
         } else if (typeOfContent == TypeOfContent.NUMBER) {
             this.cellcontent = new ContentNumber(content);
@@ -148,7 +150,7 @@ public class Cell extends Observable implements Observer {
      * @return
      */
     public String printValue() {
-        return "" + value.getValue();
+        return value.print();
     }
 
     /**

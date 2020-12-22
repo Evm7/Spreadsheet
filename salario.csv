@@ -1,0 +1,5 @@
+DIAS;EUROS;TOTAL;;;
+3;12;=A2*B2;;;
+5;7.5;=A3*B3;;;
+;;=SUMA(C2,C3);;;
+;;=PROMEDIO(C2:C3);;;

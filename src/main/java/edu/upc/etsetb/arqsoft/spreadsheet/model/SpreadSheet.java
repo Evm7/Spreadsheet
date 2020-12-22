@@ -7,12 +7,8 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.FormulaEvaluator;
-import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -40,7 +36,6 @@ public class SpreadSheet {
     public static FormulaEvaluator parser = new FormulaEvaluator();
     private final Importer importer;
     private final Exporter exporter;
-
 
     /**
      *
@@ -97,20 +92,19 @@ public class SpreadSheet {
      */
     public Cell createCell(int column, int row, String content) throws DoubleDependenciesException {
         complete_cells(column, row);
-        Cell cell = new Cell(column, row, content);
-        addCell(cell, column, row - 1);
-        return cell;
+        return editCell(column, row - 1, content);
     }
 
-    private void addCell(Cell cell, int column, int row) throws DoubleDependenciesException {
-        Cell previous = checkEmpty(column, row);
-        this.spreadsheet[row][column] = cell;
+    public Cell editCell(int column, int row, String content) throws DoubleDependenciesException {
+        Cell cell = getCell(column, row);
+        cell.updateCell(content, true);
+        return cell;
     }
 
     /**
      *
      * @param column
-     * @param raw
+     * @param row
      * @return
      */
     public Cell checkEmpty(int column, int row) {
@@ -125,7 +119,7 @@ public class SpreadSheet {
     private void complete_cells(int num_column, int num_row) {
         if ((this.max_column < num_column) || (this.max_row < num_row)) {
             Cell[][] copy = this.spreadsheet.clone();
-            int new_size_column = Math.max(num_column+1, this.max_column);
+            int new_size_column = Math.max(num_column + 1, this.max_column);
             int new_size_row = Math.max(num_row, this.max_row);
 
             this.spreadsheet = new Cell[new_size_row][new_size_column];
@@ -161,7 +155,8 @@ public class SpreadSheet {
         for (int row = 0; row < max_row; row++) {
             Cell[] row_cells = imported.get(row);
             for (int column = 0; column < max_column; column++) {
-                if (this.max_column <= row_cells.length) {
+                if (column < row_cells.length) {
+                    System.out.println("Column : "+ column+ " row " + row+ " is " +  row_cells[column].getContent());
                     this.spreadsheet[row][column] = row_cells[column];
                 } else {
                     this.spreadsheet[row][column] = new Cell(column, row, "");
@@ -181,5 +176,5 @@ public class SpreadSheet {
     private void doubleDependencies(CellCoordinate toUpdate) {
 
     }
-    
+
 }
