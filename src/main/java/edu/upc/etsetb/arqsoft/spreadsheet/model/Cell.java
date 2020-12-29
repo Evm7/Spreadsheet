@@ -127,8 +127,11 @@ public class Cell extends Observable implements Observer {
      * Updating the whole SpreadSheet to recompute Values after modifying cells
      * refered in formulas.
      */
-    public void recomputeValue() throws CircularDependencies {
+    public void recomputeValue(boolean computeFormula) throws CircularDependencies {
         if (this.cellcontent instanceof ContentFormula) {
+            if (computeFormula){
+                addAllObservers();
+            }
             this.value = new ValueNumber((ContentFormula) this.cellcontent, this.coordinates);
         } else if (this.cellcontent instanceof ContentNumber) {
             this.value = new ValueNumber((ContentNumber) this.cellcontent);
@@ -146,7 +149,7 @@ public class Cell extends Observable implements Observer {
      * Only used in Debugging Print a description of the Cell.
      */
     public void show() {
-        System.out.println("Cell " + this.coordinates.print() + " is " + this.cellcontent.getType() + " with value " + printValue());
+        System.out.println("Cell " + this.coordinates.toString() + " is " + this.cellcontent.getType() + " with value " + printValue());
     }
 
     @Override
@@ -160,7 +163,7 @@ public class Cell extends Observable implements Observer {
      * @return
      */
     public String printValue() {
-        return value.print();
+        return value.toString();
     }
 
     /**
@@ -227,7 +230,7 @@ public class Cell extends Observable implements Observer {
     public void update(java.util.Observable o, Object o1) {
         System.out.println("UPDATE OBSERVER: called over object " + o1);
         try {
-            recomputeValue();
+            recomputeValue(false);
         } catch (CircularDependencies ex) {
             System.out.println("Circular Dependencies Error: " + ex.getMessage());
         }

@@ -170,6 +170,16 @@ public class SpreadSheet {
                 }
             }
         }
+        updateSpreadSheet();
+    }
+    
+    private void updateSpreadSheet() throws CircularDependencies{
+        for (Cell[] cells : spreadsheet) {
+            for (Cell cell : cells) {
+                System.out.println(cell.toString());
+                cell.recomputeValue(true);
+            }
+        }
     }
 
     /**
@@ -179,9 +189,4 @@ public class SpreadSheet {
     public void exportSpreadSheet(File file) {
         exporter.exportSpreadSheet(file, this.spreadsheet);
     }
-
-    private void doubleDependencies(CellCoordinate toUpdate) {
-
-    }
-
 }

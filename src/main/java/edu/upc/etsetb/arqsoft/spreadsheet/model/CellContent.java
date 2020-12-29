@@ -7,17 +7,21 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 /**
- * Super Class containing the Content of the Cell. 
- * Each Cell shall contain a Content.
- * The Content of the Cell is exactly the input of the user to that cell.
+ * Super Class containing the Content of the Cell. Each Cell shall contain a
+ * Content. The Content of the Cell is exactly the input of the user to that
+ * cell.
+ *
  * @author estev
  */
 public class CellContent {
+
     private TypeOfContent type_of_content;
     private String content;
 
     /**
-     * Constructor of the class which contains the type_of_content and the String of the content inserted by the user
+     * Constructor of the class which contains the type_of_content and the
+     * String of the content inserted by the user
+     *
      * @param type_of_content
      * @param content
      */
@@ -26,20 +30,27 @@ public class CellContent {
         this.content = content;
     }
     
+    @Override
+    public String toString(){
+        return this.content;
+    }
+
     /**
      * Getter of the Type of Content
+     *
      * @return
      */
-    public TypeOfContent getType(){
+    public TypeOfContent getType() {
         return type_of_content;
     }
-    
+
     /**
      * Getter of the Content
+     *
      * @return
      */
-    public String getContent(){
+    public String getContent() {
         return content;
     }
-        
+
 }

@@ -51,7 +51,7 @@ public class ValueText extends CellValue {
      * @return
      */
     @Override
-    public String print() {
+    public String toString() {
         return this.value;
     }
 }

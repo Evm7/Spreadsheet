@@ -34,7 +34,8 @@ public class CellValue implements Value {
      * Returns the value as String.
      * @return 
      */
-    public String print() {
+    @Override
+    public String toString() {
         return "";
     }
 

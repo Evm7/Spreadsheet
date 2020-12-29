@@ -102,9 +102,9 @@ public class Importer {
      * @return 
      */
     private Cell createCellfromContent(int column, int row, String content) throws GrammarErrorFormula {
-        content.replaceAll(",", ";");
+        content = content.replaceAll(",", ";");
         try {
-            return new Cell(column, row, content, false);
+            return new Cell(column, row+1, content, false);
         } catch (CircularDependencies ex) {
             System.out.println("Importer ERROR Error should never ocurr here: "+ex.getMessage());
             return null;

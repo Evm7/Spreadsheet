@@ -35,6 +35,11 @@ public class ContentFormula extends CellContent {
         this.terms = new FormulaEvaluator().parseFormula(formula);
     }
 
+    @Override
+    public String toString() {
+        return "ContentFormula{" + "formula=" + formula + '}';
+    }
+
     /**
      * Getter of the List of Terms contained in the Formula as Post Fix
      * Expression.

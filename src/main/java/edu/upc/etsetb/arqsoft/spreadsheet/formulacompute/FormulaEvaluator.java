@@ -95,17 +95,17 @@ public class FormulaEvaluator {
         LinkedList<Tokenizer.Token> tokens = evaluateGrammar(tokenizer.getTokens());
         tokens.pop(); // To remove the initial equal
         for (Tokenizer.Token tok : tokens) {
-            //System.out.print(" [ " + tok.token + " ] ");
+            //System.out.toString(" [ " + tok.token + " ] ");
         }
 
         //System.out.println("[INFO] .. Creating PostFix (Shaunting Yard Algorithm)");
         tokens = shuntingYard(tokens);
         for (Tokenizer.Token tok : tokens) {
-            //System.out.print(tok.sequence + "   ");
+            //System.out.toString(tok.sequence + "   ");
         }
         List<Term> terms = convertTokenToOTerm(tokens);
         for (Term tok : terms) {
-            //System.out.print(tok.print() + "   ");
+            //System.out.toString(tok.toString() + "   ");
         }
         return terms;
     }
@@ -228,9 +228,9 @@ public class FormulaEvaluator {
                     break;
                 }
             }
-            // System.out.print("\t[INFO] Stack List is:   ");
+            // System.out.toString("\t[INFO] Stack List is:   ");
             // printList(stack);
-            // System.out.print("\t[INFO] Queue List is:   ");
+            // System.out.toString("\t[INFO] Queue List is:   ");
             // printList(queue);
 
         }
@@ -437,7 +437,7 @@ public class FormulaEvaluator {
         // System.out.println("[INFO] .. Evaluating PostFix"); // =A1+B1*C1-PROMEDIO(A1:C1) //A	B	C	D	E	 1| 	5.0	3.0	3.65	
         VisitorFormula visitor = new VisitorFormula();
         for (Term term : formula) {
-            // System.out.println("\t[evaluatePostFix] using term " + term.print());
+            // System.out.println("\t[evaluatePostFix] using term " + term.toString());
             term.acceptVisitor(visitor);
         }
         return visitor.getResult();
@@ -449,11 +449,11 @@ public class FormulaEvaluator {
     public void circularDependencies(CellCoordinate cellcoordinate) throws CircularDependencies {
         HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
         //System.out.println("___________CIRCULAR DEPENDENCIES___________");
-        map.put(cellcoordinate.print(), null);
-        map.put(cellcoordinate.print(), circularDependency(cellcoordinate, map));
+        map.put(cellcoordinate.toString(), null);
+        map.put(cellcoordinate.toString(), circularDependency(cellcoordinate, map));
         //System.out.println(map);
         //System.out.println("___________TREE SEARCH___________");
-        TreeSearch search = new TreeSearch(map, cellcoordinate.print());
+        TreeSearch search = new TreeSearch(map, cellcoordinate.toString());
     }
 
     /**
@@ -489,13 +489,13 @@ public class FormulaEvaluator {
                     }
 
                     for (CellCoordinate coord : arg.getReferences()) {
-                        //System.out.println("Depends on " + coord.print());
-                        args.add(coord.print());
-                        if (!map.containsKey(coord.print())) {
+                        //System.out.println("Depends on " + coord.toString());
+                        args.add(coord.toString());
+                        if (!map.containsKey(coord.toString())) {
 
                             ArrayList<String> array = circularDependency(coord, map);
                             if (array != null) {
-                                map.put(coord.print(), array);
+                                map.put(coord.toString(), array);
 
                             }
                         }

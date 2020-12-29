@@ -71,7 +71,8 @@ public class CellCoordinate {
      *
      * @return
      */
-    public String print() {
+    @Override
+    public String toString() {
         return "[" + new String(column) + "," + row + "]";
     }
 
