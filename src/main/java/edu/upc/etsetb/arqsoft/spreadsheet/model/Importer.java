@@ -7,6 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class Importer {
      * @param file from which the SpreadSheet is imported
      * @return
      */
-    public List<Cell[]> importSpreadSheet(File file) {
+    public List<Cell[]> importSpreadSheet(File file) throws GrammarErrorFormula {
         ArrayList<Cell[]> spreadsheet = new ArrayList<>();
         max_row = 0;
         max_col = 0;
@@ -81,7 +82,7 @@ public class Importer {
      * @param row position of the Row in the SpreadSheet
      * @return the Row of the SpreadSheet containing the several Cells in the specific Row
      */
-    private Cell[] createRowfromLine(String line, int row) {
+    private Cell[] createRowfromLine(String line, int row) throws GrammarErrorFormula {
         String[] cells_content = line.split(";");
         Cell[] cells_row = new Cell[cells_content.length];
         int column = 0;
@@ -100,7 +101,7 @@ public class Importer {
      * @param content which is imported from the file for that specific cell
      * @return 
      */
-    private Cell createCellfromContent(int column, int row, String content) {
+    private Cell createCellfromContent(int column, int row, String content) throws GrammarErrorFormula {
         content.replaceAll(",", ";");
         try {
             return new Cell(column, row, content, false);

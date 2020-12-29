@@ -7,6 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.FormulaEvaluator;
 import java.io.File;
 import java.util.List;
@@ -43,7 +44,7 @@ public class SpreadSheet {
      * @param name
      * @param length
      */
-    public SpreadSheet(String name, int length) throws CircularDependencies {
+    public SpreadSheet(String name, int length) throws CircularDependencies, GrammarErrorFormula {
         this.name = name;
         initializeSpreadSheet(length);
         importer = new Importer();
@@ -72,7 +73,7 @@ public class SpreadSheet {
         return this.spreadsheet[row][column];
     }
 
-    private void initializeSpreadSheet(int length) throws CircularDependencies {
+    private void initializeSpreadSheet(int length) throws CircularDependencies, GrammarErrorFormula {
         this.spreadsheet = new Cell[length][length];
         for (int row = 0; row < length; row++) {
             for (int column = 0; column < length; column++) {
@@ -91,7 +92,7 @@ public class SpreadSheet {
      * @return
      * @throws CircularDependencies
      */
-    public Cell createCell(int column, int row, String content) throws CircularDependencies {
+    public Cell createCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         complete_cells(column, row);
         return editCell(column, row, content);
     }
@@ -101,7 +102,7 @@ public class SpreadSheet {
 
     }
 
-    public Cell editCell(int column, int row, String content) throws CircularDependencies {
+    public Cell editCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         Cell cell = getCell(column, row-1);
         cell.updateCell(content, true);
         return cell;
@@ -122,7 +123,7 @@ public class SpreadSheet {
         }
     }
 
-    private void complete_cells(int num_column, int num_row) throws CircularDependencies {
+    private void complete_cells(int num_column, int num_row) throws CircularDependencies, GrammarErrorFormula {
         if ((this.max_column < num_column) || (this.max_row < num_row)) {
             Cell[][] copy = this.spreadsheet.clone();
             int new_size_column = Math.max(num_column + 1, this.max_column);
@@ -152,7 +153,7 @@ public class SpreadSheet {
      *
      * @param file
      */
-    public void importSpreadSheet(File file) throws CircularDependencies {
+    public void importSpreadSheet(File file) throws CircularDependencies, GrammarErrorFormula {
         List<Cell[]> imported = importer.importSpreadSheet(file);
         int[] dim = importer.getDimensions();
         this.max_column = dim[0];

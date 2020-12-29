@@ -9,6 +9,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.CellCoordinate;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.ContentFormula;
@@ -80,7 +81,7 @@ public class FormulaEvaluator {
      * @return a List of Terms that are contained in the Formula as Post Fix
      * expression
      */
-    public List<Term> parseFormula(String formula) {
+    public List<Term> parseFormula(String formula) throws GrammarErrorFormula {
         formula = formula.replaceAll(" ", "");
         //formula = formula.replaceFirst("=", "");
         try {
@@ -269,7 +270,7 @@ public class FormulaEvaluator {
      * @param tokens
      * @return
      */
-    public LinkedList<Tokenizer.Token> evaluateGrammar(LinkedList<Tokenizer.Token> tokens) {
+    public LinkedList<Tokenizer.Token> evaluateGrammar(LinkedList<Tokenizer.Token> tokens) throws GrammarErrorFormula {
         Tokenizer.Token prev = null;
         Tokenizer.Token curr = null;
         Tokenizer.Token next = null;
@@ -287,7 +288,7 @@ public class FormulaEvaluator {
             } else if (curr.token == TokenType.CLOSE_BRACKET) {
                 number_brackets -= 1;
                 if (number_brackets < 0) {
-                    System.out.println("Error! Can not close brackets before opening");
+                    throw new GrammarErrorFormula("Error! Can not close brackets before opening");
                 }
             }
 
@@ -297,9 +298,10 @@ public class FormulaEvaluator {
                     number_brackets -= 1;
                 }
                 if (number_brackets != 0) {
-                    System.out.println("Error! Different number of opens - close brackets");
+                    throw new GrammarErrorFormula("Error! Different number of opens - close brackets");
+
                 } else if (!isValue(next, true)) {
-                    System.out.println("Error! Function can not end up with operator " + next.sequence);
+                    throw new GrammarErrorFormula("Error! Formula can not end up with operator " + next.sequence);
                 }
             }
             if (prev == null) {
@@ -318,7 +320,7 @@ public class FormulaEvaluator {
                     else if (curr.token == TokenType.PLUS && next.token == TokenType.REAL_NUMBER) {
                         indexes.add(i);
                     } else {
-                        System.out.println("ERROR! Can not place " + curr.sequence + " at starting of a function");
+                        throw new GrammarErrorFormula("ERROR! Can not place " + curr.sequence + " at starting of a function");
 
                     }
                 }
@@ -326,7 +328,7 @@ public class FormulaEvaluator {
             } // COLON ONLY USED BETWEEN CELLS
             else if (curr.token == TokenType.COLON) {
                 if ((prev.token != TokenType.CELL) || (next.token != TokenType.CELL)) {
-                    System.out.println("ERROR! Colon can only be located between cell values");
+                    throw new GrammarErrorFormula("ERROR! Colon can only be located between cell values");
                 } else {
                     indexes.add(i - 1);
                     indexes.add(i);
@@ -335,15 +337,15 @@ public class FormulaEvaluator {
                 }
             } // OPERATORS ONLY BETWEEN VALUES
             else if (isOperator(curr) && !(isValue(prev, true) && isValue(next, false))) {
-                System.out.println("ERROR! Operator " + curr.sequence + " should be placed between values");
+                throw new GrammarErrorFormula("ERROR! Operator " + curr.sequence + " should be placed between values");
             } // FORMULA MUST BE FOLLOWED 
             else if (curr.token == TokenType.FORMULA && (next.token != TokenType.OPEN_BRACKET)) {
-                System.out.println("ERROR! Formula " + curr.sequence + " needs to be followed by brackets, not " + next.sequence);
+                throw new GrammarErrorFormula("ERROR! Formula " + curr.sequence + " needs to be followed by brackets, not " + next.sequence);
             } // BEFORE CLOSING BRACKET, ONLY VALUE ACCEPTED
             else if (next.token == TokenType.CLOSE_BRACKET && !isValue(curr, true)) {
-                System.out.println("Error! There can not be a " + next.sequence + " just before closing a bracket");
+                throw new GrammarErrorFormula("Error! There can not be a " + next.sequence + " just before closing a bracket");
             } else if (next.token == TokenType.OPEN_BRACKET && isValue(curr, true)) {
-                System.out.println("Error! Before Opening a bracket there can not be a " + curr.sequence);
+                throw new GrammarErrorFormula("Error! Before Opening a bracket there can not be a " + curr.sequence);
 
             }
         }
@@ -539,7 +541,11 @@ public class FormulaEvaluator {
 
         //CellImpl cell = new CellImpl(0, 0, easy_2);
         FormulaEvaluator parser = new FormulaEvaluator();
-        List<Term> terms = parser.parseFormula(difficult);
+        try {
+            List<Term> terms = parser.parseFormula(difficult);
+        } catch (GrammarErrorFormula ex) {
+            System.out.print(ex.getMessage());
+        }
     }
 
 }

@@ -9,6 +9,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.FormulaEvaluator;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class ContentFormula extends CellContent {
      *
      * @param formula
      */
-    public ContentFormula(String formula) {
+    public ContentFormula(String formula) throws GrammarErrorFormula {
         super(TypeOfContent.FORMULA, formula);
         this.formula = formula;
         this.terms = new FormulaEvaluator().parseFormula(formula);

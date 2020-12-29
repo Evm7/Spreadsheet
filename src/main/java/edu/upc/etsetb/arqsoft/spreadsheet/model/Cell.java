@@ -8,6 +8,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class Cell extends Observable implements Observer {
      * @param row
      * @param content
      */
-    public Cell(int column, int row, String content) throws CircularDependencies {
+    public Cell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, true);
     }
@@ -61,7 +62,7 @@ public class Cell extends Observable implements Observer {
      * @param content
      * @param computeFormula: when updating, used to prevent overflow.
      */
-    public Cell(int column, int row, String content, boolean computeFormula) throws CircularDependencies {
+    public Cell(int column, int row, String content, boolean computeFormula) throws CircularDependencies, GrammarErrorFormula {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, computeFormula);
     }
@@ -73,7 +74,7 @@ public class Cell extends Observable implements Observer {
      * @param content
      * @param computeFormula
      */
-    public void updateCell(String content, boolean computeFormula) throws CircularDependencies {
+    public void updateCell(String content, boolean computeFormula) throws CircularDependencies, GrammarErrorFormula {
         TypeOfContent typeOfContent = parseContent(content);
         if (typeOfContent == TypeOfContent.FORMULA) {
             this.cellcontent = new ContentFormula(content);

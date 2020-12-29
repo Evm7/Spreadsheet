@@ -8,6 +8,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
@@ -41,6 +42,8 @@ public class Controller {
         try {
             model = new SpreadSheet(name, max_length);
         } catch (CircularDependencies ex) {
+            this.view.display("Error should never ocurr here: " + ex.getMessage());
+        } catch (GrammarErrorFormula ex) {
             this.view.display("Error should never ocurr here: " + ex.getMessage());
         }
     }
@@ -115,6 +118,8 @@ public class Controller {
             model = new SpreadSheet(name, max_length);
         } catch (CircularDependencies ex) {
             this.view.display("Error should never ocurr here: " + ex.getMessage());
+        } catch (GrammarErrorFormula ex) {
+            this.view.display("Error should never ocurr here: " + ex.getMessage());
         }
         this.view.display("Let's start, " + name + " :");
     }
@@ -145,6 +150,9 @@ public class Controller {
             } catch (CircularDependencies ex) {
                 this.view.display("Error: " + ex.getMessage());
                 model.removeCell(column, row);
+            } catch (GrammarErrorFormula ex) {
+                this.view.display("Error: " + ex.getMessage());
+                model.removeCell(column, row);
             }
         } else {
             value = this.view.askQuestion("Do you want to modify cell in [" + position[0] + row + "] : " + cell.printValue() + "? [y/n]");
@@ -160,7 +168,11 @@ public class Controller {
                         model.editCell(column, row, cell.getStringContent());
                     } catch (CircularDependencies ex1) {
                         this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
+                    } catch (GrammarErrorFormula ex1) {
+                        this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
                     }
+                } catch (GrammarErrorFormula ex) {
+                    this.view.display("Error: " + ex.getMessage());
                 }
             }
         }
@@ -271,6 +283,8 @@ public class Controller {
             this.model.importSpreadSheet(file);
         } catch (CircularDependencies ex) {
             this.view.display("Circular dependencies sError in the import: " + ex.getMessage());
+        } catch (GrammarErrorFormula ex) {
+            this.view.display("Grammar Error in a formula when import: " + ex.getMessage());
         }
     }
 
