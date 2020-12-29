@@ -7,12 +7,14 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.DoubleDependenciesException;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Contrains the Controller of the program which manages the View and the Model.
@@ -25,7 +27,7 @@ public class Controller {
 
     private SpreadSheet model;
     private View view;
-    private int max_length=0;
+    private int max_length = 0;
     private String name;
 
     /**
@@ -36,7 +38,11 @@ public class Controller {
     public Controller() {
         this.view = new View();
         name = this.view.askQuestion("What is your name?");
-        model = new SpreadSheet(name, max_length);
+        try {
+            model = new SpreadSheet(name, max_length);
+        } catch (CircularDependencies ex) {
+            this.view.display("Error should never ocurr here: " + ex.getMessage());
+        }
     }
 
     /**
@@ -105,9 +111,12 @@ public class Controller {
      */
     private void createNewSpreadSheet() {
         max_length = Integer.parseInt(this.view.askQuestion("How many cells to start?"));
-        model = new SpreadSheet(name, max_length);
+        try {
+            model = new SpreadSheet(name, max_length);
+        } catch (CircularDependencies ex) {
+            this.view.display("Error should never ocurr here: " + ex.getMessage());
+        }
         this.view.display("Let's start, " + name + " :");
-        this.view.printTabloid(model);
     }
 
     /**
@@ -115,7 +124,7 @@ public class Controller {
      * content of the cell and calls model to compute the internal next steps.
      */
     private void addContent() {
-        if (this.max_length ==0){
+        if (this.max_length == 0) {
             createNewSpreadSheet();
         }
         String[] position = this.view.askQuestion("Where do you want your Content? (column-raw)").split("-");
@@ -133,8 +142,9 @@ public class Controller {
             value = this.view.askQuestion("Which content do you want to introduce in [" + position[0] + row + "] ?");
             try {
                 model.createCell(column, row, value);
-            } catch (DoubleDependenciesException ex) {
+            } catch (CircularDependencies ex) {
                 this.view.display("Error: " + ex.getMessage());
+                model.removeCell(column, row);
             }
         } else {
             value = this.view.askQuestion("Do you want to modify cell in [" + position[0] + row + "] : " + cell.printValue() + "? [y/n]");
@@ -144,8 +154,13 @@ public class Controller {
                 value = this.view.askQuestion("Which content do you want to introduce?");
                 try {
                     model.editCell(column, row, value);
-                } catch (DoubleDependenciesException ex) {
+                } catch (CircularDependencies ex) {
                     this.view.display("Error: " + ex.getMessage());
+                    try {
+                        model.editCell(column, row, cell.getStringContent());
+                    } catch (CircularDependencies ex1) {
+                        this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
+                    }
                 }
             }
         }
@@ -252,7 +267,11 @@ public class Controller {
                 this.view.display("Path introduced does not exist. Can not import file.");
             }
         } while (true);
-        this.model.importSpreadSheet(file);
+        try {
+            this.model.importSpreadSheet(file);
+        } catch (CircularDependencies ex) {
+            this.view.display("Circular dependencies sError in the import: " + ex.getMessage());
+        }
     }
 
     /**

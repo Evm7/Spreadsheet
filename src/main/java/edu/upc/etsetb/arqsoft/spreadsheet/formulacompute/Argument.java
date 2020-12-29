@@ -84,8 +84,8 @@ public class Argument implements Term {
     protected CellCoordinate parsePlace(String parsing) {
         String row = parsing.replaceAll("[a-zA-Z]", "");
         String col = parsing.replaceAll("[0-9]", "");
-        CellCoordinate coordiante = new CellCoordinate(col.toCharArray(), Integer.parseInt(row));
-        return coordiante;
+        CellCoordinate coordinate = new CellCoordinate(col.toCharArray(), Integer.parseInt(row));
+        return coordinate;
     }
 
     /**

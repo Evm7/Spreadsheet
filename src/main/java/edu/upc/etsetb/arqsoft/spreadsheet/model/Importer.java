@@ -6,11 +6,14 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class which manages the importing of the SpreadSheet
@@ -99,7 +102,12 @@ public class Importer {
      */
     private Cell createCellfromContent(int column, int row, String content) {
         content.replaceAll(",", ";");
-        return new Cell(column, row, content, false);
+        try {
+            return new Cell(column, row, content, false);
+        } catch (CircularDependencies ex) {
+            System.out.println("Importer ERROR Error should never ocurr here: "+ex.getMessage());
+            return null;
+        }
     }
 
 }

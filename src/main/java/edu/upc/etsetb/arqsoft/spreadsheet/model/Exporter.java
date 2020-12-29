@@ -54,7 +54,7 @@ public class Exporter {
         String line = "";
         String content;
         for (Cell cellImpl : row) {
-            content = cellImpl.getContent();
+            content = cellImpl.getStringContent();
             content = content.replaceAll(";", ",");
             line = line + content + ";";
         }

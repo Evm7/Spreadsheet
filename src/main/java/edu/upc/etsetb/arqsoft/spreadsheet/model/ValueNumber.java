@@ -6,6 +6,8 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+
 /**
  * Contains the Value of a Cell which is explicitly a Number. Used for Formula
  * and Number Contents.
@@ -30,7 +32,8 @@ public class ValueNumber extends CellValue {
      *
      * @param content
      */
-    public ValueNumber(ContentFormula content) {
+    public ValueNumber(ContentFormula content, CellCoordinate coordinate) throws CircularDependencies {
+        SpreadSheet.parser.circularDependencies(coordinate);
         this.value = SpreadSheet.parser.evaluatePostFix(content.getTerms());
     }
 

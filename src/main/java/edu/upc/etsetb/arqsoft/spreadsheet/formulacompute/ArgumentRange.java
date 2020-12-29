@@ -63,10 +63,14 @@ public class ArgumentRange extends Argument {
      * @return
      */
     private List<CellCoordinate> inBetween(CellCoordinate top, CellCoordinate bottom) {
+        int columnMin = Math.min(bottom.getColumn(), top.getColumn());
+        int columnMax = Math.max(bottom.getColumn(), top.getColumn());
+        int rowMin = Math.min(bottom.getRow(), top.getRow());
+        int rowMax = Math.max(bottom.getRow(), top.getRow());
 
         List<CellCoordinate> coordinates = new LinkedList<>();
-        for (int i = bottom.getColumn(); i <= top.getColumn(); i++) {
-            for (int j = bottom.getRow(); j <= top.getRow(); j++) {
+        for (int i = columnMin; i <= columnMax; i++) {
+            for (int j = rowMin; j <= rowMax; j++) {
                 coordinates.add(new CellCoordinate(i, j));
             }
         }
@@ -89,8 +93,8 @@ public class ArgumentRange extends Argument {
 
         return inBetween(coordinateTop, coordinateBottom);
     }
-    
-        @Override
+
+    @Override
     public void acceptVisitor(Visitor v) {
         v.visitArgument(this);
     }

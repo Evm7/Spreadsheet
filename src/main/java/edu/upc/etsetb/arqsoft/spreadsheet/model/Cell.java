@@ -6,12 +6,15 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class of the Cell of the SpreadSheet. Each Cell contains a uniq
@@ -44,7 +47,7 @@ public class Cell extends Observable implements Observer {
      * @param row
      * @param content
      */
-    public Cell(int column, int row, String content) {
+    public Cell(int column, int row, String content) throws CircularDependencies {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, true);
     }
@@ -58,7 +61,7 @@ public class Cell extends Observable implements Observer {
      * @param content
      * @param computeFormula: when updating, used to prevent overflow.
      */
-    public Cell(int column, int row, String content, boolean computeFormula) {
+    public Cell(int column, int row, String content, boolean computeFormula) throws CircularDependencies {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, computeFormula);
     }
@@ -70,14 +73,15 @@ public class Cell extends Observable implements Observer {
      * @param content
      * @param computeFormula
      */
-    public void updateCell(String content, boolean computeFormula) {
+    public void updateCell(String content, boolean computeFormula) throws CircularDependencies {
         TypeOfContent typeOfContent = parseContent(content);
         if (typeOfContent == TypeOfContent.FORMULA) {
             this.cellcontent = new ContentFormula(content);
             if (computeFormula) {
+                this.value = new ValueNumber((ContentFormula) this.cellcontent, this.coordinates);
                 addAllObservers();
-                this.value = new ValueNumber((ContentFormula) this.cellcontent);
-            }else{
+
+            } else {
                 this.value = new CellValue();
             }
         } else if (typeOfContent == TypeOfContent.NUMBER) {
@@ -122,9 +126,9 @@ public class Cell extends Observable implements Observer {
      * Updating the whole SpreadSheet to recompute Values after modifying cells
      * refered in formulas.
      */
-    public void recomputeValue() {
+    public void recomputeValue() throws CircularDependencies {
         if (this.cellcontent instanceof ContentFormula) {
-            this.value = new ValueNumber((ContentFormula) this.cellcontent);
+            this.value = new ValueNumber((ContentFormula) this.cellcontent, this.coordinates);
         } else if (this.cellcontent instanceof ContentNumber) {
             this.value = new ValueNumber((ContentNumber) this.cellcontent);
         } else if (this.cellcontent instanceof ContentText) {
@@ -142,6 +146,11 @@ public class Cell extends Observable implements Observer {
      */
     public void show() {
         System.out.println("Cell " + this.coordinates.print() + " is " + this.cellcontent.getType() + " with value " + printValue());
+    }
+
+    @Override
+    public String toString() {
+        return "Cell{" + "coordinates=" + coordinates + ", cellcontent=" + cellcontent + ", value=" + value + '}';
     }
 
     /**
@@ -167,8 +176,12 @@ public class Cell extends Observable implements Observer {
      *
      * @return
      */
-    public String getContent() {
+    public String getStringContent() {
         return this.cellcontent.getContent();
+    }
+
+    public CellContent getContent() {
+        return this.cellcontent;
     }
 
     /**
@@ -180,9 +193,13 @@ public class Cell extends Observable implements Observer {
         return this.value;
     }
 
+    public CellCoordinate getCoordinate() {
+        return this.coordinates;
+    }
+
     /**
-     * Used to add all as Observers all cells that this Cell depends on.
-     * Only called when adding a new content Formula to the Cell
+     * Used to add all as Observers all cells that this Cell depends on. Only
+     * called when adding a new content Formula to the Cell
      */
     public void addAllObservers() {
         List<Argument> arguments = ((ContentFormula) (this.cellcontent)).getArguments();
@@ -199,14 +216,19 @@ public class Cell extends Observable implements Observer {
 
     /**
      * Overriding upadte method from Observer Interface.
-     * 
+     *
      * Called when the Cell Arguments of a Observable Formula are updated.
+     *
      * @param o
-     * @param o1 
+     * @param o1
      */
     @Override
     public void update(java.util.Observable o, Object o1) {
-        System.out.println("UPDATE OBSERVER: called over object "+ o1);
-        recomputeValue();
+        System.out.println("UPDATE OBSERVER: called over object " + o1);
+        try {
+            recomputeValue();
+        } catch (CircularDependencies ex) {
+            System.out.println("Circular Dependencies Error: " + ex.getMessage());
+        }
     }
 }

@@ -6,6 +6,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,25 +18,25 @@ import java.util.Map;
  * The @author of SpreadSheet is estev This class is basically used to check
  * comprehension of update SpreadSheet
  */
-public class Tree {
+public class TreeSearch {
 
     HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
     ArrayList<String> stack = new ArrayList<>();
 
-    public Tree(HashMap<String, ArrayList> map, String computeCell) {
+    public TreeSearch(HashMap<String, ArrayList> map, String computeCell) throws CircularDependencies {
         this.map = map;
         stack.add(computeCell);
         Node root = addNode(null, computeCell);
-        printNode(root);
+        //printNode(root);
         errorDependencies(root);
     }
 
     private Node addNode(Node root, String id) {
         if (root == null) {
-            System.out.println("Starting with node root " + id);
+            //System.out.println("Starting with node root " + id);
         } else {
-            System.out.println("We are adding the node " + id + " to root " + root.toString());
-            System.out.println("The stack is: " + this.stack.toString());
+            //System.out.println("We are adding the node " + id + " to root " + root.toString());
+            //System.out.println("The stack is: " + this.stack.toString());
         }
         Node now = new Node(id, root);
         if (this.map.containsKey(id)) {
@@ -48,7 +49,7 @@ public class Tree {
                     Node child = addNode(now, next);
                     now.addChild(child);
                 } else {
-                    System.out.println("The node " + next + " is already contained in the stack. Adding as child to " + now.value);
+                    //System.out.println("The node " + next + " is already contained in the stack. Adding as child to " + now.value);
                     now.addChild(new Node(next, now));
 
                 }
@@ -97,14 +98,14 @@ public class Tree {
      * @param root initial node to check
      * @return True if error, False if not.
      */
-    private boolean errorDependencies(Node root) {
+    private boolean errorDependencies(Node root) throws CircularDependencies {
         HashMap<Integer, ArrayList> depths = getDepths(root);
         boolean results = false;
         int size = depths.size() - 1;
         for (int i = size; i >= 0; i--) {
             for (Object object : depths.get(i)) {
                 Node nd = (Node) object;
-                System.out.println("Checking circular dependency of node " + nd.value);
+                //System.out.println("Checking circular dependency of node " + nd.value);
                 results = results || checkCircularDependency(nd, nd);
             }
 
@@ -118,16 +119,15 @@ public class Tree {
     *  False --> Does not have any circular dependency.
     *  used recursively
      */
-    private boolean checkCircularDependency(Node node, Node checker) {
+    private boolean checkCircularDependency(Node node, Node checker) throws CircularDependencies {
         Node parent = node.parent;
         if ((parent != null) && (checker != null)){
-            System.out.println("\tChecking node " + checker.value + " and its parent " + parent.value);
+            //System.out.println("\tChecking node " + checker.value + " and its parent " + parent.value);
         }
         if (parent == null) {
             return false;
-        } else if (parent.value == checker.value) {
-            System.out.println("\t\tThere is a Circular Dependency between " + checker.value + " and its parent " + parent.value);
-            return true;
+        } else if (parent.value.equals(checker.value)) {
+            throw new CircularDependencies("\t\tThere is a Circular Dependency between " + checker.value + " and its parent " + node.value);
         } else {
             return checkCircularDependency(parent, checker);
         }
@@ -182,24 +182,4 @@ public class Tree {
             return this.value;
         }
     }
-
-    /**
-     * Used for Debugging with different type of functions
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-
-        HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
-        map.put("D2", new ArrayList(Arrays.asList("D1", "C3")));
-        map.put("D1", new ArrayList(Arrays.asList("A3", "B2")));
-        map.put("C3", new ArrayList(Arrays.asList("A3", "B2", "B1")));
-        //map.put("A3", new ArrayList(Arrays.asList("B2")));
-        map.put("A3", new ArrayList(Arrays.asList("D1", "B2")));  //WE HAVE TO AVOID THIS
-        map.put("B2", new ArrayList(Arrays.asList("A1")));
-
-        Tree tree = new Tree(map, "D2");
-    }
-
 }

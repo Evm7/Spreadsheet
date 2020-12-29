@@ -4,20 +4,19 @@
  *  of a spreadsheet, which can be used through a textual interface.
  *  Developed by Esteve Valls Mascaró
  */
-package edu.upc.etsetb.arqsoft.spreadsheet.model;
+package edu.upc.etsetb.arqsoft.spreadsheet.exceptions;
 
 /**
  * Exception class with Formula Update problematic
  * @author estev
  */
-public class DoubleDependenciesException extends Exception {
+public class GrammarErrorFormula extends Exception {
 
     /**
-     * Exception raise when exists two formula A and B, and
-     * A depends on B and B depends on A.
+     * Exception raise when formula does contain a not correct 
      * @param string
      */
-    public DoubleDependenciesException(String string) {
+    public GrammarErrorFormula(String string) {
         super(string);
     }
     

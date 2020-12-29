@@ -6,14 +6,22 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.CellCoordinate;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.ContentFormula;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
+import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jdk.nashorn.internal.runtime.ParserException;
 
 /**
@@ -76,27 +84,27 @@ public class FormulaEvaluator {
         formula = formula.replaceAll(" ", "");
         //formula = formula.replaceFirst("=", "");
         try {
-            System.out.println("[INFO] .. Tokenizing formula : " + formula);
+            //System.out.println("[INFO] .. Tokenizing formula : " + formula);
             tokenizer.tokenize(formula);
 
         } catch (ParserException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("[INFO] .. Evaluating Grammar");
+        //System.out.println("[INFO] .. Evaluating Grammar");
         LinkedList<Tokenizer.Token> tokens = evaluateGrammar(tokenizer.getTokens());
         tokens.pop(); // To remove the initial equal
         for (Tokenizer.Token tok : tokens) {
-            System.out.print(" [ " + tok.token + " ] ");
+            //System.out.print(" [ " + tok.token + " ] ");
         }
 
-        System.out.println("[INFO] .. Creating PostFix (Shaunting Yard Algorithm)");
+        //System.out.println("[INFO] .. Creating PostFix (Shaunting Yard Algorithm)");
         tokens = shuntingYard(tokens);
         for (Tokenizer.Token tok : tokens) {
-            System.out.print(tok.sequence + "   ");
+            //System.out.print(tok.sequence + "   ");
         }
         List<Term> terms = convertTokenToOTerm(tokens);
         for (Term tok : terms) {
-            System.out.print(tok.print() + "   ");
+            //System.out.print(tok.print() + "   ");
         }
         return terms;
     }
@@ -162,18 +170,18 @@ public class FormulaEvaluator {
         Tokenizer.Token topStack;
 
         for (Tokenizer.Token token : tokens) {
-            System.out.println("\t[shuntingYard] using token " + token.token);
+            // System.out.println("\t[shuntingYard] using token " + token.token);
             if (toQueue(token)) {
-                System.out.println("\t\tAdding to queue as value");
+                // System.out.println("\t\tAdding to queue as value");
                 queue.add(token);
             } else if (token.token == TokenType.FORMULA) {
-                System.out.println("\t\tAdding to stack as formula");
+                // System.out.println("\t\tAdding to stack as formula");
 
                 stack.add(token);
             } else if (toStack(token)) {
-                System.out.println("\t\tOpperant to stack found " + token.token);
+                // System.out.println("\t\tOpperant to stack found " + token.token);
                 if (stack.isEmpty()) {
-                    System.out.println("\t\t\tAdding to stack as stack is empty");
+                    // System.out.println("\t\t\tAdding to stack as stack is empty");
 
                     stack.add(token);
                 } else {
@@ -181,48 +189,48 @@ public class FormulaEvaluator {
                     while ((topStack != null) && isOperator(topStack) && ((topStack.precedence > token.precedence) || ((topStack.precedence == token.precedence) && isOperator(token))) && (topStack.token != TokenType.OPEN_BRACKET)) {
                         stack.remove(topStack);
                         queue.add(topStack);
-                        System.out.println("\t\t\tAdding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
+                        // System.out.println("\t\t\tAdding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
                         if (stack.isEmpty()) {
                             break;
                         }
                         topStack = stack.getLast();
                     }
                     stack.add(token);
-                    System.out.println("\t\t\tAdding token to stack after shuffer");
+                    // System.out.println("\t\t\tAdding token to stack after shuffer");
 
                 }
 
             } else if (token.token == TokenType.OPEN_BRACKET) {
-                System.out.println("\t\tAdding ( to stack as (");
+                // System.out.println("\t\tAdding ( to stack as (");
 
                 stack.add(token);
             } else if (token.token == TokenType.CLOSE_BRACKET) {
-                System.out.println("\t\tClose Bracket found, search for )");
+                // System.out.println("\t\tClose Bracket found, search for )");
                 topStack = stack.getLast();
                 while ((topStack.token != TokenType.OPEN_BRACKET)) {
-                    System.out.println("\t\t\t Top Stack " + topStack.token + " is not (, removed from stack and passed to queue");
+                    // System.out.println("\t\t\t Top Stack " + topStack.token + " is not (, removed from stack and passed to queue");
                     stack.remove(topStack);
                     queue.add(topStack);
                     topStack = stack.getLast();
                 }
                 if (topStack.token == TokenType.OPEN_BRACKET) {
-                    System.out.println("\t\t\tRemoving Open Bracket from Stack");
+                    // System.out.println("\t\t\tRemoving Open Bracket from Stack");
                     stack.remove(topStack);
                 }
                 topStack = stack.getLast();
                 if (topStack.token == TokenType.FORMULA) {
                     stack.remove(topStack);
                     queue.add(topStack);
-                    System.out.println("\t\t\tFORMULA FOUND: Adding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
+                    // System.out.println("\t\t\tFORMULA FOUND: Adding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
                 }
                 if (stack.isEmpty()) {
                     break;
                 }
             }
-            System.out.print("\t[INFO] Stack List is:   ");
-            printList(stack);
-            System.out.print("\t[INFO] Queue List is:   ");
-            printList(queue);
+            // System.out.print("\t[INFO] Stack List is:   ");
+            // printList(stack);
+            // System.out.print("\t[INFO] Queue List is:   ");
+            // printList(queue);
 
         }
         for (int i = stack.size() - 1; i >= 0; i--) {
@@ -304,7 +312,7 @@ public class FormulaEvaluator {
                     // USED WHEN WE WANT TO INPUT VALUE : -1 --> THEN VALUE IS ACTUALLY "-1", NO SUBTRACTION IS NEEDED
                     if (curr.token == TokenType.MINUS && next.token == TokenType.REAL_NUMBER) {
                         next.modifySequence("" + (-1 * Double.parseDouble(next.sequence)));
-                        System.out.println("new token at index " + i);
+                        // System.out.println("new token at index " + i);
                         indexes.add(i);
                     } // USED WHEN WE WANT TO INPUT VALUE : +1 --> THEN VALUE IS ACTUALLY "+1", NO SUM IS NEEDED
                     else if (curr.token == TokenType.PLUS && next.token == TokenType.REAL_NUMBER) {
@@ -419,19 +427,82 @@ public class FormulaEvaluator {
      * Evaluate the Post Fix Expression to compute the value depending on a List
      * of Terms passed as parameters.
      *
-     * @param terms
+     * @param formula
      * @return A value as Double
      */
     public Double evaluatePostFix(List<Term> formula) {
         System.out.println();
-        System.out.println("[INFO] .. Evaluating PostFix"); // =A1+B1*C1-PROMEDIO(A1:C1) //A	B	C	D	E	 1| 	5.0	3.0	3.65	
+        // System.out.println("[INFO] .. Evaluating PostFix"); // =A1+B1*C1-PROMEDIO(A1:C1) //A	B	C	D	E	 1| 	5.0	3.0	3.65	
         VisitorFormula visitor = new VisitorFormula();
         for (Term term : formula) {
-            System.out.println("\t[evaluatePostFix] using term " + term.print());
-            String type = term.isType();
+            // System.out.println("\t[evaluatePostFix] using term " + term.print());
             term.acceptVisitor(visitor);
         }
         return visitor.getResult();
+    }
+
+    /**
+     * Uses recursivity to compute all dependencies and its tree
+     */
+    public void circularDependencies(CellCoordinate cellcoordinate) throws CircularDependencies {
+        HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
+        //System.out.println("___________CIRCULAR DEPENDENCIES___________");
+        map.put(cellcoordinate.print(), null);
+        map.put(cellcoordinate.print(), circularDependency(cellcoordinate, map));
+        //System.out.println(map);
+        //System.out.println("___________TREE SEARCH___________");
+        TreeSearch search = new TreeSearch(map, cellcoordinate.print());
+    }
+
+    /**
+     * Check the circular Dependencies of one formula
+     *
+     * @param formula
+     */
+    private ArrayList<String> circularDependency(CellCoordinate cellcoordinate, HashMap<String, ArrayList> map) {
+        ArrayList<String> args = new ArrayList<>();
+        //System.out.println("MAP IS:");
+        //System.out.println(map);
+        // Get the Cell from the CellCoordinate
+        int column = cellcoordinate.getColumn();
+        int row = cellcoordinate.getRow();
+        Cell cell = (SpreadSheet.spreadsheet[row - 1][column]);
+        //System.out.println("Cell we are checking is " + cell.toString());
+
+        // There are only dependencies if Cell is Formula
+        if (cell.getType_of_content() == TypeOfContent.FORMULA) {
+            ContentFormula content = (ContentFormula) cell.getContent();
+            //System.out.println(content.getArguments());
+
+            // Search for Dependencies of the coordinate
+            for (Argument arg : content.getArguments()) {
+                if (arg.isType().equals("Argument")) {
+                    if (arg instanceof ArgumentRange) {
+                        arg = (ArgumentRange) arg;
+                        //System.out.println("\tArgument Range");
+                        //System.out.println(arg.getReferences());
+                    } else {
+                        arg = (ArgumentIndividual) arg;
+                        //System.out.println("\tArgument Individual");
+                    }
+
+                    for (CellCoordinate coord : arg.getReferences()) {
+                        //System.out.println("Depends on " + coord.print());
+                        args.add(coord.print());
+                        if (!map.containsKey(coord.print())) {
+
+                            ArrayList<String> array = circularDependency(coord, map);
+                            if (array != null) {
+                                map.put(coord.print(), array);
+
+                            }
+                        }
+                    }
+                }
+            }
+            return args;
+        }
+        return null;
     }
 
     /**
@@ -469,7 +540,6 @@ public class FormulaEvaluator {
         //CellImpl cell = new CellImpl(0, 0, easy_2);
         FormulaEvaluator parser = new FormulaEvaluator();
         List<Term> terms = parser.parseFormula(difficult);
-        parser.evaluatePostFix(terms);
     }
 
 }

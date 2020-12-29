@@ -6,6 +6,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.FormulaEvaluator;
 import java.io.File;
 import java.util.List;
@@ -42,7 +43,7 @@ public class SpreadSheet {
      * @param name
      * @param length
      */
-    public SpreadSheet(String name, int length) {
+    public SpreadSheet(String name, int length) throws CircularDependencies {
         this.name = name;
         initializeSpreadSheet(length);
         importer = new Importer();
@@ -71,7 +72,7 @@ public class SpreadSheet {
         return this.spreadsheet[row][column];
     }
 
-    private void initializeSpreadSheet(int length) {
+    private void initializeSpreadSheet(int length) throws CircularDependencies {
         this.spreadsheet = new Cell[length][length];
         for (int row = 0; row < length; row++) {
             for (int column = 0; column < length; column++) {
@@ -88,19 +89,24 @@ public class SpreadSheet {
      * @param row
      * @param content
      * @return
-     * @throws DoubleDependenciesException
+     * @throws CircularDependencies
      */
-    public Cell createCell(int column, int row, String content) throws DoubleDependenciesException {
+    public Cell createCell(int column, int row, String content) throws CircularDependencies {
         complete_cells(column, row);
-        return editCell(column, row - 1, content);
+        return editCell(column, row, content);
+    }
+    
+    public Cell removeCell(int column, int row){
+        return this.spreadsheet[row-1][column];
+
     }
 
-    public Cell editCell(int column, int row, String content) throws DoubleDependenciesException {
-        Cell cell = getCell(column, row);
+    public Cell editCell(int column, int row, String content) throws CircularDependencies {
+        Cell cell = getCell(column, row-1);
         cell.updateCell(content, true);
         return cell;
     }
-
+    
     /**
      *
      * @param column
@@ -116,7 +122,7 @@ public class SpreadSheet {
         }
     }
 
-    private void complete_cells(int num_column, int num_row) {
+    private void complete_cells(int num_column, int num_row) throws CircularDependencies {
         if ((this.max_column < num_column) || (this.max_row < num_row)) {
             Cell[][] copy = this.spreadsheet.clone();
             int new_size_column = Math.max(num_column + 1, this.max_column);
@@ -146,7 +152,7 @@ public class SpreadSheet {
      *
      * @param file
      */
-    public void importSpreadSheet(File file) {
+    public void importSpreadSheet(File file) throws CircularDependencies {
         List<Cell[]> imported = importer.importSpreadSheet(file);
         int[] dim = importer.getDimensions();
         this.max_column = dim[0];
@@ -156,7 +162,7 @@ public class SpreadSheet {
             Cell[] row_cells = imported.get(row);
             for (int column = 0; column < max_column; column++) {
                 if (column < row_cells.length) {
-                    System.out.println("Column : "+ column+ " row " + row+ " is " +  row_cells[column].getContent());
+                    System.out.println("Column : "+ column+ " row " + row+ " is " +  row_cells[column].getStringContent());
                     this.spreadsheet[row][column] = row_cells[column];
                 } else {
                     this.spreadsheet[row][column] = new Cell(column, row, "");
