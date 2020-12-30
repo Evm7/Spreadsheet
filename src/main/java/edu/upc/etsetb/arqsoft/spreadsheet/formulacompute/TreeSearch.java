@@ -25,7 +25,7 @@ public class TreeSearch {
 
     /**
      * Constructor of Tree Search
-     * 
+     *
      * @param map
      * @param computeCell
      * @throws CircularDependencies
@@ -38,6 +38,14 @@ public class TreeSearch {
         errorDependencies(root);
     }
 
+    /**
+     * Function used to add a Node with a given identifier to a root Node.
+     * addNode uses recursivity to create a Tree from only a node.
+     *
+     * @param root
+     * @param id
+     * @return Node added
+     */
     private Node addNode(Node root, String id) {
         if (root == null) {
             //System.out.println("Starting with node root " + id);
@@ -66,32 +74,13 @@ public class TreeSearch {
         return now;
     }
 
-    private ArrayList<String> notDependent(HashMap<String, ArrayList> map) {
-        ArrayList<String> notDependent = new ArrayList<>();
-        for (Map.Entry<String, ArrayList> entry : map.entrySet()) {
-            ArrayList<String> val = entry.getValue();
-            for (Iterator<String> iterator = val.iterator(); iterator.hasNext();) {
-                String next = iterator.next();
-                if (!map.containsKey(next)) {
-                    notDependent.add(next);
-                }
-            }
-        }
-        return notDependent;
-    }
-
-    private void printNode(Node root) {
-        HashMap<Integer, ArrayList> depths = getDepths(root);
-        for (Map.Entry<Integer, ArrayList> entry : depths.entrySet()) {
-            int key = entry.getKey();
-            System.out.println("Depth: " + key);
-            for (Object object : entry.getValue()) {
-                System.out.print("\t" + ((Node) object).value);
-            }
-            System.out.println("");
-        }
-    }
-
+    /**
+     * Function used to recursively get a map with eahc nodes depth starting
+     * from the root (0 depth)
+     *
+     * @param root
+     * @return map with all nodes and depths
+     */
     private HashMap<Integer, ArrayList> getDepths(Node root) {
         HashMap<Integer, ArrayList> depths = new HashMap<>();
         depths.put(0, new ArrayList(Arrays.asList(root)));
@@ -100,10 +89,34 @@ public class TreeSearch {
     }
 
     /**
+     * Get exact depth of a node and adds it to a given map, which is returned
+     * afterwards.
+     *
+     * @param node node to check the depth of
+     * @param depths map with past depths
+     * @return map updated with the new node depth
+     */
+    private HashMap<Integer, ArrayList> getDepth(Node node, HashMap<Integer, ArrayList> depths) {
+        for (Node nd : node.children) {
+            ArrayList<Node> nodes;
+            if (!depths.containsKey(nd.depth)) {
+                nodes = new ArrayList<>();
+            } else {
+                nodes = depths.get(nd.depth);
+            }
+            nodes.add(nd);
+            depths.put(nd.depth, nodes);
+            depths = getDepth(nd, depths);
+        }
+        return depths;
+    }
+
+    /**
      * Checks all the Dependencies of the formula if there is error or not.
      *
      * @param root initial node to check
      * @return True if error, False if not.
+     * @throws CircuarDependencies
      */
     private boolean errorDependencies(Node root) throws CircularDependencies {
         HashMap<Integer, ArrayList> depths = getDepths(root);
@@ -120,15 +133,18 @@ public class TreeSearch {
         return results;
     }
 
-    /*
-    * Checking it the node Checker has circular dependencies.
-    *  True --> has circular dependencies
-    *  False --> Does not have any circular dependency.
-    *  used recursively
+    /**
+     * Checking it the node Checker has circular dependencies recursively True
+     * --> has circular dependencies False --> Does not have any circular
+     * dependency.
+     *
+     * @param Node whose parent are we checking
+     * @param Node whose dependency we are checking
+     * @throws CircularDependencies
      */
     private boolean checkCircularDependency(Node node, Node checker) throws CircularDependencies {
         Node parent = node.parent;
-        if ((parent != null) && (checker != null)){
+        if ((parent != null) && (checker != null)) {
             //System.out.println("\tChecking node " + checker.value + " and its parent " + parent.value);
         }
         if (parent == null) {
@@ -140,21 +156,11 @@ public class TreeSearch {
         }
     }
 
-    private HashMap<Integer, ArrayList> getDepth(Node node, HashMap<Integer, ArrayList> depths) {
-        for (Node nd : node.children) {
-            ArrayList<Node> nodes;
-            if (!depths.containsKey(nd.depth)) {
-                nodes = new ArrayList<>();
-            } else {
-                nodes = depths.get(nd.depth);
-            }
-            nodes.add(nd);
-            depths.put(nd.depth, nodes);
-            depths = getDepth(nd, depths);
-        }
-        return depths;
-    }
-
+    /**
+     * Node class is used to capture the essence of a given Node of a Tree.
+     * Contains a List of its direct Children Nodes, the parent Node who it
+     * depends of, its value, and the depth from the tree root
+     */
     private class Node {
 
         private ArrayList<Node> children = null;
@@ -162,6 +168,11 @@ public class TreeSearch {
         private String value;
         private int depth = 0;
 
+        /**
+         * Constructor of the Node given its parent and the value.
+         * @param value
+         * @param parent if null, then we are referring to root Node
+         */
         public Node(String value, Node parent) {
             this.children = new ArrayList<Node>();
             this.value = value;
@@ -173,18 +184,30 @@ public class TreeSearch {
             }
         }
 
+        /**
+         * Adds a Node to the children list
+         * @param child 
+         */
         public void addChild(Node child) {
             children.add(child);
         }
 
+        /**
+         * Gets the parent of the Node
+         * @return 
+         */
         public Node getParent() {
             return this.parent;
         }
 
+        /**
+         * Prints the Node value
+         */
         public void print() {
             System.out.print("Node " + value);
         }
 
+        @Override
         public String toString() {
             return this.value;
         }
