@@ -35,8 +35,10 @@ public class Controller {
 
     /**
      * Class in charge of operating the model depending on the Inputs from the
-     * user obtained from teh view. It is the main class, which initialize View
+     * user obtained from teh view.It is the main class, which initialize View
      * and Model and manage the whole Project.
+     *
+     * @param bln
      */
     public Controller(boolean testing) {
         this.view = new View();
@@ -276,33 +278,25 @@ public class Controller {
             return;
         }
         Cell cell = getCell(column, row);
-        String content;
-        if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
-            content = this.view.askQuestion("Which content do you want to introduce in [" + position[0] + row + "] ?");
-            try {
+        String content = this.view.askQuestion("Which content do you want to introduce in [" + position[0] + row + "] ?");
+        try {
+
+            if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
                 model.createCell(column, row, content);
-            } catch (CircularDependencies | GrammarErrorFormula ex) {
-                this.view.display("Error: " + ex.getMessage());
-                model.removeCell(column, row);
+            } else {
+                model.editCell(column, row, content);
             }
-        } else {
-            content = this.view.askQuestion("Do you want to modify cell in [" + position[0] + row + "] : " + cell.printValue() + "? [y/n]");
-            if (!content.equals("n")) {
-                content = this.view.askQuestion("Which content do you want to introduce?");
-                try {
-                    model.editCell(column, row, content);
-                } catch (CircularDependencies ex) {
-                    this.view.display("Error: " + ex.getMessage());
-                    try {
-                        model.editCell(column, row, cell.getStringContent());
-                    } catch (CircularDependencies | GrammarErrorFormula ex1) {
-                        this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
-                    }
-                } catch (GrammarErrorFormula ex) {
-                    this.view.display("Error: " + ex.getMessage());
-                }
+        } catch (CircularDependencies ex) {
+            this.view.display("Error: " + ex.getMessage());
+            try {
+                model.editCell(column, row, cell.getStringContent());
+            } catch (CircularDependencies | GrammarErrorFormula ex1) {
+                this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
             }
+        } catch (GrammarErrorFormula ex) {
+            this.view.display("Error: " + ex.getMessage());
         }
+
     }
 
     /**
