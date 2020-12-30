@@ -57,17 +57,12 @@ public class ValueText extends CellValue {
         return this.value;
     }
 
-    /*
-    * Only used for testing
-     */
-
     /**
-     * Returns the value as Double (Throws exception)
-     * 
+     * Only used for testing
+     *
      * @return
      * @throws NoNumberException
      */
-
     @Override
     public Double getValueasDouble() throws NoNumberException{
         throw new NoNumberException("The value of the cell is "+ this.value);
