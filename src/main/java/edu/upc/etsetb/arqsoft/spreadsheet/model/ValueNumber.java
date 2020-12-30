@@ -32,6 +32,9 @@ public class ValueNumber extends CellValue {
      * Constructor that initialize a Value of Number if the content is Formula
      *
      * @param content
+     * @param coordinate
+     * @throws
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
      */
     public ValueNumber(ContentFormula content, CellCoordinate coordinate) throws CircularDependencies {
         SpreadSheet.parser.circularDependencies(coordinate);
@@ -66,20 +69,15 @@ public class ValueNumber extends CellValue {
     public String toString() {
         return "" + this.value;
     }
-    
-        /*
-    * Only used for testing
-    */
 
     /**
-     * Returns the value as Double
-     * 
+     * Only used for testing
+     *
      * @return
      * @throws NoNumberException
      */
-
     @Override
-    public Double getValueasDouble()  throws NoNumberException{
+    public Double getValueasDouble() throws NoNumberException {
         return value;
     }
 }
