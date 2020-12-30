@@ -23,6 +23,13 @@ public class TreeSearch {
     HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
     ArrayList<String> stack = new ArrayList<>();
 
+    /**
+     * Constructor of Tree Search
+     * 
+     * @param map
+     * @param computeCell
+     * @throws CircularDependencies
+     */
     public TreeSearch(HashMap<String, ArrayList> map, String computeCell) throws CircularDependencies {
         this.map = map;
         stack.add(computeCell);

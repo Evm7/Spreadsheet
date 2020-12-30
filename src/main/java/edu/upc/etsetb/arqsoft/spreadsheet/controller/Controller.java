@@ -32,8 +32,9 @@ public class Controller {
 
     /**
      * Class in charge of operating the model depending on the Inputs from the
-     * user obtained from teh view. It is the main class, which initialize View
-     * and Model and manage the whole Project.
+     * user obtained from teh view.It is the main class, which initialize View
+ and Model and manage the whole Project.
+     * @param testing
      */
     public Controller(boolean testing) {
         this.view = new View();
@@ -111,6 +112,8 @@ public class Controller {
     }
     /**
      * This command shall create a new empty SpreadSheet
+     * @param tester
+     * @return 
      */
     public SpreadSheet createNewSpreadSheet(boolean tester) {
         if (tester) {

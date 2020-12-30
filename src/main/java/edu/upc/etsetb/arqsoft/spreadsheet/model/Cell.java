@@ -184,6 +184,11 @@ public class Cell extends Observable implements Observer {
         return this.cellcontent.getContent();
     }
 
+    /**
+     * Returns the content of the cell
+     * 
+     * @return
+     */
     public CellContent getContent() {
         return this.cellcontent;
     }
@@ -197,6 +202,11 @@ public class Cell extends Observable implements Observer {
         return this.value;
     }
 
+    /**
+     * Returns the coordinates of the cell
+     * 
+     * @return
+     */
     public CellCoordinate getCoordinate() {
         return this.coordinates;
     }

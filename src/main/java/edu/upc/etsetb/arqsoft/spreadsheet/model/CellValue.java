@@ -44,6 +44,14 @@ public class CellValue implements Value {
     /*
     * Only used for testing
      */
+
+    /**
+     *  Returns the value as Double
+     * 
+     * @return
+     * @throws NoNumberException
+     */
+
     public Double getValueasDouble()  throws NoNumberException {
         return 0.0;
     }

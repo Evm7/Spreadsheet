@@ -23,7 +23,11 @@ public class VisitorFormula implements Visitor {
     LinkedList<Term> queue;
     boolean debug = false;
     
-
+    /**
+     * Constructor of VisitorFormula.
+     * 
+     * @param debug
+     */
     public VisitorFormula(boolean debug) {
         debug=debug;
         queue = new LinkedList<Term>();  // for values
@@ -36,6 +40,12 @@ public class VisitorFormula implements Visitor {
         }
     }
 
+    /**
+     * Removes the last two terms of the queue and operates them. Then tries to
+     * add the obtained result to the queue
+     * 
+     * @param term
+     */
     @Override
     public void visitOperatorImpl(OperatorImpl term) {
         print(debug, "\tThe term is an operator");
@@ -49,30 +59,56 @@ public class VisitorFormula implements Visitor {
         }
     }
 
+    /**
+     * Computes the value of a Function (operating through all the corresponding
+     * operands) and obtains the new queue
+     * 
+     * @param term
+     */
     @Override
     public void visitOperatorFunction(OperatorFunction term) {
         queue = operateFunction(queue, (OperatorFunction) term);
 
     }
 
+    /**
+     * Adds the Argument term to the queue
+     * 
+     * @param term
+     */
     @Override
     public void visitArgument(Argument term) {
         print(debug,"\t\tAdding to queue as value");
         queue.add(term);
     }
 
+    /**
+     * Adds the OperandFunction term to the queue
+     * 
+     * @param term
+     */
     @Override
     public void visitOperandFunction(OperandFunction term) {
         print(debug,"\t\tAdding to queue as value");
         queue.add(term);
     }
 
+    /**
+     * Adds the OperandNumber term to the queue
+     * 
+     * @param term
+     */
     @Override
     public void visitOperandNumber(OperandNumber term) {
         print(debug,"\t\tAdding to queue as value");
         queue.add(term);
     }
 
+    /**
+     * Gets the final result of the queue
+     * 
+     * @return
+     */
     public Double getResult() {
         Term result = queue.getLast();
         if (result instanceof OperandNumber) {

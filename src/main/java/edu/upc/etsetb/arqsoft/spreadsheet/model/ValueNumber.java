@@ -70,6 +70,14 @@ public class ValueNumber extends CellValue {
         /*
     * Only used for testing
     */
+
+    /**
+     * Returns the value as Double
+     * 
+     * @return
+     * @throws NoNumberException
+     */
+
     @Override
     public Double getValueasDouble()  throws NoNumberException{
         return value;

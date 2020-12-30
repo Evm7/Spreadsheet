@@ -74,6 +74,11 @@ public class FormulaEvaluator {
         functions.put("SUMA", new FunctionSuma());
     }
     
+    /**
+     * Sets debug value to True or False, in order to visualize some logs
+     * 
+     * @param mode
+     */
     public void setDebugger(boolean mode){
         debug=mode;
     }
@@ -85,6 +90,7 @@ public class FormulaEvaluator {
      * @param formula
      * @return a List of Terms that are contained in the Formula as Post Fix
      * expression
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
      */
     public List<Term> parseFormula(String formula) throws GrammarErrorFormula {
         formula = formula.replaceAll(" ", "");
@@ -260,32 +266,33 @@ public class FormulaEvaluator {
     }
 
     /**
-     * Evaluates the grammar of the list of tokens.
+     * Evaluates the grammar of the list of tokens.Userd to check if the user has inputted a formula which does not have a
+ Proper Mathematical format.
      *
-     * Userd to check if the user has inputted a formula which does not have a
-     * Proper Mathematical format. i. Check that number of OPEN BRACKETS equals
-     * the number of CLOSED BRACKETS.
-     *
-     * ii. Check if the brackets are closed before being opened .
-     *
-     * iii. If there is a MINUS or PLUS token before a REAL VALUE and after OPEN
-     * BRACKETS or starting the formula, unify both tokens to REAL VALUE with
-     * the corresponding sign.
-     *
-     * iv. Check that COLON can only be used between CELL token.
-     *
-     * v. Check that operators can only be used between CELL , REAL NUMBER,
-     * brackets or FORMULA.
-     *
-     * vi. Check if formula is followed by OPEN BRACKET.
-     *
-     * vii. Before closing a bracket only a CELL, REAL NUMBER or CLOSE BRACKET
-     * accepted.
-     *
-     * viii. Before opening a bracket there can not be a CELL or REAL NUMBER.
+     * i. Check that number of OPEN BRACKETS equals
+ the number of CLOSED BRACKETS.
+
+ ii. Check if the brackets are closed before being opened .
+
+ iii. If there is a MINUS or PLUS token before a REAL VALUE and after OPEN
+ BRACKETS or starting the formula, unify both tokens to REAL VALUE with
+ the corresponding sign.
+
+ iv. Check that COLON can only be used between CELL token.
+
+ v. Check that operators can only be used between CELL , REAL NUMBER,
+ brackets or FORMULA.
+
+ vi. Check if formula is followed by OPEN BRACKET.
+
+ vii. Before closing a bracket only a CELL, REAL NUMBER or CLOSE BRACKET
+ accepted.
+
+ viii. Before opening a bracket there can not be a CELL or REAL NUMBER.
      *
      * @param tokens
      * @return
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
      */
     public LinkedList<Tokenizer.Token> evaluateGrammar(LinkedList<Tokenizer.Token> tokens) throws GrammarErrorFormula {
         Tokenizer.Token prev = null;
@@ -462,6 +469,8 @@ public class FormulaEvaluator {
 
     /**
      * Uses recursivity to compute all dependencies and its tree
+     * @param cellcoordinate
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
      */
     public void circularDependencies(CellCoordinate cellcoordinate) throws CircularDependencies {
         HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();

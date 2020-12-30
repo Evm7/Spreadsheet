@@ -57,6 +57,11 @@ public class SpreadSheet {
 
     }
     
+    /**
+     * Sets debugging value to True or False, in order to visualize some logs
+     * 
+     * @param debug
+     */
     public void setDebugger(boolean debug){
         debugging=debug;
         parser.setDebugger(debug);
@@ -112,6 +117,16 @@ public class SpreadSheet {
 
     }
 
+    /**
+     * Edits the content of a cell
+     * 
+     * @param column
+     * @param row
+     * @param content
+     * @return
+     * @throws CircularDependencies
+     * @throws GrammarErrorFormula
+     */
     public Cell editCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         Cell cell = getCell(column, row - 1);
         cell.updateCell(content, true);
@@ -284,6 +299,15 @@ public class SpreadSheet {
     }
 
     // FIRST ADDED 2
+
+    /**
+     * Returns the value of a cell as a Double
+     * 
+     * @param coord
+     * @return
+     * @throws BadCoordinateException
+     * @throws NoNumberException
+     */
     public double getCellContentAsDouble(String coord) throws BadCoordinateException, NoNumberException {
         String[] position = parsePosition(coord);
         int column, row;
@@ -299,6 +323,14 @@ public class SpreadSheet {
     }
 
     // FIRST ADDED 3
+
+    /**
+     * Returns the value of a cell as a String
+     * 
+     * @param coord
+     * @return
+     * @throws BadCoordinateException
+     */
     public String getCellContentAsString(String coord) throws BadCoordinateException {
         String[] position = parsePosition(coord);
         int column, row;
