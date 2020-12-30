@@ -28,26 +28,25 @@ import java.util.regex.Pattern;
 public class SpreadSheet {
 
     private String name;
-    private boolean debugging=false;
+    private boolean debugging = false;
 
-    /**
-     *
-     */
     public static Cell[][] spreadsheet;   // [row][column]
     private int max_column;
     private int max_row;
 
-    /**
-     *
-     */
     public static FormulaEvaluator parser = new FormulaEvaluator();
     private final Importer importer;
     private final Exporter exporter;
 
     /**
+     * Constructor of the Spreadsheet given a name and its Lenght.Initialize the
+     * Cells as Empty to the given lenght
      *
      * @param name
      * @param length
+     * @throws
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
      */
     public SpreadSheet(String name, int length) throws CircularDependencies, GrammarErrorFormula {
         this.name = name;
@@ -56,18 +55,19 @@ public class SpreadSheet {
         exporter = new Exporter();
 
     }
-    
+
     /**
      * Sets debugging value to True or False, in order to visualize some logs
-     * 
+     *
      * @param debug
      */
-    public void setDebugger(boolean debug){
-        debugging=debug;
+    public void setDebugger(boolean debug) {
+        debugging = debug;
         parser.setDebugger(debug);
     }
 
     /**
+     * Gets the length of the columns and rows as a array of integers
      *
      * @return
      */
@@ -79,20 +79,28 @@ public class SpreadSheet {
     }
 
     /**
+     * Obtain a Cell from the SpreadSheet from a given row and column
      *
      * @param column
      * @param row
      * @return
      */
     public Cell getCell(int column, int row) {
-        return this.spreadsheet[row][column];
+        return SpreadSheet.spreadsheet[row][column];
     }
 
+    /**
+     * Initialize the Spreadsheet to the given length
+     *
+     * @param length
+     * @throws CircularDependencies
+     * @throws GrammarErrorFormula
+     */
     private void initializeSpreadSheet(int length) throws CircularDependencies, GrammarErrorFormula {
-        this.spreadsheet = new Cell[length][length];
+        SpreadSheet.spreadsheet = new Cell[length][length];
         for (int row = 0; row < length; row++) {
             for (int column = 0; column < length; column++) {
-                this.spreadsheet[row][column] = new Cell(column, row + 1, "");
+                SpreadSheet.spreadsheet[row][column] = new Cell(column, row + 1, "");
             }
         }
         this.max_row = length;
@@ -100,26 +108,34 @@ public class SpreadSheet {
     }
 
     /**
+     * Creates a Cell froma given coordinate and content
      *
      * @param column
      * @param row
      * @param content
      * @return
      * @throws CircularDependencies
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
      */
     public Cell createCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         complete_cells(column, row);
         return editCell(column, row, content);
     }
 
+    /**
+     * Remove some cell from the Spreadsheet given its coordinates
+     *
+     * @param column
+     * @param row
+     * @return Cell removed
+     */
     public Cell removeCell(int column, int row) {
-        return this.spreadsheet[row - 1][column];
-
+        return SpreadSheet.spreadsheet[row - 1][column];
     }
 
     /**
      * Edits the content of a cell
-     * 
+     *
      * @param column
      * @param row
      * @param content
@@ -134,6 +150,8 @@ public class SpreadSheet {
     }
 
     /**
+     * Check whether a cell is out of the coordinates of the Spreadsheet and
+     * return Null if so
      *
      * @param column
      * @param row
@@ -141,31 +159,40 @@ public class SpreadSheet {
      */
     public Cell checkEmpty(int column, int row) {
         try {
-            Cell cell = this.spreadsheet[row][column];
+            Cell cell = SpreadSheet.spreadsheet[row][column];
             return cell;
         } catch (ArrayIndexOutOfBoundsException ex) {
             return null;
         }
     }
 
+    /**
+     * Fill up the remaining cells as empty to be able to be visualized and
+     * accessed to.
+     *
+     * @param num_column
+     * @param num_row
+     * @throws CircularDependencies
+     * @throws GrammarErrorFormula
+     */
     private void complete_cells(int num_column, int num_row) throws CircularDependencies, GrammarErrorFormula {
         if ((this.max_column < num_column) || (this.max_row < num_row)) {
-            Cell[][] copy = this.spreadsheet.clone();
+            Cell[][] copy = SpreadSheet.spreadsheet.clone();
             int new_size_column = Math.max(num_column + 1, this.max_column);
             int new_size_row = Math.max(num_row, this.max_row);
 
-            this.spreadsheet = new Cell[new_size_row][new_size_column];
+            SpreadSheet.spreadsheet = new Cell[new_size_row][new_size_column];
             for (int row = 0; row < new_size_row; row++) {
                 for (int column = 0; column < new_size_column; column++) {
                     if (this.max_column > column) {
                         if (this.max_row > row) {
-                            this.spreadsheet[row][column] = copy[row][column];
+                            SpreadSheet.spreadsheet[row][column] = copy[row][column];
                         } else {
-                            this.spreadsheet[row][column] = new Cell(column, row, "");
+                            SpreadSheet.spreadsheet[row][column] = new Cell(column, row, "");
 
                         }
                     } else {
-                        this.spreadsheet[row][column] = new Cell(column, row, "");
+                        SpreadSheet.spreadsheet[row][column] = new Cell(column, row, "");
                     }
                 }
             }
@@ -175,28 +202,41 @@ public class SpreadSheet {
     }
 
     /**
+     * Used to import the SpreadSheet from a file to the fiven model First adds
+     * all the contents to the cells and computes the value f all cells which
+     * are not formulas. Then update the SpreadSheet to compute recursively the
+     * values of the remaining ones.
      *
      * @param file
+     * @throws
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
      */
     public void importSpreadSheet(File file) throws CircularDependencies, GrammarErrorFormula {
         List<Cell[]> imported = importer.importSpreadSheet(file);
         int[] dim = importer.getDimensions();
         this.max_column = dim[0];
         this.max_row = dim[1];
-        this.spreadsheet = new Cell[max_column][max_row];
+        SpreadSheet.spreadsheet = new Cell[max_column][max_row];
         for (int row = 0; row < max_row; row++) {
             Cell[] row_cells = imported.get(row);
             for (int column = 0; column < max_column; column++) {
                 if (column < row_cells.length) {
-                    this.spreadsheet[row][column] = row_cells[column];
+                    SpreadSheet.spreadsheet[row][column] = row_cells[column];
                 } else {
-                    this.spreadsheet[row][column] = new Cell(column, row, "");
+                    SpreadSheet.spreadsheet[row][column] = new Cell(column, row, "");
                 }
             }
         }
         updateSpreadSheet();
     }
 
+    /**
+     * Function used to recompute the value of all the cells in the SpreadSheet.
+     * Used to compute all the formulas after importing a file.
+     *
+     * @throws CircularDependencies
+     */
     private void updateSpreadSheet() throws CircularDependencies {
         for (Cell[] cells : spreadsheet) {
             for (Cell cell : cells) {
@@ -206,7 +246,7 @@ public class SpreadSheet {
     }
 
     /**
-     *
+     * Export the SpreadSheet to a given file
      * @param file
      */
     public void exportSpreadSheet(File file) {
@@ -215,6 +255,10 @@ public class SpreadSheet {
 
     /**
      * ADD FOR DEBUGGING AND TESTING, NOT USED OTHERWISE*
+     * @param cellCoord
+     * @param content
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.ContentException
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.BadCoordinateException
      */
     // FIRST ADDED 1
     public void setCellContent(String cellCoord, String content) throws ContentException, BadCoordinateException {
@@ -241,6 +285,12 @@ public class SpreadSheet {
         }
     }
 
+    /**
+     * Parses the coordinate of a cell to obtain the row and column
+     * @param position
+     * @return
+     * @throws BadCoordinateException 
+     */
     private String[] parsePosition(String position) throws BadCoordinateException {
         String[] coord = new String[2];
         if (position.contains("-")) {
@@ -277,37 +327,7 @@ public class SpreadSheet {
         return column_num - 1;
     }
 
-    /**
-     * Gets the String Alphabetical column of the coordinate from an int Column
-     * Number
-     *
-     * @param column : passes the column as an int. Ex: 27
-     * @return String refering to the coordinate of the column in the
-     * SpreadSheet. Ex: AB
-     */
-    private String getStrColumn(int number) {
-        int number_of_letters = number;
-        String col = "";
-        int module;
-
-        while (number_of_letters > 0) {
-            module = (number_of_letters - 1) % ('Z' - 'A' + 1);
-            col = String.valueOf((char) ('A' + module) + col);
-            number_of_letters = (int) ((number_of_letters - module) / ('Z' - 'A' + 1));
-        }
-        return col;
-    }
-
     // FIRST ADDED 2
-
-    /**
-     * Returns the value of a cell as a Double
-     * 
-     * @param coord
-     * @return
-     * @throws BadCoordinateException
-     * @throws NoNumberException
-     */
     public double getCellContentAsDouble(String coord) throws BadCoordinateException, NoNumberException {
         String[] position = parsePosition(coord);
         int column, row;
@@ -323,14 +343,6 @@ public class SpreadSheet {
     }
 
     // FIRST ADDED 3
-
-    /**
-     * Returns the value of a cell as a String
-     * 
-     * @param coord
-     * @return
-     * @throws BadCoordinateException
-     */
     public String getCellContentAsString(String coord) throws BadCoordinateException {
         String[] position = parsePosition(coord);
         int column, row;
