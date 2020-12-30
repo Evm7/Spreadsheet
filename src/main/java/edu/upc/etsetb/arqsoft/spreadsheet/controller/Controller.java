@@ -9,15 +9,18 @@ package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.ReadCommandException;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * Contrains the Controller of the program which manages the View and the Model.
+ * Contains the Controller of the program which manages the View and the Model.
  * Operates into the model depending of the answer that View obtains from the
  * user.
  *
@@ -32,9 +35,8 @@ public class Controller {
 
     /**
      * Class in charge of operating the model depending on the Inputs from the
-     * user obtained from teh view.It is the main class, which initialize View
- and Model and manage the whole Project.
-     * @param testing
+     * user obtained from teh view. It is the main class, which initialize View
+     * and Model and manage the whole Project.
      */
     public Controller(boolean testing) {
         this.view = new View();
@@ -92,7 +94,6 @@ public class Controller {
                 exit();
                 return "Exit";
             default:
-                // code block
                 this.view.printTabloid(model);
                 this.view.display("Error in menu option selection. Please try again.");
                 return "0";
@@ -103,17 +104,142 @@ public class Controller {
     }
 
     /**
-     * This command shall instruct the program to read the rest of the commands
-     * from a text file instead the keyboard. This command shall have one
-     * argument: the text file pathname.
+     * Instruct the program to read the rest of the commands from a text file
+     * instead the keyboard. This command shall obtain the file to read commands
+     * from and call readCommands for the process.
      */
     private void readCommandsFromFile() {
+        this.view.display("Read commands from file ...");
+        String path_file;
+        File file;
+        do {
+            path_file = this.view.askQuestion("Which is the path of the file to read commands From? Introduce 'Exit' to return to menu");
+            if (path_file.equals("Exit")) {
+                return;
+            }
 
+            try {
+                file = processArgumentFile(path_file);
+                break;
+            } catch (FileNotFoundException ex) {
+                this.view.display(ex.getMessage());
+            }
+        } while (true);
+
+        readCommands(file);
     }
+
+    /**
+     * Used to read the commands of a given file
+     *
+     * @param file
+     */
+    private void readCommands(File file) {
+        Scanner scanner;
+        try {
+            scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                processCommand(scanner.nextLine());
+            }
+            scanner.close();
+        } catch (FileNotFoundException ex) {
+            this.view.display("Path introduced does not exist. Can not read file.");
+        } catch (CircularDependencies | GrammarErrorFormula | ReadCommandException ex) {
+            this.view.display(ex.getMessage());
+        } catch (IOException ex) {
+            this.view.display("There is an error on the coordinates when adding cell");
+        }
+    }
+
+    /**
+     * Processes the commands that can be found in the Read File. Commands can
+     * be of differnet types: RF <text_file_pathname>
+     * C
+     * E <cell coordinate> <new cell content>
+     * L <SV2 file pathname>
+     * S <SV2 file pathname>
+     *
+     * @param command
+     * @throws FileNotFoundException
+     * @throws CircularDependencies
+     * @throws GrammarErrorFormula
+     * @throws IOException
+     * @throws ReadCommandException
+     *
+     */
+    private void processCommand(String command) throws FileNotFoundException, CircularDependencies, GrammarErrorFormula, IOException, ReadCommandException {
+        command = command.toUpperCase();
+        String error = "Commands can be of differnet types:\n"
+                + "    RF <text_file_pathname>\n"
+                + "    C\n"
+                + "    E <cell coordinate> <new cell content>\n"
+                + "    L <SV2 file pathname>\n"
+                + "    S <SV2 file pathname>";
+        if (!command.contains(" ")) {
+            if (command.equals("C")) {
+                createNewSpreadSheet(false);
+            } else {
+                this.view.display("Error in the format of the command." + error);
+            }
+        } else {
+            String[] sent = command.split(" ");
+            File file;
+            switch (sent[0]) {
+                case "RF":
+                    file = processArgumentFile(sent[1]);
+                    readCommands(file);
+                    break;
+                case "L":
+                    file = processArgumentFile(sent[1]);
+                    this.model.importSpreadSheet(file);
+                    break;
+                case "S":
+                    file = new File(sent[1]);
+                    file.createNewFile();
+                    this.model.exportSpreadSheet(file);
+                    break;
+
+                case "E":
+                    String[] position = parsePosition(sent[1]);
+                    int column = getIntColumn(position[0]);
+                    int row = Integer.parseInt(position[1]);
+                    Cell cell = getCell(column, row);
+                    if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
+                        model.createCell(column, row, sent[2]);
+                    } else {
+                        model.editCell(column, row, sent[2]);
+                    }
+                    break;
+
+                default:
+                    throw new ReadCommandException("Error in the format of command introduced.");
+            }
+        }
+    }
+
+    /**
+     * This function checks whether a given path of the file does exist and can
+     * be used as input.
+     *
+     * @param path_file
+     * @return File if found
+     * @throws FileNotFoundException
+     */
+    private File processArgumentFile(String path_file) throws FileNotFoundException {
+        File file = new File(path_file);
+        if (file.exists()) {
+            return file;
+        } else {
+            throw new FileNotFoundException("Path introduced does not exist. Can not read file.");
+        }
+    }
+
     /**
      * This command shall create a new empty SpreadSheet
-     * @param tester
-     * @return 
+     *
+     * @param tester set to True if the new SpreadSheet will be used in
+     * debugging mode, which outputs some visualization of the process
+     * @return SpreadSheet created
      */
     public SpreadSheet createNewSpreadSheet(boolean tester) {
         if (tester) {
@@ -179,6 +305,13 @@ public class Controller {
         }
     }
 
+    /**
+     * Parses the cell coordinates from a single String. Separates the row and
+     * column and check some synta errors
+     *
+     * @param position
+     * @return the column and row processed
+     */
     private String[] parsePosition(String position) {
         String[] coord = new String[2];
         if (position.contains("-")) {
@@ -231,27 +364,6 @@ public class Controller {
     }
 
     /**
-     * Gets the String Alphabetical column of the coordinate from an int Column
-     * Number
-     *
-     * @param column : passes the column as an int. Ex: 27
-     * @return String refering to the coordinate of the column in the
-     * SpreadSheet. Ex: AB
-     */
-    private String getStrColumn(int number) {
-        int number_of_letters = number;
-        String col = "";
-        int module;
-
-        while (number_of_letters > 0) {
-            module = (number_of_letters - 1) % ('Z' - 'A' + 1);
-            col = String.valueOf((char) ('A' + module) + col);
-            number_of_letters = (int) ((number_of_letters - module) / ('Z' - 'A' + 1));
-        }
-        return col;
-    }
-
-    /**
      * Exports the SpreadSheet to a S2V file. Asks for the path to save the file
      * to. Manage errors if path does not exist.
      */
@@ -296,11 +408,11 @@ public class Controller {
                 return;
             }
 
-            file = new File(path_file);
-            if (file.exists()) {
+            try {
+                file = processArgumentFile(path_file);
                 break;
-            } else {
-                this.view.display("Path introduced does not exist. Can not import file.");
+            } catch (FileNotFoundException ex) {
+                this.view.display(ex.getMessage());
             }
         } while (true);
         try {
