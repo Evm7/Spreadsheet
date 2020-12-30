@@ -18,11 +18,8 @@ import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jdk.nashorn.internal.runtime.ParserException;
 
 /**
@@ -33,7 +30,7 @@ import jdk.nashorn.internal.runtime.ParserException;
  */
 public class FormulaEvaluator {
 
-    Tokenizer tokenizer;        
+    Tokenizer tokenizer;
     boolean debug = false;
 
     /**
@@ -73,19 +70,14 @@ public class FormulaEvaluator {
         functions.put("PROMEDIO", new FunctionPromedio());
         functions.put("SUMA", new FunctionSuma());
     }
-    
-    /**
-     * Sets debug value to True or False, in order to visualize some logs
-     * 
-     * @param mode
-     */
-    public void setDebugger(boolean mode){
-        debug=mode;
+
+    public void setDebugger(boolean mode) {
+        debug = mode;
     }
 
     /**
      * Parses a Formula by Tokenizing, evaluating the Grammar and creating the
-     * Post Fix Expression. Uses the help of the Parser.
+     * Post Fix Expression.Uses the help of the Parser.
      *
      * @param formula
      * @return a List of Terms that are contained in the Formula as Post Fix
@@ -94,7 +86,6 @@ public class FormulaEvaluator {
      */
     public List<Term> parseFormula(String formula) throws GrammarErrorFormula {
         formula = formula.replaceAll(" ", "");
-        //formula = formula.replaceFirst("=", "");
         print(debug, "_______________________ PARSING FORMULA _______________________");
         try {
             print(debug, "[INFO] .. Tokenizing formula : " + formula);
@@ -129,7 +120,7 @@ public class FormulaEvaluator {
      * @return List of Terms
      */
     private List<Term> convertTokenToOTerm(LinkedList<Tokenizer.Token> tokens) {
-        List<Term> terms = new LinkedList<Term>();
+        List<Term> terms = new LinkedList<>();
         int facts = 0;
         for (Tokenizer.Token tok : tokens) {
             TokenType type = tok.token;
@@ -183,8 +174,8 @@ public class FormulaEvaluator {
      * @return list of tokens sorted depending on Shunting Yard Algorithm
      */
     public LinkedList<Tokenizer.Token> shuntingYard(LinkedList<Tokenizer.Token> tokens) {
-        LinkedList<Tokenizer.Token> queue = new LinkedList<Tokenizer.Token>();  // for values
-        LinkedList<Tokenizer.Token> stack = new LinkedList<Tokenizer.Token>();  // for operators
+        LinkedList<Tokenizer.Token> queue = new LinkedList<>();  // for values
+        LinkedList<Tokenizer.Token> stack = new LinkedList<>();  // for operators
 
         Tokenizer.Token topStack;
 
@@ -266,29 +257,19 @@ public class FormulaEvaluator {
     }
 
     /**
-     * Evaluates the grammar of the list of tokens.Userd to check if the user has inputted a formula which does not have a
- Proper Mathematical format.
+     * Evaluates the grammar of the list of tokens.Userd to check if the user
+     * has inputted a formula which does not have a Proper Mathematical format.
      *
-     * i. Check that number of OPEN BRACKETS equals
- the number of CLOSED BRACKETS.
-
- ii. Check if the brackets are closed before being opened .
-
- iii. If there is a MINUS or PLUS token before a REAL VALUE and after OPEN
- BRACKETS or starting the formula, unify both tokens to REAL VALUE with
- the corresponding sign.
-
- iv. Check that COLON can only be used between CELL token.
-
- v. Check that operators can only be used between CELL , REAL NUMBER,
- brackets or FORMULA.
-
- vi. Check if formula is followed by OPEN BRACKET.
-
- vii. Before closing a bracket only a CELL, REAL NUMBER or CLOSE BRACKET
- accepted.
-
- viii. Before opening a bracket there can not be a CELL or REAL NUMBER.
+     * i. Check that number of OPEN BRACKETS equals the number of CLOSED
+     * BRACKETS. ii. Check if the brackets are closed before being opened . iii.
+     * If there is a MINUS or PLUS token before a REAL VALUE and after OPEN
+     * BRACKETS or starting the formula, unify both tokens to REAL VALUE with
+     * the corresponding sign. iv. Check that COLON can only be used between
+     * CELL token. v. Check that operators can only be used between CELL , REAL
+     * NUMBER, brackets or FORMULA. vi. Check if formula is followed by OPEN
+     * BRACKET. vii. Before closing a bracket only a CELL, REAL NUMBER or CLOSE
+     * BRACKET accepted. viii. Before opening a bracket there can not be a CELL
+     * or REAL NUMBER.
      *
      * @param tokens
      * @return
@@ -412,17 +393,6 @@ public class FormulaEvaluator {
      */
     private boolean isValue(Tokenizer.Token token, boolean before) {
         return ((token.token == TokenType.FORMULA && !before) || (token.token == TokenType.CELL) || (token.token == TokenType.REAL_NUMBER) || (token.token == TokenType.RANGE) || (token.token == TokenType.OPEN_BRACKET && !before) || (token.token == TokenType.CLOSE_BRACKET && before));
-    }
-
-    /**
-     * Check whether the Token is Value or Not. A Token is considered a value
-     * when token is type: Formula, cell or real number
-     *
-     * @param token
-     * @return True if Operator
-     */
-    private boolean isValue(Tokenizer.Token token) {
-        return ((token.token == TokenType.FORMULA) || (token.token == TokenType.CELL) || (token.token == TokenType.REAL_NUMBER));
     }
 
     /**
