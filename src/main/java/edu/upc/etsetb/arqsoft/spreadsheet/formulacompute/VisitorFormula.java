@@ -11,44 +11,53 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * The @author of SpreadSheet is estev
+ *
+ * This class implements the Visitor Pattern to operate Formulas
  */
 public class VisitorFormula implements Visitor {
 
     LinkedList<Term> queue;
     boolean debug = false;
-    
+
     /**
-     * Constructor of VisitorFormula.
-     * 
-     * @param debug
+     * Constructor of VisitorFormula. Contains a List with all the values of the
+     * formula to Operate.
+     *
+     * @param debug used to test and debug the program
      */
     public VisitorFormula(boolean debug) {
-        debug=debug;
+        this.debug = debug;
         queue = new LinkedList<Term>();  // for values
 
     }
-    
-    private void print(boolean testing, String toprint){
-        if(testing){
+
+    /**
+     * Function only used for printing steps of Visitor Formula when debugging.
+     *
+     * @param testing
+     * @param toprint
+     */
+    private void print(String toprint) {
+        if (this.debug) {
             System.out.println(toprint);
         }
     }
 
     /**
-     * Removes the last two terms of the queue and operates them. Then tries to
-     * add the obtained result to the queue
+     * The term is an operator so we are opering the last two operants of the
+     * queue and add the result to the queue.
      * 
+     * If division to 0 error, then show error. Should throw the error.
+     *
      * @param term
      */
     @Override
     public void visitOperatorImpl(OperatorImpl term) {
-        print(debug, "\tThe term is an operator");
+        print("\tThe term is an operator");
         Term second = queue.removeLast();
         Term first = queue.removeLast();
         try {
@@ -60,10 +69,8 @@ public class VisitorFormula implements Visitor {
     }
 
     /**
-     * Computes the value of a Function (operating through all the corresponding
-     * operands) and obtains the new queue
-     * 
-     * @param term
+     * Computes the value of a function given all its arguments
+     * @param term 
      */
     @Override
     public void visitOperatorFunction(OperatorFunction term) {
@@ -72,42 +79,38 @@ public class VisitorFormula implements Visitor {
     }
 
     /**
-     * Adds the Argument term to the queue
-     * 
-     * @param term
+     * Adds the Argument to the queue
+     * @param term 
      */
     @Override
     public void visitArgument(Argument term) {
-        print(debug,"\t\tAdding to queue as value");
+        print("\t\tAdding to queue as value");
         queue.add(term);
     }
 
     /**
-     * Adds the OperandFunction term to the queue
-     * 
-     * @param term
+     * Adds the OperandFunction to the queue
+     * @param term 
      */
     @Override
     public void visitOperandFunction(OperandFunction term) {
-        print(debug,"\t\tAdding to queue as value");
+        print("\t\tAdding to queue as value");
         queue.add(term);
     }
 
     /**
-     * Adds the OperandNumber term to the queue
-     * 
-     * @param term
+     * Adds the OperandNumber to the queue
+     * @param term 
      */
     @Override
     public void visitOperandNumber(OperandNumber term) {
-        print(debug,"\t\tAdding to queue as value");
+        print("\t\tAdding to queue as value");
         queue.add(term);
     }
 
     /**
-     * Gets the final result of the queue
-     * 
-     * @return
+     * Get the result of the last term in the queue as a Double value.
+     * @return the final result (as a double) of the formula
      */
     public Double getResult() {
         Term result = queue.getLast();
@@ -116,7 +119,7 @@ public class VisitorFormula implements Visitor {
         } else if (result instanceof ArgumentIndividual) {
             return ((ArgumentIndividual) result).getValue().getValue();
         } else {
-            print(debug,"Error " + result.toString());
+            print("Error " + result.toString());
             return 0.0;
         }
     }
@@ -130,7 +133,7 @@ public class VisitorFormula implements Visitor {
      * @return
      */
     private OperandNumber operate(Term first, Term second, OperatorImpl operator) throws MathematicalInvalidation {
-        print(debug,"\t\t\tWe are computing: " + first.toString() + " " + operator.toString() + " " + second.toString());
+        print("\t\t\tWe are computing: " + first.toString() + " " + operator.toString() + " " + second.toString());
         OperandNumber first_val;
         OperandNumber second_val;
         if (first instanceof OperandNumber) {
@@ -158,17 +161,17 @@ public class VisitorFormula implements Visitor {
      * @return New List of Terms that remains after the Operation.
      */
     private LinkedList<Term> operateFunction(LinkedList<Term> queue, OperatorFunction operator) {
-        print(debug,"\t\t\tWe are computing a formula " + operator.toString());
-        List<Term> operands = new LinkedList<Term>();
+        print("\t\t\tWe are computing a formula " + operator.toString());
+        List<Term> operands = new LinkedList<>();
         int index = operator.getTerms() + 1;
-        print(debug,"\t\t\tNumber of items are " + index);
+        print("\t\t\tNumber of items are " + index);
 
         for (int count = 0; count < index; count++) {
             Term term = queue.remove(queue.size() - 1);
             operands.add(term);
-            print(debug,"[ " + term.toString() + " ]  ");
+            print("[ " + term.toString() + " ]  ");
         }
-        print(debug,"");
+        print("");
         OperandNumber num = ((OperatorFunction) operator).computeOperation(new OperandFunction(operands));
         queue.add(num);
         return queue;
