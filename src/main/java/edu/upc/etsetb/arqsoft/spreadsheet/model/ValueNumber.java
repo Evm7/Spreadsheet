@@ -33,8 +33,7 @@ public class ValueNumber extends CellValue {
      *
      * @param content
      * @param coordinate
-     * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
+     * @throws CircularDependencies
      */
     public ValueNumber(ContentFormula content, CellCoordinate coordinate) throws CircularDependencies {
         SpreadSheet.parser.circularDependencies(coordinate);
