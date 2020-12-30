@@ -7,7 +7,6 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Function;
-import edu.upc.etsetb.arqsoft.spreadsheet.model.NoParseableArguments;
 import java.util.List;
 
 /**
@@ -21,16 +20,7 @@ public class FunctionMax implements Function{
      */
     public FunctionMax() {
     }
-    
-    /**
-     * Parses the Arguments of the Functions
-     * @return
-     * @throws NoParseableArguments
-     */
-    @Override
-    public Double[] parseArguments() throws NoParseableArguments{
-        throw new NoParseableArguments("Not supported yet."); 
-    }
+
 
     /**
      * Computes the Max Function to all the operands passed as parameters.

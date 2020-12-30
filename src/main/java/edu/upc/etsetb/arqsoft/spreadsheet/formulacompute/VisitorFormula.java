@@ -8,8 +8,11 @@ package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,18 +21,32 @@ import java.util.List;
 public class VisitorFormula implements Visitor {
 
     LinkedList<Term> queue;
+    boolean debug = false;
+    
 
-    public VisitorFormula() {
+    public VisitorFormula(boolean debug) {
+        debug=debug;
         queue = new LinkedList<Term>();  // for values
 
+    }
+    
+    private void print(boolean testing, String toprint){
+        if(testing){
+            System.out.println(toprint);
+        }
     }
 
     @Override
     public void visitOperatorImpl(OperatorImpl term) {
-        System.out.println("\tThe term is an operator");
+        print(debug, "\tThe term is an operator");
         Term second = queue.removeLast();
         Term first = queue.removeLast();
-        queue.add(operate(first, second, (OperatorImpl) term));
+        try {
+            queue.add(operate(first, second, (OperatorImpl) term));
+        } catch (MathematicalInvalidation ex) {
+            queue.add(new OperandNumber(0.0));
+            System.out.println("ERROR: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -40,19 +57,19 @@ public class VisitorFormula implements Visitor {
 
     @Override
     public void visitArgument(Argument term) {
-        System.out.println("\t\tAdding to queue as value");
+        print(debug,"\t\tAdding to queue as value");
         queue.add(term);
     }
 
     @Override
     public void visitOperandFunction(OperandFunction term) {
-        System.out.println("\t\tAdding to queue as value");
+        print(debug,"\t\tAdding to queue as value");
         queue.add(term);
     }
 
     @Override
     public void visitOperandNumber(OperandNumber term) {
-        System.out.println("\t\tAdding to queue as value");
+        print(debug,"\t\tAdding to queue as value");
         queue.add(term);
     }
 
@@ -63,7 +80,7 @@ public class VisitorFormula implements Visitor {
         } else if (result instanceof ArgumentIndividual) {
             return ((ArgumentIndividual) result).getValue().getValue();
         } else {
-            System.out.println("Error " + result.print());
+            print(debug,"Error " + result.toString());
             return 0.0;
         }
     }
@@ -76,8 +93,8 @@ public class VisitorFormula implements Visitor {
      * @param operator OperatorImpl
      * @return
      */
-    private OperandNumber operate(Term first, Term second, OperatorImpl operator) {
-        System.out.println("\t\t\tWe are computing: " + first.print() + " " + operator.print() + " " + second.print());
+    private OperandNumber operate(Term first, Term second, OperatorImpl operator) throws MathematicalInvalidation {
+        print(debug,"\t\t\tWe are computing: " + first.toString() + " " + operator.toString() + " " + second.toString());
         OperandNumber first_val;
         OperandNumber second_val;
         if (first instanceof OperandNumber) {
@@ -105,17 +122,17 @@ public class VisitorFormula implements Visitor {
      * @return New List of Terms that remains after the Operation.
      */
     private LinkedList<Term> operateFunction(LinkedList<Term> queue, OperatorFunction operator) {
-        System.out.println("\t\t\tWe are computing a formula " + operator.print());
+        print(debug,"\t\t\tWe are computing a formula " + operator.toString());
         List<Term> operands = new LinkedList<Term>();
         int index = operator.getTerms() + 1;
-        System.out.println("\t\t\tNumber of items are " + index);
+        print(debug,"\t\t\tNumber of items are " + index);
 
         for (int count = 0; count < index; count++) {
             Term term = queue.remove(queue.size() - 1);
             operands.add(term);
-            System.out.print("[ " + term.print() + " ]  ");
+            print(debug,"[ " + term.toString() + " ]  ");
         }
-        System.out.println();
+        print(debug,"");
         OperandNumber num = ((OperatorFunction) operator).computeOperation(new OperandFunction(operands));
         queue.add(num);
         return queue;

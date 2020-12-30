@@ -30,6 +30,13 @@ public class ArgumentIndividual extends Argument {
 
     }
 
+    @Override
+    public String toString() {
+        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+
     /**
      * Obtains the Value of the Cell the Individual Argument is refering to
      *

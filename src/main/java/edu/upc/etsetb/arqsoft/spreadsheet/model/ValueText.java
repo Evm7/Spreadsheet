@@ -6,6 +6,8 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException;
+
 /**
  * Contains the Value of a Cell which is explicitly a Text. Used for Text
  * Content
@@ -53,5 +55,13 @@ public class ValueText extends CellValue {
     @Override
     public String toString() {
         return this.value;
+    }
+
+    /*
+    * Only used for testing
+     */
+    @Override
+    public Double getValueasDouble() throws NoNumberException{
+        throw new NoNumberException("The value of the cell is "+ this.value);
     }
 }

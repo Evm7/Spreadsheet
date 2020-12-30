@@ -6,11 +6,15 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.BadCoordinateException;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.ContentException;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.FormulaEvaluator;
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -24,6 +28,7 @@ import java.util.List;
 public class SpreadSheet {
 
     private String name;
+    private boolean debugging=false;
 
     /**
      *
@@ -50,6 +55,11 @@ public class SpreadSheet {
         importer = new Importer();
         exporter = new Exporter();
 
+    }
+    
+    public void setDebugger(boolean debug){
+        debugging=debug;
+        parser.setDebugger(debug);
     }
 
     /**
@@ -96,18 +106,18 @@ public class SpreadSheet {
         complete_cells(column, row);
         return editCell(column, row, content);
     }
-    
-    public Cell removeCell(int column, int row){
-        return this.spreadsheet[row-1][column];
+
+    public Cell removeCell(int column, int row) {
+        return this.spreadsheet[row - 1][column];
 
     }
 
     public Cell editCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
-        Cell cell = getCell(column, row-1);
+        Cell cell = getCell(column, row - 1);
         cell.updateCell(content, true);
         return cell;
     }
-    
+
     /**
      *
      * @param column
@@ -163,7 +173,6 @@ public class SpreadSheet {
             Cell[] row_cells = imported.get(row);
             for (int column = 0; column < max_column; column++) {
                 if (column < row_cells.length) {
-                    System.out.println("Column : "+ column+ " row " + row+ " is " +  row_cells[column].getStringContent());
                     this.spreadsheet[row][column] = row_cells[column];
                 } else {
                     this.spreadsheet[row][column] = new Cell(column, row, "");
@@ -172,11 +181,10 @@ public class SpreadSheet {
         }
         updateSpreadSheet();
     }
-    
-    private void updateSpreadSheet() throws CircularDependencies{
+
+    private void updateSpreadSheet() throws CircularDependencies {
         for (Cell[] cells : spreadsheet) {
             for (Cell cell : cells) {
-                System.out.println(cell.toString());
                 cell.recomputeValue(true);
             }
         }
@@ -188,5 +196,121 @@ public class SpreadSheet {
      */
     public void exportSpreadSheet(File file) {
         exporter.exportSpreadSheet(file, this.spreadsheet);
+    }
+
+    /**
+     * ADD FOR DEBUGGING AND TESTING, NOT USED OTHERWISE*
+     */
+    // FIRST ADDED 1
+    public void setCellContent(String cellCoord, String content) throws ContentException, BadCoordinateException {
+        String[] position = parsePosition(cellCoord);
+        int column, row;
+        try {
+            column = getIntColumn(position[0]);
+            row = Integer.parseInt(position[1]);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new BadCoordinateException("Coordinate was not correctly introduced");
+        }
+        Cell cell = getCell(column, row);
+        try {
+            if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
+                createCell(column, row, content);
+
+            } else {
+                editCell(column, row, content);
+
+            }
+        } catch (CircularDependencies | GrammarErrorFormula ex) {
+            removeCell(column, row);
+            throw new ContentException(ex.getMessage());
+        }
+    }
+
+    private String[] parsePosition(String position) throws BadCoordinateException {
+        String[] coord = new String[2];
+        if (position.contains("-")) {
+            coord = position.split("-");
+        } else {
+            coord[0] = position.replaceAll("[0-9]", "");
+            coord[1] = position.replaceAll("[a-zA-Z]", "");
+        }
+        coord[0] = coord[0].toUpperCase();
+        Pattern col = Pattern.compile("[^A-Z]");
+        Pattern row = Pattern.compile("[^0-9]");
+
+        if (col.matcher(coord[0]).find()) {
+            throw new BadCoordinateException("Error in column as contains none alphabetical characters. Cell needs to be specified as Column-Row. Example: A1, A-1, a-1 or a1.");
+        }
+        if (row.matcher(coord[1]).find()) {
+            throw new BadCoordinateException("Error in row as contain none numerical characters. Cell needs to be specified as Column-Row. Example: A1, A-1, a-1 or a1.");
+        }
+        return coord;
+    }
+
+    /**
+     * Gets the int number of the coordinate from an String Column
+     *
+     * @param column : passes the column as an String. Ex: AB
+     * @return int refering to the coordinate of the column in the SpreadSheet.
+     * Ex: 27
+     */
+    private int getIntColumn(String column) {
+        int column_num = 0;
+        for (int i = 0; i < column.length(); i++) {
+            column_num += Math.pow(('Z' - 'A' + 1), i) * (column.charAt(column.length() - 1 - i) - 'A' + 1);
+        }
+        return column_num - 1;
+    }
+
+    /**
+     * Gets the String Alphabetical column of the coordinate from an int Column
+     * Number
+     *
+     * @param column : passes the column as an int. Ex: 27
+     * @return String refering to the coordinate of the column in the
+     * SpreadSheet. Ex: AB
+     */
+    private String getStrColumn(int number) {
+        int number_of_letters = number;
+        String col = "";
+        int module;
+
+        while (number_of_letters > 0) {
+            module = (number_of_letters - 1) % ('Z' - 'A' + 1);
+            col = String.valueOf((char) ('A' + module) + col);
+            number_of_letters = (int) ((number_of_letters - module) / ('Z' - 'A' + 1));
+        }
+        return col;
+    }
+
+    // FIRST ADDED 2
+    public double getCellContentAsDouble(String coord) throws BadCoordinateException, NoNumberException {
+        String[] position = parsePosition(coord);
+        int column, row;
+        try {
+            column = getIntColumn(position[0]);
+            row = Integer.parseInt(position[1]);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new BadCoordinateException("Coordinate was not correctly introduced");
+        }
+        Cell cell = getCell(column, row - 1);
+        System.out.println("_____________ VALUE IS " + cell.value.getValueasDouble() + " _____________");
+        return cell.value.getValueasDouble();
+    }
+
+    // FIRST ADDED 3
+    public String getCellContentAsString(String coord) throws BadCoordinateException {
+        String[] position = parsePosition(coord);
+        int column, row;
+        try {
+            column = getIntColumn(position[0]);
+            row = Integer.parseInt(position[1]);
+        } catch (IndexOutOfBoundsException ex) {
+            throw new BadCoordinateException("Coordinate was not correctly introduced");
+        }
+        Cell cell = getCell(column, row - 1);
+        System.out.println("_____________ VALUE IS " + cell.value.toString() + " _____________");
+
+        return cell.value.toString();
     }
 }

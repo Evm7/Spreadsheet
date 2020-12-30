@@ -41,7 +41,7 @@ public class OperandNumber implements Term {
      * @return
      */
     @Override
-    public String print() {
+    public String toString() {
         return "" + this.operant;
     }
 

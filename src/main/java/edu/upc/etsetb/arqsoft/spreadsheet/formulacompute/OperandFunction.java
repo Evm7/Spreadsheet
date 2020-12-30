@@ -68,10 +68,10 @@ public class OperandFunction implements Term {
      *
      * @return
      */
-    public String print() {
+    public String toString() {
         String res = "[";
         for (Term op : operants) {
-            res = res + op.print() + " ; ";
+            res = res + op.toString() + " ; ";
         }
         return res + "]";
     }

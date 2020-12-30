@@ -38,7 +38,7 @@ public class OperatorFunction implements Term {
      *
      * @return
      */
-    public String print() {
+    public String toString() {
         return formula;
     }
 

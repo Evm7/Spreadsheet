@@ -7,6 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException;
 
 /**
  * Contains the Value of a Cell which is explicitly a Number. Used for Formula
@@ -64,5 +65,13 @@ public class ValueNumber extends CellValue {
     @Override
     public String toString() {
         return "" + this.value;
+    }
+    
+        /*
+    * Only used for testing
+    */
+    @Override
+    public Double getValueasDouble()  throws NoNumberException{
+        return value;
     }
 }

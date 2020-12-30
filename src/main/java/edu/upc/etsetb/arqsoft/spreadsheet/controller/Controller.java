@@ -14,8 +14,7 @@ import edu.upc.etsetb.arqsoft.spreadsheet.model.TypeOfContent;
 import edu.upc.etsetb.arqsoft.spreadsheet.view.View;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Contrains the Controller of the program which manages the View and the Model.
@@ -28,7 +27,7 @@ public class Controller {
 
     private SpreadSheet model;
     private View view;
-    private int max_length = 0;
+    private int max_length = 5;
     private String name;
 
     /**
@@ -36,14 +35,16 @@ public class Controller {
      * user obtained from teh view. It is the main class, which initialize View
      * and Model and manage the whole Project.
      */
-    public Controller() {
+    public Controller(boolean testing) {
         this.view = new View();
-        name = this.view.askQuestion("What is your name?");
+        if (testing) {
+            name = "Tester";
+        } else {
+            name = this.view.askQuestion("What is your name?");
+        }
         try {
             model = new SpreadSheet(name, max_length);
-        } catch (CircularDependencies ex) {
-            this.view.display("Error should never ocurr here: " + ex.getMessage());
-        } catch (GrammarErrorFormula ex) {
+        } catch (CircularDependencies | GrammarErrorFormula ex) {
             this.view.display("Error should never ocurr here: " + ex.getMessage());
         }
     }
@@ -55,7 +56,7 @@ public class Controller {
         String option;
         do {
             option = showMenu();
-        } while (option != "Exit");
+        } while (!"Exit".equals(option));
     }
 
     /**
@@ -71,7 +72,7 @@ public class Controller {
                 break;
             case "2":
             case "C":
-                createNewSpreadSheet();
+                createNewSpreadSheet(false);
                 break;
             case "3":
             case "E":
@@ -108,20 +109,23 @@ public class Controller {
     private void readCommandsFromFile() {
 
     }
-
     /**
      * This command shall create a new empty SpreadSheet
      */
-    private void createNewSpreadSheet() {
-        max_length = Integer.parseInt(this.view.askQuestion("How many cells to start?"));
+    public SpreadSheet createNewSpreadSheet(boolean tester) {
+        if (tester) {
+            max_length = 30;
+        } else {
+            max_length = Integer.parseInt(this.view.askQuestion("How many cells to start?"));
+        }
         try {
             model = new SpreadSheet(name, max_length);
-        } catch (CircularDependencies ex) {
-            this.view.display("Error should never ocurr here: " + ex.getMessage());
-        } catch (GrammarErrorFormula ex) {
+            model.setDebugger(tester);
+        } catch (CircularDependencies | GrammarErrorFormula ex) {
             this.view.display("Error should never ocurr here: " + ex.getMessage());
         }
         this.view.display("Let's start, " + name + " :");
+        return model;
     }
 
     /**
@@ -129,46 +133,40 @@ public class Controller {
      * content of the cell and calls model to compute the internal next steps.
      */
     private void addContent() {
-        if (this.max_length == 0) {
-            createNewSpreadSheet();
+        String[] position = null;
+        while (position == null) {
+            String cellCoord = this.view.askQuestion("Where do you want your Content? (column-raw)");
+            position = parsePosition(cellCoord);
         }
-        String[] position = this.view.askQuestion("Where do you want your Content? (column-raw)").split("-");
         int column, row;
         try {
             column = getIntColumn(position[0]);
             row = Integer.parseInt(position[1]);
         } catch (IndexOutOfBoundsException ex) {
-            view.display("Content was not correctly introduced");
+            view.display("Coordinate was not correctly introduced");
             return;
         }
         Cell cell = getCell(column, row);
-        String value;
+        String content;
         if (cell == null || (cell.getType_of_content() == TypeOfContent.EMPTY)) {
-            value = this.view.askQuestion("Which content do you want to introduce in [" + position[0] + row + "] ?");
+            content = this.view.askQuestion("Which content do you want to introduce in [" + position[0] + row + "] ?");
             try {
-                model.createCell(column, row, value);
-            } catch (CircularDependencies ex) {
-                this.view.display("Error: " + ex.getMessage());
-                model.removeCell(column, row);
-            } catch (GrammarErrorFormula ex) {
+                model.createCell(column, row, content);
+            } catch (CircularDependencies | GrammarErrorFormula ex) {
                 this.view.display("Error: " + ex.getMessage());
                 model.removeCell(column, row);
             }
         } else {
-            value = this.view.askQuestion("Do you want to modify cell in [" + position[0] + row + "] : " + cell.printValue() + "? [y/n]");
-            if (value.equals("n")) {
-                return;
-            } else {
-                value = this.view.askQuestion("Which content do you want to introduce?");
+            content = this.view.askQuestion("Do you want to modify cell in [" + position[0] + row + "] : " + cell.printValue() + "? [y/n]");
+            if (!content.equals("n")) {
+                content = this.view.askQuestion("Which content do you want to introduce?");
                 try {
-                    model.editCell(column, row, value);
+                    model.editCell(column, row, content);
                 } catch (CircularDependencies ex) {
                     this.view.display("Error: " + ex.getMessage());
                     try {
                         model.editCell(column, row, cell.getStringContent());
-                    } catch (CircularDependencies ex1) {
-                        this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
-                    } catch (GrammarErrorFormula ex1) {
+                    } catch (CircularDependencies | GrammarErrorFormula ex1) {
                         this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
                     }
                 } catch (GrammarErrorFormula ex) {
@@ -176,6 +174,29 @@ public class Controller {
                 }
             }
         }
+    }
+
+    private String[] parsePosition(String position) {
+        String[] coord = new String[2];
+        if (position.contains("-")) {
+            coord = position.split("-");
+        } else {
+            coord[0] = position.replaceAll("[0-9]", "");
+            coord[1] = position.replaceAll("[a-zA-Z]", "");
+        }
+        coord[0] = coord[0].toUpperCase();
+        Pattern col = Pattern.compile("[^A-Z]");
+        Pattern row = Pattern.compile("[^0-9]");
+
+        if (col.matcher(coord[0]).find()) {
+            this.view.display("Error in column as contains none alphabetical characters. Cell needs to be specified as Column-Row. Example: A1, A-1, a-1 or a1.");
+            return null;
+        }
+        if (row.matcher(coord[1]).find()) {
+            this.view.display("Error in row as contain none numerical characters. Cell needs to be specified as Column-Row. Example: A1, A-1, a-1 or a1.");
+            return null;
+        }
+        return coord;
     }
 
     /**

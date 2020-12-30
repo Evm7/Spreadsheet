@@ -4,20 +4,20 @@
  *  of a spreadsheet, which can be used through a textual interface.
  *  Developed by Esteve Valls Mascaró
  */
-package edu.upc.etsetb.arqsoft.spreadsheet.model;
+package edu.upc.etsetb.arqsoft.spreadsheet.exceptions;
 
 /**
- * Exception class for error in Formula arguments
+ * Exception class with Formula Update problematic
  * @author estev
  */
-public class NoParseableArguments extends Exception {
+public class NoNumberException extends Exception {
 
     /**
-     * Exception raise when exists Terms in the formula can not be parsed correctly.
-     * Format of formula inserted by user is not correct or adequate.
+     * Exception raise when formula does contain a not correct 
      * @param string
+     * ONLY USED FOR TESTING AND DEBUGGIND. NOT NECESSARY OTHERWISE
      */
-    public NoParseableArguments(String string) {
+    public NoNumberException(String string) {
         super(string);
     }
     

@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) {
         // TODO code application logic here
 
-        Controller controller = new Controller();
+        Controller controller = new Controller(false);
         controller.run();
 
     }

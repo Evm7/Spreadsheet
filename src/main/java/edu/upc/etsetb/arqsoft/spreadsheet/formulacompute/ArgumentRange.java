@@ -30,6 +30,11 @@ public class ArgumentRange extends Argument {
         super(arg);
     }
 
+    @Override
+    public String toString() {
+        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+    }
+
     /**
      * Obtains the values of the Range Argument is refering to. ArgumentRange
      * can only be used inside a Function, therefore, return an OperandFunction.

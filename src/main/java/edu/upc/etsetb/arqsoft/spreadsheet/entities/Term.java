@@ -19,7 +19,7 @@ public interface Term {
      *
      * @return String
      */
-    String print();
+    String toString();
 
     /**
      * Shows the Type of term we are refering to as String Argument |

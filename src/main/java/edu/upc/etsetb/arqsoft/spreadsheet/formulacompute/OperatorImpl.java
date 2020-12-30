@@ -8,6 +8,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation;
 
 /**
  * Class which implements Term Interface Used to Operate Terms explicit by the
@@ -55,7 +56,7 @@ public class OperatorImpl implements Term {
      *
      * @return
      */
-    public String print() {
+    public String toString() {
         return sign;
     }
 
@@ -65,10 +66,14 @@ public class OperatorImpl implements Term {
      * @param arg1 left Term
      * @param arg2 right Term
      * @return
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation
      */
-    public OperandNumber computeOperation(OperandNumber arg1, OperandNumber arg2) {
+    public OperandNumber computeOperation(OperandNumber arg1, OperandNumber arg2) throws MathematicalInvalidation {
         Double value = null;
         if (this.sign.equals("/")) {
+            if((Double) (arg2.getValue())==0){
+                throw new MathematicalInvalidation("Error when computing operation "+ ((Double) (arg1.getValue()))+ "/0. Can not divide to 0" );
+            }
             value = (Double) (arg1.getValue()) / (Double) (arg2.getValue());
 
         } else if (this.sign.equals("*")) {

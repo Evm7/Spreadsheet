@@ -33,7 +33,8 @@ import jdk.nashorn.internal.runtime.ParserException;
  */
 public class FormulaEvaluator {
 
-    Tokenizer tokenizer;
+    Tokenizer tokenizer;        
+    boolean debug = false;
 
     /**
      * Contains an static function with all the functions that implement
@@ -72,6 +73,10 @@ public class FormulaEvaluator {
         functions.put("PROMEDIO", new FunctionPromedio());
         functions.put("SUMA", new FunctionSuma());
     }
+    
+    public void setDebugger(boolean mode){
+        debug=mode;
+    }
 
     /**
      * Parses a Formula by Tokenizing, evaluating the Grammar and creating the
@@ -84,28 +89,29 @@ public class FormulaEvaluator {
     public List<Term> parseFormula(String formula) throws GrammarErrorFormula {
         formula = formula.replaceAll(" ", "");
         //formula = formula.replaceFirst("=", "");
+        print(debug, "_______________________ PARSING FORMULA _______________________");
         try {
-            //System.out.println("[INFO] .. Tokenizing formula : " + formula);
+            print(debug, "[INFO] .. Tokenizing formula : " + formula);
             tokenizer.tokenize(formula);
 
         } catch (ParserException e) {
             System.out.println(e.getMessage());
         }
-        //System.out.println("[INFO] .. Evaluating Grammar");
+        print(debug, "[INFO] .. Evaluating Grammar");
         LinkedList<Tokenizer.Token> tokens = evaluateGrammar(tokenizer.getTokens());
         tokens.pop(); // To remove the initial equal
         for (Tokenizer.Token tok : tokens) {
-            //System.out.toString(" [ " + tok.token + " ] ");
+            print(debug, " [ " + tok.token + " ] ");
         }
 
-        //System.out.println("[INFO] .. Creating PostFix (Shaunting Yard Algorithm)");
+        print(debug, "[INFO] .. Creating PostFix (Shaunting Yard Algorithm)");
         tokens = shuntingYard(tokens);
         for (Tokenizer.Token tok : tokens) {
-            //System.out.toString(tok.sequence + "   ");
+            print(debug, tok.sequence + "   ");
         }
         List<Term> terms = convertTokenToOTerm(tokens);
         for (Term tok : terms) {
-            //System.out.toString(tok.toString() + "   ");
+            print(debug, tok.toString() + "   ");
         }
         return terms;
     }
@@ -158,6 +164,12 @@ public class FormulaEvaluator {
         return terms;
     }
 
+    private void print(boolean visualize, String s) {
+        if (visualize) {
+            System.out.println(s);
+        }
+    }
+
     /**
      * Computes the Shunting Yard algorithm for a list of tokens.
      *
@@ -170,19 +182,21 @@ public class FormulaEvaluator {
 
         Tokenizer.Token topStack;
 
+        print(debug, "_______________________ SHUNTING YARD_______________________");
+
         for (Tokenizer.Token token : tokens) {
-            // System.out.println("\t[shuntingYard] using token " + token.token);
+            print(debug, "\t[shuntingYard] using token " + token.token);
             if (toQueue(token)) {
-                // System.out.println("\t\tAdding to queue as value");
+                print(debug, "\t\tAdding to queue as value");
                 queue.add(token);
             } else if (token.token == TokenType.FORMULA) {
-                // System.out.println("\t\tAdding to stack as formula");
+                print(debug, "\t\tAdding to stack as formula");
 
                 stack.add(token);
             } else if (toStack(token)) {
-                // System.out.println("\t\tOpperant to stack found " + token.token);
+                print(debug, "\t\tOpperant to stack found " + token.token);
                 if (stack.isEmpty()) {
-                    // System.out.println("\t\t\tAdding to stack as stack is empty");
+                    print(debug, "\t\t\tAdding to stack as stack is empty");
 
                     stack.add(token);
                 } else {
@@ -190,48 +204,51 @@ public class FormulaEvaluator {
                     while ((topStack != null) && isOperator(topStack) && ((topStack.precedence > token.precedence) || ((topStack.precedence == token.precedence) && isOperator(token))) && (topStack.token != TokenType.OPEN_BRACKET)) {
                         stack.remove(topStack);
                         queue.add(topStack);
-                        // System.out.println("\t\t\tAdding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
+                        print(debug, "\t\t\tAdding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
                         if (stack.isEmpty()) {
                             break;
                         }
                         topStack = stack.getLast();
                     }
                     stack.add(token);
-                    // System.out.println("\t\t\tAdding token to stack after shuffer");
+                    print(debug, "\t\t\tAdding token to stack after shuffer");
 
                 }
 
             } else if (token.token == TokenType.OPEN_BRACKET) {
-                // System.out.println("\t\tAdding ( to stack as (");
+                print(debug, "\t\tAdding ( to stack as (");
 
                 stack.add(token);
             } else if (token.token == TokenType.CLOSE_BRACKET) {
-                // System.out.println("\t\tClose Bracket found, search for )");
+                print(debug, "\t\tClose Bracket found, search for )");
                 topStack = stack.getLast();
                 while ((topStack.token != TokenType.OPEN_BRACKET)) {
-                    // System.out.println("\t\t\t Top Stack " + topStack.token + " is not (, removed from stack and passed to queue");
+                    print(debug, "\t\t\t Top Stack " + topStack.token + " is not (, removed from stack and passed to queue");
                     stack.remove(topStack);
                     queue.add(topStack);
                     topStack = stack.getLast();
                 }
                 if (topStack.token == TokenType.OPEN_BRACKET) {
-                    // System.out.println("\t\t\tRemoving Open Bracket from Stack");
+                    print(debug, "\t\t\tRemoving Open Bracket from Stack");
                     stack.remove(topStack);
+                }
+                if (stack.isEmpty()) {
+                    continue;
                 }
                 topStack = stack.getLast();
                 if (topStack.token == TokenType.FORMULA) {
                     stack.remove(topStack);
                     queue.add(topStack);
-                    // System.out.println("\t\t\tFORMULA FOUND: Adding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
+                    print(debug, "\t\t\tFORMULA FOUND: Adding the topstack " + topStack.token + " to queue as procedence is " + topStack.precedence);
                 }
                 if (stack.isEmpty()) {
-                    break;
+                    continue;
                 }
             }
-            // System.out.toString("\t[INFO] Stack List is:   ");
-            // printList(stack);
-            // System.out.toString("\t[INFO] Queue List is:   ");
-            // printList(queue);
+            print(debug, "\t[INFO] Stack List is:   ");
+            printList(debug, stack);
+            print(debug, "\t[INFO] Queue List is:   ");
+            printList(debug, queue);
 
         }
         for (int i = stack.size() - 1; i >= 0; i--) {
@@ -433,11 +450,11 @@ public class FormulaEvaluator {
      * @return A value as Double
      */
     public Double evaluatePostFix(List<Term> formula) {
-        System.out.println();
-        // System.out.println("[INFO] .. Evaluating PostFix"); // =A1+B1*C1-PROMEDIO(A1:C1) //A	B	C	D	E	 1| 	5.0	3.0	3.65	
-        VisitorFormula visitor = new VisitorFormula();
+        print(debug, "_______________________ EVALUATE POSTFIX");
+        print(debug, "[INFO] .. Evaluating PostFix"); // =A1+B1*C1-PROMEDIO(A1:C1) //A	B	C	D	E	 1| 	5.0	3.0	3.65	
+        VisitorFormula visitor = new VisitorFormula(debug);
         for (Term term : formula) {
-            // System.out.println("\t[evaluatePostFix] using term " + term.toString());
+            print(debug, "\t[evaluatePostFix] using term " + term.toString());
             term.acceptVisitor(visitor);
         }
         return visitor.getResult();
@@ -512,11 +529,13 @@ public class FormulaEvaluator {
      *
      * @param tokens
      */
-    private void printList(LinkedList<Tokenizer.Token> tokens) {
-        for (Tokenizer.Token tok : tokens) {
-            System.out.print(tok.sequence + "   ");
+    private void printList(boolean visited, LinkedList<Tokenizer.Token> tokens) {
+        if (visited) {
+            for (Tokenizer.Token tok : tokens) {
+                System.out.print(tok.sequence + "   ");
+            }
+            System.out.println();
         }
-        System.out.println();
     }
 
     /**

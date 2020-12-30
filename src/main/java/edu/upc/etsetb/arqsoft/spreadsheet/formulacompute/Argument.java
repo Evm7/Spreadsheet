@@ -40,7 +40,7 @@ public class Argument implements Term {
      * @return
      */
     @Override
-    public String print() {
+    public String toString() {
         return arg;
     }
 

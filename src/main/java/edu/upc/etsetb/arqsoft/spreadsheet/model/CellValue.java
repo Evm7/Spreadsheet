@@ -7,6 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException;
 
 /**
  * Super Class implementing the Value InterFace
@@ -32,11 +33,19 @@ public class CellValue implements Value {
 
     /**
      * Returns the value as String.
-     * @return 
+     *
+     * @return
      */
     @Override
     public String toString() {
         return "";
+    }
+
+    /*
+    * Only used for testing
+     */
+    public Double getValueasDouble()  throws NoNumberException {
+        return 0.0;
     }
 
 }
