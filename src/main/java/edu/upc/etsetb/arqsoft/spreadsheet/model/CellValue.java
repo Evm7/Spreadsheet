@@ -27,6 +27,7 @@ public class CellValue implements Value {
      *
      * @return
      */
+    @Override
     public Object getValue() {
         return 0.0;
     }
@@ -41,17 +42,11 @@ public class CellValue implements Value {
         return "";
     }
 
-    /*
-    * Only used for testing
-     */
-
     /**
-     *  Returns the value as Double
-     * 
-     * @return
-     * @throws NoNumberException
+    * Only used for testing
+     * @return 
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException
      */
-
     public Double getValueasDouble()  throws NoNumberException {
         return 0.0;
     }
