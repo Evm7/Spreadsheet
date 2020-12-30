@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Class of the Cell of the SpreadSheet. Each Cell contains a uniq
@@ -41,12 +39,15 @@ public class Cell extends Observable implements Observer {
     public CellValue value;
 
     /**
-     * Constructor of the Cell when passing the column, row, and content.
-     * Initialize the Cell and computes all the updateCell use case.
+     * Constructor of the Cell when passing the column, row, and
+     * content.Initialize the Cell and computes all the updateCell use case.
      *
      * @param column
      * @param row
      * @param content
+     * @throws
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
      */
     public Cell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         this.coordinates = new CellCoordinate(column, row);
@@ -54,13 +55,16 @@ public class Cell extends Observable implements Observer {
     }
 
     /**
-     * Constructor of the Cell when passing the column, row, and content.
-     * Initialize the Cell and computes all the updateCell use case.
+     * Constructor of the Cell when passing the column, row, and
+     * content.Initialize the Cell and computes all the updateCell use case.
      *
      * @param column
      * @param row
      * @param content
      * @param computeFormula: when updating, used to prevent overflow.
+     * @throws
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
      */
     public Cell(int column, int row, String content, boolean computeFormula) throws CircularDependencies, GrammarErrorFormula {
         this.coordinates = new CellCoordinate(column, row);
@@ -68,11 +72,13 @@ public class Cell extends Observable implements Observer {
     }
 
     /**
-     * Update the Cell by passing a new content. Parses the Cell and creates the
+     * Update the Cell by passing a new content.Parses the Cell and creates the
      * determined CellContent and CellValue
      *
      * @param content
      * @param computeFormula
+     * @throws
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
      */
     public void updateCell(String content, boolean computeFormula) throws CircularDependencies, GrammarErrorFormula {
         TypeOfContent typeOfContent = parseContent(content);
@@ -123,13 +129,17 @@ public class Cell extends Observable implements Observer {
     }
 
     /**
-     * Compute value of the Cell without updating the Content. Used when
-     * Updating the whole SpreadSheet to recompute Values after modifying cells
-     * refered in formulas.
+     * Compute value of the Cell without updating the Content.Used when Updating
+     * the whole SpreadSheet to recompute Values after modifying cells refered
+     * in formulas.
+     *
+     * @param computeFormula
+     * @throws
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
      */
     public void recomputeValue(boolean computeFormula) throws CircularDependencies {
         if (this.cellcontent instanceof ContentFormula) {
-            if (computeFormula){
+            if (computeFormula) {
                 addAllObservers();
             }
             this.value = new ValueNumber((ContentFormula) this.cellcontent, this.coordinates);
@@ -184,11 +194,6 @@ public class Cell extends Observable implements Observer {
         return this.cellcontent.getContent();
     }
 
-    /**
-     * Returns the content of the cell
-     * 
-     * @return
-     */
     public CellContent getContent() {
         return this.cellcontent;
     }
@@ -202,11 +207,6 @@ public class Cell extends Observable implements Observer {
         return this.value;
     }
 
-    /**
-     * Returns the coordinates of the cell
-     * 
-     * @return
-     */
     public CellCoordinate getCoordinate() {
         return this.coordinates;
     }
