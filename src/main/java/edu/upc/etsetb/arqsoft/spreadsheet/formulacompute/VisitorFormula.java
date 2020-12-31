@@ -8,11 +8,8 @@ package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
-import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

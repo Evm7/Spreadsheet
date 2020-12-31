@@ -8,7 +8,6 @@ package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
-import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation;
 
 /**
  * Class which implements Term Interface Used to Operate Terms explicit by the
