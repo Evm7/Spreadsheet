@@ -71,6 +71,11 @@ public class FormulaEvaluator {
         functions.put("SUMA", new FunctionSuma());
     }
 
+    
+   /**
+    *  Establishes the evaluator in Debugging mode. 
+    * @param mode True if wans to print the steps followed to evaluate formula.
+    */
     public void setDebugger(boolean mode) {
         debug = mode;
     }

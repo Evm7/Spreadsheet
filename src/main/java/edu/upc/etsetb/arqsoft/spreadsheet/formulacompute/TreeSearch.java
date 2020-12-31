@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  *
@@ -20,16 +19,17 @@ import java.util.Map;
  */
 public class TreeSearch {
 
-    HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
+    HashMap<String, ArrayList> map = new HashMap<>();
     ArrayList<String> stack = new ArrayList<>();
 
     /**
      * Constructor of Tree Search
      *
      * @param map Hash Map
-     * @param computeCell 
-     * @throws CircularDependencies Exception raised when exists two formula A and B, and
-     * A depends on B and B depends on A.
+     * @param computeCell Cell that acts as the Root of the Tree. It is the cell
+     * coordinates of the cell of the current formulas
+     * @throws CircularDependencies Exception raised when exists two formula A
+     * and B, and A depends on B and B depends on A.
      */
     public TreeSearch(HashMap<String, ArrayList> map, String computeCell) throws CircularDependencies {
         this.map = map;
@@ -171,6 +171,7 @@ public class TreeSearch {
 
         /**
          * Constructor of the Node given its parent and the value.
+         *
          * @param value
          * @param parent if null, then we are referring to root Node
          */
@@ -187,7 +188,8 @@ public class TreeSearch {
 
         /**
          * Adds a Node to the children list
-         * @param child 
+         *
+         * @param child
          */
         public void addChild(Node child) {
             children.add(child);
@@ -195,7 +197,8 @@ public class TreeSearch {
 
         /**
          * Gets the parent of the Node
-         * @return 
+         *
+         * @return
          */
         public Node getParent() {
             return this.parent;

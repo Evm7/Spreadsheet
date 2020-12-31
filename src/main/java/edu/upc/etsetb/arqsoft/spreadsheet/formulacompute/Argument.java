@@ -89,7 +89,7 @@ public class Argument implements Term {
     }
 
     /**
-     *
+     * Get the CellValue of a given CellCoordinate from the SpreadSheet
      * @param coordinate Cell coordinate
      * @return Cell value
      */
