@@ -26,8 +26,8 @@ public class TreeSearch {
      * Constructor of Tree Search
      *
      * @param map Hash Map
-     * @param computeCell Cell that acts as the Root of the Tree. It is the cell
-     * coordinates of the cell of the current formulas
+     * @param computeCell String that relfects the identifier of the Root of the Tree. It is the cell
+     * coordinates of the cell of the current formulas established as an String identifier.
      * @throws CircularDependencies Exception raised when exists two formula A
      * and B, and A depends on B and B depends on A.
      */
