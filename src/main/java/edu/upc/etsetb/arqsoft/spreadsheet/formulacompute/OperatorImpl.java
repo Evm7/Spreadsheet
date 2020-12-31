@@ -66,29 +66,32 @@ public class OperatorImpl implements Term {
      * @param arg1 left Term
      * @param arg2 right Term
      * @return Resulting Operand Number
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation Exception raise when formula does contain a not correct parameter
      */
-    public OperandNumber computeOperation(OperandNumber arg1, OperandNumber arg2) throws MathematicalInvalidation {
+    public OperandNumber computeOperation(OperandNumber arg1, OperandNumber arg2) {
         Double value = null;
-        if (this.sign.equals("/")) {
-            if((Double) (arg2.getValue())==0){
-                throw new MathematicalInvalidation("Error when computing operation "+ ((Double) (arg1.getValue()))+ "/0. Can not divide to 0" );
-            }
-            value = (Double) (arg1.getValue()) / (Double) (arg2.getValue());
-
-        } else if (this.sign.equals("*")) {
-            value = (Double) (arg1.getValue()) * (Double) (arg2.getValue());
-
-        } else if (this.sign.equals("+")) {
-            value = (Double) (arg1.getValue()) + (Double) (arg2.getValue());
-
-        } else if (this.sign.equals("-")) {
-            value = (Double) (arg1.getValue()) - (Double) (arg2.getValue());
-        } else if (this.sign.equals("^")) {
-            value = Math.pow((Double) (arg1.getValue()), (Double) (arg2.getValue()));
-
-        } else if (this.sign.equals(";")) {
-            value = arg1.getValue();
+        switch (this.sign) {
+            case "/":
+                if(arg2.getValue()==0){
+                    throw new ArithmeticException("Error when computing operation "+ ((arg1.getValue()))+ "/0. Can not divide to 0" );
+                }   value = arg1.getValue() / arg2.getValue();
+                break;
+            case "*":
+                value = arg1.getValue() * arg2.getValue();
+                break;
+            case "+":
+                value = arg1.getValue() + (arg2.getValue());
+                break;
+            case "-":
+                value = arg1.getValue() - (arg2.getValue());
+                break;
+            case "^":
+                value = Math.pow(arg1.getValue(), arg2.getValue());
+                break;
+            case ";":
+                value = arg1.getValue();
+                break;
+            default:
+                break;
         }
         return new OperandNumber(value);
     }

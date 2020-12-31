@@ -11,6 +11,8 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -60,12 +62,8 @@ public class VisitorFormula implements Visitor {
         print("\tThe term is an operator");
         Term second = queue.removeLast();
         Term first = queue.removeLast();
-        try {
-            queue.add(operate(first, second, (OperatorImpl) term));
-        } catch (MathematicalInvalidation ex) {
-            queue.add(new OperandNumber(0.0));
-            System.out.println("ERROR: " + ex.getMessage());
-        }
+        queue.add(operate(first, second, (OperatorImpl) term));
+
     }
 
     /**
@@ -132,7 +130,7 @@ public class VisitorFormula implements Visitor {
      * @param operator OperatorImpl
      * @return The result as an Operand Number
      */
-    private OperandNumber operate(Term first, Term second, OperatorImpl operator) throws MathematicalInvalidation {
+    private OperandNumber operate(Term first, Term second, OperatorImpl operator) {
         print("\t\t\tWe are computing: " + first.toString() + " " + operator.toString() + " " + second.toString());
         OperandNumber first_val;
         OperandNumber second_val;

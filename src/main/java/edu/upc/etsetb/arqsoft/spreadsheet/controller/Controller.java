@@ -146,7 +146,7 @@ public class Controller {
             scanner.close();
         } catch (FileNotFoundException ex) {
             this.view.display("Path introduced does not exist. Can not read file.");
-        } catch (CircularDependencies | GrammarErrorFormula | ReadCommandException ex) {
+        } catch (CircularDependencies | GrammarErrorFormula | ReadCommandException | ArithmeticException ex) {
             this.view.display(ex.getMessage());
         } catch (IOException ex) {
             this.view.display("There is an error on the coordinates when adding cell");
@@ -293,7 +293,7 @@ public class Controller {
             } catch (CircularDependencies | GrammarErrorFormula ex1) {
                 this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
             }
-        } catch (GrammarErrorFormula ex) {
+        } catch (GrammarErrorFormula | ArithmeticException ex) {
             this.view.display("Error: " + ex.getMessage());
         }
 
@@ -415,6 +415,9 @@ public class Controller {
             this.view.display("Circular dependencies sError in the import: " + ex.getMessage());
         } catch (GrammarErrorFormula ex) {
             this.view.display("Grammar Error in a formula when import: " + ex.getMessage());
+        }
+        catch (ArithmeticException ex){
+            this.view.display("Arithmetic Error: "+ ex.getMessage());
         }
     }
 
