@@ -79,10 +79,10 @@ public class FormulaEvaluator {
      * Parses a Formula by Tokenizing, evaluating the Grammar and creating the
      * Post Fix Expression.Uses the help of the Parser.
      *
-     * @param formula
+     * @param formula Formula as String
      * @return a List of Terms that are contained in the Formula as Post Fix
      * expression
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Exception raised when formula does contain a not correct parameter
      */
     public List<Term> parseFormula(String formula) throws GrammarErrorFormula {
         formula = formula.replaceAll(" ", "");
@@ -271,9 +271,9 @@ public class FormulaEvaluator {
      * BRACKET accepted. viii. Before opening a bracket there can not be a CELL
      * or REAL NUMBER.
      *
-     * @param tokens
-     * @return
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
+     * @param tokens List of tokens
+     * @return List of tokens
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Exception raise when formula does contain a not correct parameter
      */
     public LinkedList<Tokenizer.Token> evaluateGrammar(LinkedList<Tokenizer.Token> tokens) throws GrammarErrorFormula {
         Tokenizer.Token prev = null;
@@ -423,7 +423,7 @@ public class FormulaEvaluator {
      * Evaluate the Post Fix Expression to compute the value depending on a List
      * of Terms passed as parameters.
      *
-     * @param formula
+     * @param formula List of terms
      * @return A value as Double
      */
     public Double evaluatePostFix(List<Term> formula) {
@@ -439,8 +439,9 @@ public class FormulaEvaluator {
 
     /**
      * Uses recursivity to compute all dependencies and its tree
-     * @param cellcoordinate
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
+     * @param cellcoordinate Cell coordinates
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * A depends on B and B depends on A.
      */
     public void circularDependencies(CellCoordinate cellcoordinate) throws CircularDependencies {
         HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();

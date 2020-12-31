@@ -53,7 +53,7 @@ public class VisitorFormula implements Visitor {
      * 
      * If division to 0 error, then show error. Should throw the error.
      *
-     * @param term
+     * @param term Operator
      */
     @Override
     public void visitOperatorImpl(OperatorImpl term) {
@@ -70,7 +70,7 @@ public class VisitorFormula implements Visitor {
 
     /**
      * Computes the value of a function given all its arguments
-     * @param term 
+     * @param term Function Operator
      */
     @Override
     public void visitOperatorFunction(OperatorFunction term) {
@@ -80,7 +80,7 @@ public class VisitorFormula implements Visitor {
 
     /**
      * Adds the Argument to the queue
-     * @param term 
+     * @param term  Argument
      */
     @Override
     public void visitArgument(Argument term) {
@@ -90,7 +90,7 @@ public class VisitorFormula implements Visitor {
 
     /**
      * Adds the OperandFunction to the queue
-     * @param term 
+     * @param term Function Operand 
      */
     @Override
     public void visitOperandFunction(OperandFunction term) {
@@ -100,7 +100,7 @@ public class VisitorFormula implements Visitor {
 
     /**
      * Adds the OperandNumber to the queue
-     * @param term 
+     * @param term Number Operand 
      */
     @Override
     public void visitOperandNumber(OperandNumber term) {
@@ -130,7 +130,7 @@ public class VisitorFormula implements Visitor {
      * @param first OperandNumber or ArgumentIndividual
      * @param second OperandNumber or ArgumentIndividual
      * @param operator OperatorImpl
-     * @return
+     * @return The result as an Operand Number
      */
     private OperandNumber operate(Term first, Term second, OperatorImpl operator) throws MathematicalInvalidation {
         print("\t\t\tWe are computing: " + first.toString() + " " + operator.toString() + " " + second.toString());

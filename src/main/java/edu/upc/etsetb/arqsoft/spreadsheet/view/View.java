@@ -31,8 +31,8 @@ public class View {
      * Constructor of the View class which initialize the Scanner and sets the
      * max dimensions to display
      *
-     * @param max_column
-     * @param max_raw
+     * @param max_column Max columns to display
+     * @param max_raw Max rows to display
      */
     public View(int max_column, int max_raw) {
         this.scanner = new Scanner(System.in);
@@ -43,7 +43,7 @@ public class View {
     /**
      * Establish the Maximum Number of Columns to Display
      *
-     * @param max_column
+     * @param max_column Max columns to display
      */
     public void setMax_column(int max_column) {
         this.max_column = max_column;
@@ -52,7 +52,7 @@ public class View {
     /**
      * Establish the Maximum Number of Rows to Display
      *
-     * @param max_raw
+     * @param max_raw Max rows to display
      */
     public void setMax_raw(int max_raw) {
         this.max_raw = max_raw;
@@ -61,7 +61,7 @@ public class View {
     /**
      * Print the SpreadSheet passed as argument.
      *
-     * @param cells
+     * @param cells Cells to display
      */
     public void printTabloid(SpreadSheet cells) {
 
@@ -104,8 +104,8 @@ public class View {
     /**
      * Ask a question passed as argument to the user. Returns the answer given.
      *
-     * @param question
-     * @return
+     * @param question String with the question to ask
+     * @return String containing the answer introduced
      */
     public String askQuestion(String question) {
         System.out.println(question);
@@ -116,7 +116,7 @@ public class View {
     /**
      * Display the String passed as argument to inform the user.
      *
-     * @param display
+     * @param display String to display
      */
     public void display(String display) {
         System.out.println(display);
@@ -126,7 +126,7 @@ public class View {
      * Obtain the Reference of the Column in the Abecedary way.
      *
      * @param number: integer with the number position of the cell.
-     * @return column as string in Abecedary (1--> A, 2-->B, ...)
+     * @return column as string in Abecedary (1-- A, 2--B, ...)
      */
     public String getColumn(int number) {
         int number_of_letters = number;

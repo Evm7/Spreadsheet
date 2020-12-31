@@ -25,8 +25,8 @@ public class FunctionMax implements Function{
     /**
      * Computes the Max Function to all the operands passed as parameters.
      * Return the Maximum Value of all the Values of the operands passed as parameters.
-     * @param args
-     * @return
+     * @param args Arguments to compute the function to
+     * @return Result as Operand Number
      */
     @Override
     public OperandNumber computeFunction(OperandFunction args) {

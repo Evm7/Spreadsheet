@@ -14,7 +14,7 @@ public class ContentNumber extends CellContent{
     
     /**
      * Constructor of the Content Number of the Cell
-     * @param value
+     * @param value Content of the cell
      */
     public ContentNumber(String value) {
         super(TypeOfContent.NUMBER, value);

@@ -26,8 +26,8 @@ public class FunctionMin implements Function{
     /**
      * Computes the Min Function to all the operands passed as parameters.
      * Return the Minimum Value of all the Values of the operands passed as parameters.
-     * @param args
-     * @return
+     * @param args Arguments to compute the function to
+     * @return Result as Operand Number
      */
     @Override
     public OperandNumber computeFunction(OperandFunction args) {

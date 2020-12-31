@@ -58,7 +58,7 @@ public enum TokenType {
     REAL_NUMBER,
 
     /**
-     * When found: CHARNUMBER --> A1
+     * When found: CHARNUMBER -- A1
      */
     CELL,
 
@@ -78,7 +78,7 @@ public enum TokenType {
     SEMICOLON,
 
     /**
-     * When found two cells --> A1:A2
+     * When found two cells -- A1:A2
      */
     RANGE,
 
@@ -89,7 +89,7 @@ public enum TokenType {
 
     /**
      * Assign the representation of the Token Type, used for Debugging.
-     * @return
+     * @return Token representation
      */
     @Override
     public String toString() {

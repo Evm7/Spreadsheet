@@ -46,7 +46,7 @@ public class Tokenizer {
     /**
      * Tokenizes an string through matching regex
      *
-     * @param str
+     * @param str String to tokenize
      */
     public void tokenize(String str) {
         String s = new String(str);
@@ -76,10 +76,10 @@ public class Tokenizer {
     /**
      * Used to Create a Token from its type, sequence and precedence.
      *
-     * @param token
-     * @param sequence
-     * @param precedence
-     * @return
+     * @param token Type of token
+     * @param sequence String sequence of the token
+     * @param precedence Precedence of the Token
+     * @return Resulting Token
      */
     public Token createToken(TokenType token, String sequence, int precedence) {
         return new Token(token, sequence, precedence);
@@ -88,7 +88,7 @@ public class Tokenizer {
     /**
      * Get the List of tokens
      *
-     * @return
+     * @return List of tokens
      */
     public LinkedList<Token> getTokens() {
         return tokens;
@@ -119,9 +119,9 @@ public class Tokenizer {
         /**
          * Constructor of the Token
          *
-         * @param token
-         * @param sequence
-         * @param precedence
+         * @param token Type of token
+         * @param sequence String sequence of the token
+         * @param precedence Precedence of the Token
          */
         public Token(TokenType token, String sequence, int precedence) {
             super();
@@ -133,7 +133,7 @@ public class Tokenizer {
         /**
          * Modifies the Sequence of the Token.
          *
-         * @param sequence
+         * @param sequence New sequence
          */
         public void modifySequence(String sequence) {
             this.sequence = sequence;
@@ -142,9 +142,9 @@ public class Tokenizer {
         /**
          * Updates the whole token
          *
-         * @param token
-         * @param sequence
-         * @param precedence
+         * @param token Type of token
+         * @param sequence String sequence of the token
+         * @param precedence Precedence of the Token
          */
         public void update(TokenType token, String sequence, int precedence) {
             this.token = token;

@@ -27,7 +27,8 @@ public class ContentFormula extends CellContent {
      * Constructor which evaluates the formula passed as string and creates the
      * list of terms.To Evaluate Formula we are using Formula Evaluator.
      *
-     * @param formula
+     * @param formula Formula to evaluate
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     public ContentFormula(String formula) throws GrammarErrorFormula {
         super(TypeOfContent.FORMULA, formula);
@@ -44,7 +45,7 @@ public class ContentFormula extends CellContent {
      * Getter of the List of Terms contained in the Formula as Post Fix
      * Expression.
      *
-     * @return
+     * @return List of terms of the formula
      */
     public List<Term> getTerms() {
         return terms;

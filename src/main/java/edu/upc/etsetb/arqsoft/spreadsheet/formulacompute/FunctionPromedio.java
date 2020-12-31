@@ -25,8 +25,8 @@ public class FunctionPromedio implements Function{
     /**
      * Computes the Promedio Function to all the operands passed as parameters.
      * Return the arithmetic mean of the Values of the operands passed as parameters.
-     * @param args
-     * @return
+     * @param args Arguments to compute the function to
+     * @return Result as Operand Number
      */
     @Override
     public OperandNumber computeFunction(OperandFunction args) {

@@ -15,7 +15,7 @@ public interface Value {
 
     /**
      *
-     * @return
+     * @return Cell value
      */
     Object getValue();
 }

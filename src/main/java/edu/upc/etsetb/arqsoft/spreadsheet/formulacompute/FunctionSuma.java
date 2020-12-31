@@ -27,8 +27,8 @@ public class FunctionSuma implements Function {
      * Computes the Suma Function to all the operands passed as parameters.
      * Return the sum of the Values of the operands passed as parameters.
      *
-     * @param args
-     * @return
+     * @param args Arguments to compute the function to
+     * @return Result as Operand Number
      */
     @Override
     public OperandNumber computeFunction(OperandFunction args) {

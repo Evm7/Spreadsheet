@@ -29,7 +29,7 @@ public class OperatorImpl implements Term {
      * Initialize the weight of the term depending on Operator, used to compute
      * PostFixExpression
      *
-     * @param sign
+     * @param sign Sign of the Operator
      */
     public OperatorImpl(String sign) {
         this.sign = sign;
@@ -45,7 +45,7 @@ public class OperatorImpl implements Term {
     /**
      * Get the weight of the Term
      *
-     * @return
+     * @return Weight of the term
      */
     public int getWeight() {
         return this.weight;
@@ -54,7 +54,7 @@ public class OperatorImpl implements Term {
     /**
      * Print the sign
      *
-     * @return
+     * @return Sign as String
      */
     public String toString() {
         return sign;
@@ -65,8 +65,8 @@ public class OperatorImpl implements Term {
      *
      * @param arg1 left Term
      * @param arg2 right Term
-     * @return
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation
+     * @return Resulting Operand Number
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.MathematicalInvalidation Exception raise when formula does contain a not correct parameter
      */
     public OperandNumber computeOperation(OperandNumber arg1, OperandNumber arg2) throws MathematicalInvalidation {
         Double value = null;
@@ -96,7 +96,7 @@ public class OperatorImpl implements Term {
     /**
      * Get the Type of Term
      *
-     * @return
+     * @return Type of the term
      */
     @Override
     public String isType() {
@@ -106,7 +106,7 @@ public class OperatorImpl implements Term {
     /**
      * Get the Sign of the Operator. Same to print()
      *
-     * @return
+     * @return Sign of the operator as String
      */
     @Override
     public String getValue() {

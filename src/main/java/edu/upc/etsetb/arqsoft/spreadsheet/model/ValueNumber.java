@@ -22,7 +22,7 @@ public class ValueNumber extends CellValue {
     /**
      * Constructor that initialize a Value of Number if the content is Number
      *
-     * @param content
+     * @param content Cell content
      */
     public ValueNumber(ContentNumber content) {
         this.value = Double.parseDouble(content.getContent());
@@ -31,9 +31,10 @@ public class ValueNumber extends CellValue {
     /**
      * Constructor that initialize a Value of Number if the content is Formula
      *
-     * @param content
-     * @param coordinate
-     * @throws CircularDependencies
+     * @param content Cell content
+     * @param coordinate Cell coordinate
+     * @throws CircularDependencies Exception raised when exists two formula A and B, and
+     * A depends on B and B depends on A.
      */
     public ValueNumber(ContentFormula content, CellCoordinate coordinate) throws CircularDependencies {
         SpreadSheet.parser.circularDependencies(coordinate);
@@ -43,7 +44,7 @@ public class ValueNumber extends CellValue {
     /**
      * Get the value as Double
      *
-     * @return
+     * @return Cell value
      */
     @Override
     public Double getValue() {
@@ -53,7 +54,7 @@ public class ValueNumber extends CellValue {
     /**
      * Stablish a precise value
      *
-     * @param value
+     * @param value Value to set
      */
     public void setValue(Double value) {
         this.value = value;
@@ -62,7 +63,7 @@ public class ValueNumber extends CellValue {
     /**
      * Gets the String representation of the value
      *
-     * @return
+     * @return Cell value as String
      */
     @Override
     public String toString() {
@@ -72,8 +73,8 @@ public class ValueNumber extends CellValue {
     /**
      * Only used for testing
      *
-     * @return
-     * @throws NoNumberException
+     * @return Cell value as Double
+     * @throws NoNumberException Exception raised when formula does contain a not correct value
      */
     @Override
     public Double getValueasDouble() throws NoNumberException {

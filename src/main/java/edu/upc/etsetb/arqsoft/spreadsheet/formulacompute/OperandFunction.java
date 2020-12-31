@@ -24,7 +24,7 @@ public class OperandFunction implements Term {
     /**
      * Constructor which creates a Term container for a List of Terms
      *
-     * @param operants
+     * @param operants List of terms
      */
     public OperandFunction(List<Term> operants) {
         this.operants = operants;
@@ -33,7 +33,7 @@ public class OperandFunction implements Term {
     /**
      * Get Value returns a List of OperandNumber
      *
-     * @return
+     * @return List of Operand Numbers
      */
     public List<OperandNumber> getValue() {
         return flatten(this);
@@ -45,7 +45,7 @@ public class OperandFunction implements Term {
      * the OperandFunction
      *
      * @param fun
-     * @return
+     * @return List of Operand Numbers 
      */
     private List<OperandNumber> flatten(OperandFunction fun) {
         List<OperandNumber> flatList = new ArrayList<OperandNumber>();
@@ -66,7 +66,7 @@ public class OperandFunction implements Term {
     /**
      * gets as String the List of terms. For debugging use.
      *
-     * @return
+     * @return List of terms as String
      */
     public String toString() {
         String res = "[";
@@ -79,7 +79,7 @@ public class OperandFunction implements Term {
     /**
      * Return the OperandFunction type.
      *
-     * @return
+     * @return Operand Function type
      */
     @Override
     public String isType() {

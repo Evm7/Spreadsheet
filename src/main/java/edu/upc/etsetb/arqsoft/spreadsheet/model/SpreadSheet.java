@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * @author estev
  *
  * IT IS IMPORTANT TOT TAKE INTO ACCOUNT THAT SPREADSHEET IS A MATTRIX THAT GOES
- * FROM [0-->MAX_RAW-1][0--> MAX_COLUMN-1] However, when creating the cells, a
+ * FROM [0 -- MAX_RAW-1][0 -- MAX_COLUMN-1] However, when creating the cells, a
  * cell [0][0] have the position A1. A0 does no exists. Therefore, in order to
  * do the creation of cells, remind that SpreadSheet.Row = Cell.Row-1
  */
@@ -42,11 +42,11 @@ public class SpreadSheet {
      * Constructor of the Spreadsheet given a name and its Lenght.Initialize the
      * Cells as Empty to the given lenght
      *
-     * @param name
-     * @param length
+     * @param name Spreadsheet name
+     * @param length Spreadsheet length
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     public SpreadSheet(String name, int length) throws CircularDependencies, GrammarErrorFormula {
         this.name = name;
@@ -59,7 +59,7 @@ public class SpreadSheet {
     /**
      * Sets debugging value to True or False, in order to visualize some logs
      *
-     * @param debug
+     * @param debug Debugging value
      */
     public void setDebugger(boolean debug) {
         debugging = debug;
@@ -69,7 +69,7 @@ public class SpreadSheet {
     /**
      * Gets the length of the columns and rows as a array of integers
      *
-     * @return
+     * @return Spreadsheet length
      */
     public int[] getMaxLength() {
         int[] max = new int[2];
@@ -81,9 +81,9 @@ public class SpreadSheet {
     /**
      * Obtain a Cell from the SpreadSheet from a given row and column
      *
-     * @param column
-     * @param row
-     * @return
+     * @param column Cell column
+     * @param row Cell row
+     * @return Cell from the Spreadsheet
      */
     public Cell getCell(int column, int row) {
         return SpreadSheet.spreadsheet[row][column];
@@ -92,9 +92,9 @@ public class SpreadSheet {
     /**
      * Initialize the Spreadsheet to the given length
      *
-     * @param length
-     * @throws CircularDependencies
-     * @throws GrammarErrorFormula
+     * @param length Spreadsheet length
+     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     private void initializeSpreadSheet(int length) throws CircularDependencies, GrammarErrorFormula {
         SpreadSheet.spreadsheet = new Cell[length][length];
@@ -110,12 +110,12 @@ public class SpreadSheet {
     /**
      * Creates a Cell froma given coordinate and content
      *
-     * @param column
-     * @param row
-     * @param content
-     * @return
-     * @throws CircularDependencies
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
+     * @param column Cell column
+     * @param row Cell row
+     * @param content Cell content
+     * @return Created cell
+     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     public Cell createCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         complete_cells(column, row);
@@ -125,8 +125,8 @@ public class SpreadSheet {
     /**
      * Remove some cell from the Spreadsheet given its coordinates
      *
-     * @param column
-     * @param row
+     * @param column Cell column
+     * @param row Cell row
      * @return Cell removed
      */
     public Cell removeCell(int column, int row) {
@@ -136,12 +136,12 @@ public class SpreadSheet {
     /**
      * Edits the content of a cell
      *
-     * @param column
-     * @param row
-     * @param content
-     * @return
-     * @throws CircularDependencies
-     * @throws GrammarErrorFormula
+     * @param column Cell column
+     * @param row Cell row
+     * @param content Cell content
+     * @return Edited cell
+     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     public Cell editCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         Cell cell = getCell(column, row - 1);
@@ -153,9 +153,9 @@ public class SpreadSheet {
      * Check whether a cell is out of the coordinates of the Spreadsheet and
      * return Null if so
      *
-     * @param column
-     * @param row
-     * @return
+     * @param column Cell column
+     * @param row Cell row
+     * @return Null or the checked cell
      */
     public Cell checkEmpty(int column, int row) {
         try {
@@ -170,10 +170,10 @@ public class SpreadSheet {
      * Fill up the remaining cells as empty to be able to be visualized and
      * accessed to.
      *
-     * @param num_column
-     * @param num_row
-     * @throws CircularDependencies
-     * @throws GrammarErrorFormula
+     * @param num_column Number of columns on the Spreadsheet
+     * @param num_row Number of rows on the Spreadsheet
+     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     private void complete_cells(int num_column, int num_row) throws CircularDependencies, GrammarErrorFormula {
         if ((this.max_column < num_column) || (this.max_row < num_row)) {
@@ -207,10 +207,10 @@ public class SpreadSheet {
      * are not formulas. Then update the SpreadSheet to compute recursively the
      * values of the remaining ones.
      *
-     * @param file
+     * @param file File containing the spreadsheet to import
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     public void importSpreadSheet(File file) throws CircularDependencies, GrammarErrorFormula {
         List<Cell[]> imported = importer.importSpreadSheet(file);
@@ -235,7 +235,7 @@ public class SpreadSheet {
      * Function used to recompute the value of all the cells in the SpreadSheet.
      * Used to compute all the formulas after importing a file.
      *
-     * @throws CircularDependencies
+     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
      */
     private void updateSpreadSheet() throws CircularDependencies {
         for (Cell[] cells : spreadsheet) {
@@ -247,7 +247,7 @@ public class SpreadSheet {
 
     /**
      * Export the SpreadSheet to a given file
-     * @param file
+     * @param file File to export the spreadsheet
      */
     public void exportSpreadSheet(File file) {
         exporter.exportSpreadSheet(file, this.spreadsheet);
@@ -255,10 +255,10 @@ public class SpreadSheet {
 
     /**
      * ADD FOR DEBUGGING AND TESTING, NOT USED OTHERWISE*
-     * @param cellCoord
-     * @param content
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.ContentException
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.BadCoordinateException
+     * @param cellCoord Cell coordinate as String
+     * @param content Cell content
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.ContentException Raised when cell contains an incorrect content
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.BadCoordinateException Raised when introduced an incorrect coordinates
      */
     // FIRST ADDED 1
     public void setCellContent(String cellCoord, String content) throws ContentException, BadCoordinateException {
@@ -287,8 +287,8 @@ public class SpreadSheet {
 
     /**
      * Parses the coordinate of a cell to obtain the row and column
-     * @param position
-     * @return
+     * @param position Cell coordinate as String
+     * @return Cell coordinates
      * @throws BadCoordinateException 
      */
     private String[] parsePosition(String position) throws BadCoordinateException {

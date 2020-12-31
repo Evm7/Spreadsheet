@@ -14,7 +14,7 @@ public class ContentText extends CellContent{
     
     /**
      * Constructor of the Content Text of the Cell
-     * @param text
+     * @param text Content of the cell
      */
     public ContentText(String text) {
         super(TypeOfContent.TEXT, text);

@@ -42,12 +42,13 @@ public class Cell extends Observable implements Observer {
      * Constructor of the Cell when passing the column, row, and
      * content.Initialize the Cell and computes all the updateCell use case.
      *
-     * @param column
-     * @param row
-     * @param content
+     * @param column Column coordinate
+     * @param row Row coordinate
+     * @param content Content of the cell
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * A depends on B and B depends on A.
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     public Cell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
         this.coordinates = new CellCoordinate(column, row);
@@ -58,13 +59,14 @@ public class Cell extends Observable implements Observer {
      * Constructor of the Cell when passing the column, row, and
      * content.Initialize the Cell and computes all the updateCell use case.
      *
-     * @param column
-     * @param row
-     * @param content
-     * @param computeFormula: when updating, used to prevent overflow.
+     * @param column Column coordinate
+     * @param row Row coordinate
+     * @param content Content of the cell
+     * @param computeFormula when updating, used to prevent overflow.
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * A depends on B and B depends on A.
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     public Cell(int column, int row, String content, boolean computeFormula) throws CircularDependencies, GrammarErrorFormula {
         this.coordinates = new CellCoordinate(column, row);
@@ -75,10 +77,11 @@ public class Cell extends Observable implements Observer {
      * Update the Cell by passing a new content.Parses the Cell and creates the
      * determined CellContent and CellValue
      *
-     * @param content
-     * @param computeFormula
-     * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
+     * @param content Content of the cell
+     * @param computeFormula Used to prevent overflow.
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * A depends on B and B depends on A.
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced.
      */
     public void updateCell(String content, boolean computeFormula) throws CircularDependencies, GrammarErrorFormula {
         TypeOfContent typeOfContent = parseContent(content);
@@ -109,8 +112,8 @@ public class Cell extends Observable implements Observer {
     /**
      * Checks wheteher the content refers to a Text, Number or Formula
      *
-     * @param content
-     * @return
+     * @param content Content to parse
+     * @return Type of content identifier
      */
     public TypeOfContent parseContent(String content) {
         if (content.equals("")) {
@@ -133,9 +136,11 @@ public class Cell extends Observable implements Observer {
      * the whole SpreadSheet to recompute Values after modifying cells refered
      * in formulas.
      *
-     * @param computeFormula
+     * @param computeFormula Used to prevent overflow.Determines if the value 
+     * is recomputed or not
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * A depends on B and B depends on A.
      */
     public void recomputeValue(boolean computeFormula) throws CircularDependencies {
         if (this.cellcontent instanceof ContentFormula) {
@@ -170,7 +175,7 @@ public class Cell extends Observable implements Observer {
     /**
      * Returns the Value of the Cell as String
      *
-     * @return
+     * @return Value as String
      */
     public String printValue() {
         return value.toString();
@@ -179,7 +184,7 @@ public class Cell extends Observable implements Observer {
     /**
      * Returns the Type of Content of the Cell
      *
-     * @return
+     * @return  The type of content
      */
     public TypeOfContent getType_of_content() {
         return cellcontent.getType();
@@ -188,7 +193,7 @@ public class Cell extends Observable implements Observer {
     /**
      * Returns the content of the Cell.
      *
-     * @return
+     * @return Content of the cell
      */
     public String getStringContent() {
         return this.cellcontent.getContent();
@@ -201,7 +206,7 @@ public class Cell extends Observable implements Observer {
     /**
      * Returns the value of the Cell.
      *
-     * @return
+     * @return Value of the cell
      */
     public Value getValue() {
         return this.value;
@@ -233,8 +238,8 @@ public class Cell extends Observable implements Observer {
      *
      * Called when the Cell Arguments of a Observable Formula are updated.
      *
-     * @param o
-     * @param o1
+     * @param o Observable object
+     * @param o1 Object that causes the update
      */
     @Override
     public void update(java.util.Observable o, Object o1) {

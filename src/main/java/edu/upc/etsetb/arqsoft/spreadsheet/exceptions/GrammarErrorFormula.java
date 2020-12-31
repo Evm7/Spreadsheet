@@ -14,7 +14,7 @@ public class GrammarErrorFormula extends Exception {
 
     /**
      * Exception raise when formula does contain a not correct 
-     * @param string
+     * @param string String to display
      */
     public GrammarErrorFormula(String string) {
         super(string);

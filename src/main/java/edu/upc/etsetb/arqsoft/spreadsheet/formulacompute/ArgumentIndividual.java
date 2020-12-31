@@ -23,7 +23,7 @@ public class ArgumentIndividual extends Argument {
     /**
      * Constructor of Argument Individual
      *
-     * @param arg
+     * @param arg Argument
      */
     public ArgumentIndividual(String arg) {
         super(arg);
@@ -40,7 +40,7 @@ public class ArgumentIndividual extends Argument {
     /**
      * Obtains the Value of the Cell the Individual Argument is refering to
      *
-     * @return
+     * @return Cell value
      */
     @Override
     public OperandNumber getValue() {

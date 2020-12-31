@@ -25,7 +25,7 @@ public class CellValue implements Value {
     /**
      * Get the Value of the Cell
      *
-     * @return
+     * @return Value of the cell
      */
     @Override
     public Object getValue() {
@@ -35,7 +35,7 @@ public class CellValue implements Value {
     /**
      * Returns the value as String.
      *
-     * @return
+     * @return Value of the cell as a String
      */
     @Override
     public String toString() {
@@ -44,8 +44,9 @@ public class CellValue implements Value {
 
     /**
     * Only used for testing
-     * @return 
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException
+     * @return Value of the cell as Double
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException 
+     * Raised when formula does contain an incorrect content String
      */
     public Double getValueasDouble()  throws NoNumberException {
         return 0.0;

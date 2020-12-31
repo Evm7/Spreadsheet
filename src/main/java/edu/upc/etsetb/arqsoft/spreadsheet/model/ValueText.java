@@ -21,7 +21,7 @@ public class ValueText extends CellValue {
     /**
      * Constructor that initialize a Value of Text.
      *
-     * @param content
+     * @param content Cell content
      */
     public ValueText(ContentText content) {
         this.value = content.getContent();
@@ -30,7 +30,7 @@ public class ValueText extends CellValue {
     /**
      * Get the value as String
      *
-     * @return
+     * @return Cell value
      */
     @Override
     public String getValue() {
@@ -40,7 +40,7 @@ public class ValueText extends CellValue {
     /**
      * Set the Value
      *
-     * @param value
+     * @param value Value to set
      */
     public void setValue(String value) {
         this.value = value;
@@ -50,7 +50,7 @@ public class ValueText extends CellValue {
      * Get the representatonas String of the Value: as TextValue, same as
      * getValue()
      *
-     * @return
+     * @return Cell value as String
      */
     @Override
     public String toString() {
@@ -60,8 +60,8 @@ public class ValueText extends CellValue {
     /**
      * Only used for testing
      *
-     * @return
-     * @throws NoNumberException
+     * @return Cell value as Double
+     * @throws NoNumberException Exception raised when formula does contain a not correct value
      */
     @Override
     public Double getValueasDouble() throws NoNumberException{

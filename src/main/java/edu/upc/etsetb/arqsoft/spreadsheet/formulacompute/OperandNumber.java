@@ -21,7 +21,7 @@ public class OperandNumber implements Term {
 
     /**
      * Constructor of an OperandNumber
-     * @param operant
+     * @param operant Operand
      */
     public OperandNumber(Double operant) {
         this.operant = operant;
@@ -29,7 +29,7 @@ public class OperandNumber implements Term {
 
     /**
      * Gets the value of the Operand as Double
-     * @return
+     * @return Value of the operand as a Double
      */
     @Override
     public Double getValue() {
@@ -38,7 +38,7 @@ public class OperandNumber implements Term {
 
     /**
      * Gets the value as String
-     * @return
+     * @return Value of the operand as a String
      */
     @Override
     public String toString() {
@@ -47,7 +47,7 @@ public class OperandNumber implements Term {
 
     /**
      * Return the OperandNumber type.
-     * @return
+     * @return Operand type
      */
     @Override
     public String isType() {

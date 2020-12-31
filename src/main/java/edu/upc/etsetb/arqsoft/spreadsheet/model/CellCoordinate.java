@@ -28,8 +28,8 @@ public class CellCoordinate {
     /**
      * Constructor of the Cell Coordinate with Abecedary way
      *
-     * @param column
-     * @param row
+     * @param column Cell column
+     * @param row Cell row
      */
     public CellCoordinate(char[] column, int row) {
         this.column = column;
@@ -39,8 +39,8 @@ public class CellCoordinate {
     /**
      * COnstructor of the Cell Coordinate with Numbers.
      *
-     * @param column
-     * @param row
+     * @param column Cell column
+     * @param row Cell row
      */
     public CellCoordinate(int column, int row) {
         this.column = intToChar(column);
@@ -51,8 +51,8 @@ public class CellCoordinate {
      * Converts the reference of the X Position of the Cell from number to
      * Abecedary list of Char
      *
-     * @param column
-     * @return
+     * @param column Cell column
+     * @return List of Char
      */
     public char[] intToChar(int column) {
         int number_of_letters = column + 1;
@@ -69,7 +69,7 @@ public class CellCoordinate {
     /**
      * Formats the Cell Coordinate as a visual String [column, row]
      *
-     * @return
+     * @return String containing the cell coordinate
      */
     @Override
     public String toString() {
@@ -79,7 +79,7 @@ public class CellCoordinate {
     /**
      * Gets the column as int
      *
-     * @return
+     * @return Column number
      */
     public int getColumn() {
         String column = new String(this.column);
@@ -93,7 +93,7 @@ public class CellCoordinate {
     /**
      * Gets the row as int.
      *
-     * @return
+     * @return Row number
      */
     public int getRow() {
         return row;

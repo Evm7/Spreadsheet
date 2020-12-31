@@ -22,8 +22,8 @@ public class CellContent {
      * Constructor of the class which contains the type_of_content and the
      * String of the content inserted by the user
      *
-     * @param type_of_content
-     * @param content
+     * @param type_of_content Type of content of the cell
+     * @param content Content of the cell
      */
     public CellContent(TypeOfContent type_of_content, String content) {
         this.type_of_content = type_of_content;
@@ -38,7 +38,7 @@ public class CellContent {
     /**
      * Getter of the Type of Content
      *
-     * @return
+     * @return Type of content
      */
     public TypeOfContent getType() {
         return type_of_content;
@@ -47,7 +47,7 @@ public class CellContent {
     /**
      * Getter of the Content
      *
-     * @return
+     * @return Content
      */
     public String getContent() {
         return content;

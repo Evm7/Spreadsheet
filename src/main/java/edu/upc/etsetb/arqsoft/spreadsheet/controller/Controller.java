@@ -38,7 +38,7 @@ public class Controller {
      * user obtained from teh view.It is the main class, which initialize View
      * and Model and manage the whole Project.
      *
-     * @param bln
+     * @param testing Boolean to enable testing
      */
     public Controller(boolean testing) {
         this.view = new View();

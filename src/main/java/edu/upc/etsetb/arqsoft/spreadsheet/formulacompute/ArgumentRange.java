@@ -24,7 +24,7 @@ public class ArgumentRange extends Argument {
     /**
      * Constructor of Argument Range
      *
-     * @param arg
+     * @param arg Argument
      */
     public ArgumentRange(String arg) {
         super(arg);
@@ -39,7 +39,7 @@ public class ArgumentRange extends Argument {
      * Obtains the values of the Range Argument is refering to. ArgumentRange
      * can only be used inside a Function, therefore, return an OperandFunction.
      *
-     * @return
+     * @return Operand Function with the values of the Range Argument is refering to
      */
     @Override
     public OperandFunction getValue() {
@@ -86,7 +86,7 @@ public class ArgumentRange extends Argument {
     /**
      * Obtains the coordinates of the cells refered by the Argument Range
      *
-     * @return
+     * @return List of cell coordinates
      */
     @Override
     public List<CellCoordinate> getReferences() {

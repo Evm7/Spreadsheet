@@ -36,7 +36,7 @@ public class Importer {
 
     /**
      * Get the Max Columns and Max Rows of the File SpreadSheet
-     * @return
+     * @return Spreadsheet dimensions
      */
     public int[] getDimensions() {
         int[] max = new int[2];
@@ -46,12 +46,12 @@ public class Importer {
     }
 
     /**
-     * Function used to import  SpreadSheet from a file passed as a parameter.
-     * Format used is C2v.
+     * Function used to import  SpreadSheet from a file passed as a parameter.Format used is C2v.
      * Iterates through all the lines and transform each to List of Cells (as Row) 
-     * Then groups and creates file.
+ Then groups and creates file.
      * @param file from which the SpreadSheet is imported
-     * @return
+     * @return Spreadsheet object
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
     public List<Cell[]> importSpreadSheet(File file) throws GrammarErrorFormula {
         ArrayList<Cell[]> spreadsheet = new ArrayList<>();
@@ -99,7 +99,7 @@ public class Importer {
      * @param column x position of the Cell
      * @param row y position of the Cell
      * @param content which is imported from the file for that specific cell
-     * @return 
+     * @return Cell object
      */
     private Cell createCellfromContent(int column, int row, String content) throws GrammarErrorFormula {
         content = content.replaceAll(",", ";");

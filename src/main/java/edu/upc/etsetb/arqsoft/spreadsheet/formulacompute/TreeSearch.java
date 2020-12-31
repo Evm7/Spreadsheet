@@ -26,9 +26,10 @@ public class TreeSearch {
     /**
      * Constructor of Tree Search
      *
-     * @param map
-     * @param computeCell
-     * @throws CircularDependencies
+     * @param map Hash Map
+     * @param computeCell 
+     * @throws CircularDependencies Exception raised when exists two formula A and B, and
+     * A depends on B and B depends on A.
      */
     public TreeSearch(HashMap<String, ArrayList> map, String computeCell) throws CircularDependencies {
         this.map = map;

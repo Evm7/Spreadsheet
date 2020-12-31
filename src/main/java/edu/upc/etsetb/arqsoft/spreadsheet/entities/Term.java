@@ -17,7 +17,7 @@ public interface Term {
     /**
      * Prints the Term
      *
-     * @return String
+     * @return String Term as String
      */
     String toString();
 
@@ -25,20 +25,20 @@ public interface Term {
      * Shows the Type of term we are refering to as String Argument |
      * OperandFunction | OperandNumber | OperatorImpl
      *
-     * @return
+     * @return Type of the Term as String
      */
     String isType();
 
     /**
      * Gets the value of the Term.
      *
-     * @return
+     * @return Value of the Term
      */
     Object getValue();
     
     /**
      * Visitor pattern
-     * @param v
+     * @param v Visitor to accept
      */
     void acceptVisitor(Visitor v);
 }

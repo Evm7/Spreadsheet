@@ -28,7 +28,7 @@ public class Argument implements Term {
     /**
      * Constructor of Argument, which needs the content parsed in the Formula
      *
-     * @param arg
+     * @param arg Argument
      */
     public Argument(String arg) {
         this.arg = arg;
@@ -37,7 +37,7 @@ public class Argument implements Term {
     /**
      * Prints the content of the argument.
      *
-     * @return
+     * @return Argument as String
      */
     @Override
     public String toString() {
@@ -48,7 +48,7 @@ public class Argument implements Term {
      * Gets the Value of the Cell Corresponding to the argument and transorm
      * into Term
      *
-     * @return
+     * @return Argument as a Term
      */
     public Term getValue() {
         return new OperandNumber(Double.parseDouble(arg));
@@ -57,7 +57,7 @@ public class Argument implements Term {
     /**
      * Return the Type of Argument: ArgumentIndividual | ArgumentRange
      *
-     * @return
+     * @return "Argument"
      */
     @Override
     public String isType() {
@@ -67,7 +67,7 @@ public class Argument implements Term {
     /**
      * Get the List of Coordinates of the cells referenced in the Argument.
      *
-     * @return
+     * @return List of cell coordinates referenced
      */
     public List<CellCoordinate> getReferences() {
         List<CellCoordinate> references = new ArrayList<>();
@@ -76,10 +76,10 @@ public class Argument implements Term {
     }
 
     /**
-     * Obtain a Coordintate from an Individual Argument: A1 --> Column 1, Row 1
+     * Obtain a Coordintate from an Individual Argument: A1 -- Column 1, Row 1
      *
-     * @param parsing
-     * @return
+     * @param parsing Cell coordinates as String
+     * @return Cell coordinate
      */
     protected CellCoordinate parsePlace(String parsing) {
         String row = parsing.replaceAll("[a-zA-Z]", "");
@@ -90,8 +90,8 @@ public class Argument implements Term {
 
     /**
      *
-     * @param coordinate
-     * @return
+     * @param coordinate Cell coordinate
+     * @return Cell value
      */
     protected CellValue getCellValue(CellCoordinate coordinate) {
         int column = coordinate.getColumn();

@@ -25,8 +25,8 @@ public class OperatorFunction implements Term {
      * Constructor of the OperatorFunction which initialize the type of Function
      * and Num of Terms
      *
-     * @param type
-     * @param num_terms
+     * @param type Type of function
+     * @param num_terms Number of terms
      */
     public OperatorFunction(String type, int num_terms) {
         this.formula = type;
@@ -36,7 +36,7 @@ public class OperatorFunction implements Term {
     /**
      * Print the type of formula SUMA; MIN; MAX; PROMEDIO
      *
-     * @return
+     * @return Type of formula
      */
     public String toString() {
         return formula;
@@ -45,7 +45,7 @@ public class OperatorFunction implements Term {
     /**
      * Get the number of terms
      *
-     * @return
+     * @return Number of terms
      */
     public int getTerms() {
         return num_terms;
@@ -54,8 +54,8 @@ public class OperatorFunction implements Term {
     /**
      * Compute the Function specified due to the OperandFunction
      *
-     * @param arg
-     * @return
+     * @param arg Argument
+     * @return Result of the computed function
      */
     public OperandNumber computeOperation(OperandFunction arg) {
         Function function = FormulaEvaluator.functions.get(this.formula);
@@ -65,7 +65,7 @@ public class OperatorFunction implements Term {
     /**
      * Get the Type of Term
      *
-     * @return
+     * @return Type of term
      */
     public String isType() {
         return "OperatorFunction";
@@ -74,7 +74,7 @@ public class OperatorFunction implements Term {
     /**
      * Get the Value of the operand. Same as print: SUMA; MIN; MAX; PROMEDIO
      *
-     * @return
+     * @return Operand value
      */
     @Override
     public String getValue() {
