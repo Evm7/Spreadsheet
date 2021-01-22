@@ -6,7 +6,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -105,7 +105,7 @@ public class Importer {
         content = content.replaceAll(",", ";");
         try {
             return new Cell(column, row+1, content, false);
-        } catch (CircularDependencies ex) {
+        } catch (CircularDependenciesException ex) {
             System.out.println("Importer ERROR Error should never ocurr here: "+ex.getMessage());
             return null;
         }

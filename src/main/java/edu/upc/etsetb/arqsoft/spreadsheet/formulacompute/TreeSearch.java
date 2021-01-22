@@ -6,7 +6,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.formulacompute;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,10 +28,10 @@ public class TreeSearch {
      * @param map Hash Map
      * @param computeCell String that relfects the identifier of the Root of the Tree. It is the cell
      * coordinates of the cell of the current formulas established as an String identifier.
-     * @throws CircularDependencies Exception raised when exists two formula A
+     * @throws CircularDependenciesException Exception raised when exists two formula A
      * and B, and A depends on B and B depends on A.
      */
-    public TreeSearch(HashMap<String, ArrayList> map, String computeCell) throws CircularDependencies {
+    public TreeSearch(HashMap<String, ArrayList> map, String computeCell) throws CircularDependenciesException {
         this.map = map;
         stack.add(computeCell);
         Node root = addNode(null, computeCell);
@@ -119,7 +119,7 @@ public class TreeSearch {
      * @return True if error, False if not.
      * @throws CircuarDependencies
      */
-    private boolean errorDependencies(Node root) throws CircularDependencies {
+    private boolean errorDependencies(Node root) throws CircularDependenciesException {
         HashMap<Integer, ArrayList> depths = getDepths(root);
         boolean results = false;
         int size = depths.size() - 1;
@@ -141,9 +141,9 @@ public class TreeSearch {
      *
      * @param Node whose parent are we checking
      * @param Node whose dependency we are checking
-     * @throws CircularDependencies
+     * @throws CircularDependenciesException
      */
-    private boolean checkCircularDependency(Node node, Node checker) throws CircularDependencies {
+    private boolean checkCircularDependency(Node node, Node checker) throws CircularDependenciesException {
         Node parent = node.parent;
         if ((parent != null) && (checker != null)) {
             //System.out.println("\tChecking node " + checker.value + " and its parent " + parent.value);
@@ -151,7 +151,7 @@ public class TreeSearch {
         if (parent == null) {
             return false;
         } else if (parent.value.equals(checker.value)) {
-            throw new CircularDependencies("\t\tThere is a Circular Dependency between " + checker.value + " and its parent " + node.value);
+            throw new CircularDependenciesException("\t\tThere is a Circular Dependency between " + checker.value + " and its parent " + node.value);
         } else {
             return checkCircularDependency(parent, checker);
         }

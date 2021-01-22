@@ -34,8 +34,14 @@ public class ArgumentIndividual extends Argument {
     public String toString() {
         return super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
+    public Double getDouble() {
+        return getValue().getValue();
+    }
+
+    public OperandNumber getOperand() {
+        return getValue();
+    }
 
     /**
      * Obtains the Value of the Cell the Individual Argument is refering to

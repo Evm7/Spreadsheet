@@ -6,7 +6,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Value;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
@@ -46,11 +46,11 @@ public class Cell extends Observable implements Observer {
      * @param row Row coordinate
      * @param content Content of the cell
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException Exception raised when exists two formula A and B, and
      * A depends on B and B depends on A.
      * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
-    public Cell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
+    public Cell(int column, int row, String content) throws CircularDependenciesException, GrammarErrorFormula {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, true);
     }
@@ -64,11 +64,11 @@ public class Cell extends Observable implements Observer {
      * @param content Content of the cell
      * @param computeFormula when updating, used to prevent overflow.
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException Exception raised when exists two formula A and B, and
      * A depends on B and B depends on A.
      * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
-    public Cell(int column, int row, String content, boolean computeFormula) throws CircularDependencies, GrammarErrorFormula {
+    public Cell(int column, int row, String content, boolean computeFormula) throws CircularDependenciesException, GrammarErrorFormula {
         this.coordinates = new CellCoordinate(column, row);
         updateCell(content, computeFormula);
     }
@@ -79,11 +79,11 @@ public class Cell extends Observable implements Observer {
      *
      * @param content Content of the cell
      * @param computeFormula Used to prevent overflow.
-     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException Exception raised when exists two formula A and B, and
      * A depends on B and B depends on A.
      * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced.
      */
-    public void updateCell(String content, boolean computeFormula) throws CircularDependencies, GrammarErrorFormula {
+    public void updateCell(String content, boolean computeFormula) throws CircularDependenciesException, GrammarErrorFormula {
         TypeOfContent typeOfContent = parseContent(content);
         if (typeOfContent == TypeOfContent.FORMULA) {
             this.cellcontent = new ContentFormula(content);
@@ -139,10 +139,10 @@ public class Cell extends Observable implements Observer {
      * @param computeFormula Used to prevent overflow.Determines if the value 
      * is recomputed or not
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException Exception raised when exists two formula A and B, and
      * A depends on B and B depends on A.
      */
-    public void recomputeValue(boolean computeFormula) throws CircularDependencies {
+    public void recomputeValue(boolean computeFormula) throws CircularDependenciesException {
         if (this.cellcontent instanceof ContentFormula) {
             if (computeFormula) {
                 addAllObservers();
@@ -246,7 +246,7 @@ public class Cell extends Observable implements Observer {
         System.out.println("UPDATE OBSERVER: called over object " + o1);
         try {
             recomputeValue(false);
-        } catch (CircularDependencies ex) {
+        } catch (CircularDependenciesException ex) {
             System.out.println("Circular Dependencies Error: " + ex.getMessage());
         }
     }

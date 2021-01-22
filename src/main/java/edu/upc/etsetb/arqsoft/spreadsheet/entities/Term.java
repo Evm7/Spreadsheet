@@ -6,6 +6,8 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandNumber;
+
 /**
  * Interface which groups the different Terms that form the Content of a
  * Formula.
@@ -41,4 +43,7 @@ public interface Term {
      * @param v Visitor to accept
      */
     void acceptVisitor(Visitor v);
+    
+    Double getDouble();
+    OperandNumber getOperand();
 }

@@ -10,9 +10,9 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Term;
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
 
 /**
- * Class which implements Term Interface
- * Contains an OperandNumber that is used to compute a Formula
-
+ * Class which implements Term Interface Contains an OperandNumber that is used
+ * to compute a Formula
+ *
  * @author estev
  */
 public class OperandNumber implements Term {
@@ -21,6 +21,7 @@ public class OperandNumber implements Term {
 
     /**
      * Constructor of an OperandNumber
+     *
      * @param operant Operand
      */
     public OperandNumber(Double operant) {
@@ -29,6 +30,7 @@ public class OperandNumber implements Term {
 
     /**
      * Gets the value of the Operand as Double
+     *
      * @return Value of the operand as a Double
      */
     @Override
@@ -36,8 +38,13 @@ public class OperandNumber implements Term {
         return this.operant;
     }
 
+    public Double getDouble() {
+        return this.operant;
+    }
+
     /**
      * Gets the value as String
+     *
      * @return Value of the operand as a String
      */
     @Override
@@ -47,15 +54,20 @@ public class OperandNumber implements Term {
 
     /**
      * Return the OperandNumber type.
+     *
      * @return Operand type
      */
     @Override
     public String isType() {
         return "OperandNumber";
     }
-    
-        @Override
+
+    @Override
     public void acceptVisitor(Visitor v) {
         v.visitOperandNumber(this);
+    }
+    
+    public OperandNumber getOperand() {
+        return this;
     }
 }

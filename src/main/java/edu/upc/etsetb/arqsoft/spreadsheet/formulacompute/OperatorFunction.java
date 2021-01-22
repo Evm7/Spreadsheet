@@ -43,21 +43,21 @@ public class OperatorFunction implements Term {
     }
 
     /**
-     * Get the number of terms
+     * Get the number of arguments
      *
-     * @return Number of terms
+     * @return Number of arguments
      */
-    public int getTerms() {
+    public int getArguments() {
         return num_terms;
     }
 
     /**
-     * Compute the Function specified due to the OperandFunction
+     * Compute the Function specified due to the ArgumentFunction
      *
      * @param arg Argument
      * @return Result of the computed function
      */
-    public OperandNumber computeOperation(OperandFunction arg) {
+    public OperandNumber computeOperation(ArgumentFunction arg) {
         Function function = FormulaEvaluator.functions.get(this.formula);
         return function.computeFunction(arg);
     }
@@ -82,7 +82,16 @@ public class OperatorFunction implements Term {
     }
 
     @Override
+    public Double getDouble() {
+        return null;
+    }
+
+    @Override
     public void acceptVisitor(Visitor v) {
         v.visitOperatorFunction(this);
+    }
+
+    public OperandNumber getOperand() {
+        return null;
     }
 }

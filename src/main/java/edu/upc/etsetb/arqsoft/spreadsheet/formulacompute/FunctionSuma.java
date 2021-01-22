@@ -31,7 +31,7 @@ public class FunctionSuma implements Function {
      * @return Result as Operand Number
      */
     @Override
-    public OperandNumber computeFunction(OperandFunction args) {
+    public OperandNumber computeFunction(ArgumentFunction args) {
         List<OperandNumber> values = args.getValue();
         Double result = new Double(0);
         for (OperandNumber v : values) {

@@ -7,7 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.BadCoordinateException;
-import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.ContentException;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException;
@@ -45,10 +45,10 @@ public class SpreadSheet {
      * @param name Spreadsheet name
      * @param length Spreadsheet length
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException Exception raised when exists two formula A and B, and A depends on B and B depends on A.
      * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
-    public SpreadSheet(String name, int length) throws CircularDependencies, GrammarErrorFormula {
+    public SpreadSheet(String name, int length) throws CircularDependenciesException, GrammarErrorFormula {
         this.name = name;
         initializeSpreadSheet(length);
         importer = new Importer();
@@ -93,10 +93,10 @@ public class SpreadSheet {
      * Initialize the Spreadsheet to the given length
      *
      * @param length Spreadsheet length
-     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws CircularDependenciesException Exception raised when exists two formula A and B, and A depends on B and B depends on A.
      * @throws GrammarErrorFormula Raised when an incorrect String param is introduced
      */
-    private void initializeSpreadSheet(int length) throws CircularDependencies, GrammarErrorFormula {
+    private void initializeSpreadSheet(int length) throws CircularDependenciesException, GrammarErrorFormula {
         SpreadSheet.spreadsheet = new Cell[length][length];
         for (int row = 0; row < length; row++) {
             for (int column = 0; column < length; column++) {
@@ -114,10 +114,10 @@ public class SpreadSheet {
      * @param row Cell row
      * @param content Cell content
      * @return Created cell
-     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws CircularDependenciesException Exception raised when exists two formula A and B, and A depends on B and B depends on A.
      * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
-    public Cell createCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
+    public Cell createCell(int column, int row, String content) throws CircularDependenciesException, GrammarErrorFormula {
         complete_cells(column, row);
         return editCell(column, row, content);
     }
@@ -140,10 +140,10 @@ public class SpreadSheet {
      * @param row Cell row
      * @param content Cell content
      * @return Edited cell
-     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws CircularDependenciesException Exception raised when exists two formula A and B, and A depends on B and B depends on A.
      * @throws GrammarErrorFormula Raised when an incorrect String param is introduced
      */
-    public Cell editCell(int column, int row, String content) throws CircularDependencies, GrammarErrorFormula {
+    public Cell editCell(int column, int row, String content) throws CircularDependenciesException, GrammarErrorFormula {
         Cell cell = getCell(column, row - 1);
         cell.updateCell(content, true);
         return cell;
@@ -172,10 +172,10 @@ public class SpreadSheet {
      *
      * @param num_column Number of columns on the Spreadsheet
      * @param num_row Number of rows on the Spreadsheet
-     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws CircularDependenciesException Exception raised when exists two formula A and B, and A depends on B and B depends on A.
      * @throws GrammarErrorFormula Raised when an incorrect String param is introduced
      */
-    private void complete_cells(int num_column, int num_row) throws CircularDependencies, GrammarErrorFormula {
+    private void complete_cells(int num_column, int num_row) throws CircularDependenciesException, GrammarErrorFormula {
         if ((this.max_column < num_column) || (this.max_row < num_row)) {
             Cell[][] copy = SpreadSheet.spreadsheet.clone();
             int new_size_column = Math.max(num_column + 1, this.max_column);
@@ -209,10 +209,10 @@ public class SpreadSheet {
      *
      * @param file File containing the spreadsheet to import
      * @throws
-     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException Exception raised when exists two formula A and B, and A depends on B and B depends on A.
      * @throws edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula Raised when an incorrect String param is introduced
      */
-    public void importSpreadSheet(File file) throws CircularDependencies, GrammarErrorFormula {
+    public void importSpreadSheet(File file) throws CircularDependenciesException, GrammarErrorFormula {
         List<Cell[]> imported = importer.importSpreadSheet(file);
         int[] dim = importer.getDimensions();
         this.max_column = dim[0];
@@ -235,9 +235,9 @@ public class SpreadSheet {
      * Function used to recompute the value of all the cells in the SpreadSheet.
      * Used to compute all the formulas after importing a file.
      *
-     * @throws CircularDependencies Exception raised when exists two formula A and B, and A depends on B and B depends on A.
+     * @throws CircularDependenciesException Exception raised when exists two formula A and B, and A depends on B and B depends on A.
      */
-    private void updateSpreadSheet() throws CircularDependencies {
+    private void updateSpreadSheet() throws CircularDependenciesException {
         for (Cell[] cells : spreadsheet) {
             for (Cell cell : cells) {
                 cell.recomputeValue(true);
@@ -279,7 +279,7 @@ public class SpreadSheet {
                 editCell(column, row, content);
 
             }
-        } catch (CircularDependencies | GrammarErrorFormula ex) {
+        } catch (CircularDependenciesException | GrammarErrorFormula ex) {
             removeCell(column, row);
             throw new ContentException(ex.getMessage());
         }

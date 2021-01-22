@@ -42,7 +42,7 @@ public class ArgumentRange extends Argument {
      * @return Operand Function with the values of the Range Argument is refering to
      */
     @Override
-    public OperandFunction getValue() {
+    public ArgumentFunction getValue() {
         String[] terms = this.arg.split(":");
         List<Term> range = new LinkedList<Term>();
 
@@ -55,7 +55,7 @@ public class ArgumentRange extends Argument {
             CellValue value = super.getCellValue(coordinate);
             range.add(new OperandNumber((Double) value.getValue()));
         }
-        return new OperandFunction(range);
+        return new ArgumentFunction(range);
 
     }
 

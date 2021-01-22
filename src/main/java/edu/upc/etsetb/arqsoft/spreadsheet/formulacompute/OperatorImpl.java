@@ -119,4 +119,14 @@ public class OperatorImpl implements Term {
     public void acceptVisitor(Visitor v) {
         v.visitOperatorImpl(this);
     }
+        
+    @Override
+    public Double getDouble() {
+        return null;
+    }
+
+    
+    public OperandNumber getOperand() {
+        return null;
+    }
 }

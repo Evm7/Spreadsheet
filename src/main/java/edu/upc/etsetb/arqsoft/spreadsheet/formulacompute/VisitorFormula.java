@@ -84,11 +84,11 @@ public class VisitorFormula implements Visitor {
     }
 
     /**
-     * Adds the OperandFunction to the queue
+     * Adds the ArgumentFunction to the queue
      * @param term Function Operand 
      */
     @Override
-    public void visitOperandFunction(OperandFunction term) {
+    public void visitOperandFunction(ArgumentFunction term) {
         print("\t\tAdding to queue as value");
         queue.add(term);
     }
@@ -109,14 +109,7 @@ public class VisitorFormula implements Visitor {
      */
     public Double getResult() {
         Term result = queue.getLast();
-        if (result instanceof OperandNumber) {
-            return ((OperandNumber) result).getValue();
-        } else if (result instanceof ArgumentIndividual) {
-            return ((ArgumentIndividual) result).getValue().getValue();
-        } else {
-            print("Error " + result.toString());
-            return 0.0;
-        }
+        return result.getDouble();
     }
 
     /**
@@ -129,20 +122,7 @@ public class VisitorFormula implements Visitor {
      */
     private OperandNumber operate(Term first, Term second, OperatorImpl operator) {
         print("\t\t\tWe are computing: " + first.toString() + " " + operator.toString() + " " + second.toString());
-        OperandNumber first_val;
-        OperandNumber second_val;
-        if (first instanceof OperandNumber) {
-            first_val = (OperandNumber) first;
-        } else {
-            first_val = (OperandNumber) first.getValue();
-        }
-
-        if (second instanceof OperandNumber) {
-            second_val = (OperandNumber) second;
-        } else {
-            second_val = (OperandNumber) second.getValue();
-        }
-        return operator.computeOperation(first_val, second_val);
+        return operator.computeOperation(first.getOperand(), second.getOperand());
     }
 
     /**
@@ -158,7 +138,7 @@ public class VisitorFormula implements Visitor {
     private LinkedList<Term> operateFunction(LinkedList<Term> queue, OperatorFunction operator) {
         print("\t\t\tWe are computing a formula " + operator.toString());
         List<Term> operands = new LinkedList<>();
-        int index = operator.getTerms() + 1;
+        int index = operator.getArguments() + 1;
         print("\t\t\tNumber of items are " + index);
 
         for (int count = 0; count < index; count++) {
@@ -167,7 +147,7 @@ public class VisitorFormula implements Visitor {
             print("[ " + term.toString() + " ]  ");
         }
         print("");
-        OperandNumber num = ((OperatorFunction) operator).computeOperation(new OperandFunction(operands));
+        OperandNumber num = ((OperatorFunction) operator).computeOperation(new ArgumentFunction(operands));
         queue.add(num);
         return queue;
 

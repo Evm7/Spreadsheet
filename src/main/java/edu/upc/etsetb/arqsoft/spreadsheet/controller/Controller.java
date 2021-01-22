@@ -7,7 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.controller;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.model.Cell;
-import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.GrammarErrorFormula;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.ReadCommandException;
 import edu.upc.etsetb.arqsoft.spreadsheet.model.SpreadSheet;
@@ -49,7 +49,7 @@ public class Controller {
         }
         try {
             model = new SpreadSheet(name, max_length);
-        } catch (CircularDependencies | GrammarErrorFormula ex) {
+        } catch (CircularDependenciesException | GrammarErrorFormula ex) {
             this.view.display("Error should never ocurr here: " + ex.getMessage());
         }
     }
@@ -146,7 +146,7 @@ public class Controller {
             scanner.close();
         } catch (FileNotFoundException ex) {
             this.view.display("Path introduced does not exist. Can not read file.");
-        } catch (CircularDependencies | GrammarErrorFormula | ReadCommandException | ArithmeticException ex) {
+        } catch (CircularDependenciesException | GrammarErrorFormula | ReadCommandException | ArithmeticException ex) {
             this.view.display(ex.getMessage());
         } catch (IOException ex) {
             this.view.display("There is an error on the coordinates when adding cell");
@@ -163,13 +163,13 @@ public class Controller {
      *
      * @param command
      * @throws FileNotFoundException
-     * @throws CircularDependencies
+     * @throws CircularDependenciesException
      * @throws GrammarErrorFormula
      * @throws IOException
      * @throws ReadCommandException
      *
      */
-    private void processCommand(String command) throws FileNotFoundException, CircularDependencies, GrammarErrorFormula, IOException, ReadCommandException {
+    private void processCommand(String command) throws FileNotFoundException, CircularDependenciesException, GrammarErrorFormula, IOException, ReadCommandException {
         command = command.toUpperCase();
         String error = "Commands can be of differnet types:\n"
                 + "    RF <text_file_pathname>\n"
@@ -252,7 +252,7 @@ public class Controller {
         try {
             model = new SpreadSheet(name, max_length);
             model.setDebugger(tester);
-        } catch (CircularDependencies | GrammarErrorFormula ex) {
+        } catch (CircularDependenciesException | GrammarErrorFormula ex) {
             this.view.display("Error should never ocurr here: " + ex.getMessage());
         }
         this.view.display("Let's start, " + name + " :");
@@ -286,11 +286,11 @@ public class Controller {
             } else {
                 model.editCell(column, row, content);
             }
-        } catch (CircularDependencies ex) {
+        } catch (CircularDependenciesException ex) {
             this.view.display("Error: " + ex.getMessage());
             try {
                 model.editCell(column, row, cell.getStringContent());
-            } catch (CircularDependencies | GrammarErrorFormula ex1) {
+            } catch (CircularDependenciesException | GrammarErrorFormula ex1) {
                 this.view.display("EDIT_CELL: Error should never ocurr here: " + ex.getMessage());
             }
         } catch (GrammarErrorFormula | ArithmeticException ex) {
@@ -411,7 +411,7 @@ public class Controller {
         } while (true);
         try {
             this.model.importSpreadSheet(file);
-        } catch (CircularDependencies ex) {
+        } catch (CircularDependenciesException ex) {
             this.view.display("Circular dependencies sError in the import: " + ex.getMessage());
         } catch (GrammarErrorFormula ex) {
             this.view.display("Grammar Error in a formula when import: " + ex.getMessage());

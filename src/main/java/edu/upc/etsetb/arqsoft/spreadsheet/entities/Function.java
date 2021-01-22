@@ -6,7 +6,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandFunction;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.ArgumentFunction;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandNumber;
 
 /**
@@ -21,8 +21,8 @@ public interface Function {
     /**
      * Computes the Function when
      *
-     * @param args OperandFunction with the Arguments for the Function
+     * @param args ArgumentFunction with the Arguments for the Function
      * @return OperandNumber with the result of the Function
      */
-    OperandNumber computeFunction(OperandFunction args);
+    OperandNumber computeFunction(ArgumentFunction args);
 }

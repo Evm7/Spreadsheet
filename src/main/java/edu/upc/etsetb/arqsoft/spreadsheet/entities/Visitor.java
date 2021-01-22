@@ -7,7 +7,7 @@
 package edu.upc.etsetb.arqsoft.spreadsheet.entities;
 
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.Argument;
-import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandFunction;
+import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.ArgumentFunction;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperandNumber;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperatorFunction;
 import edu.upc.etsetb.arqsoft.spreadsheet.formulacompute.OperatorImpl;
@@ -41,11 +41,11 @@ public interface Visitor {
     void visitArgument(Argument argument);
 
     /**
-     * Adds the OperandFunction term to the queue
+     * Adds the ArgumentFunction term to the queue
      * 
      * @param operand Function Operand
      */
-    void visitOperandFunction(OperandFunction operand);
+    void visitOperandFunction(ArgumentFunction operand);
 
     /**
      * Adds the OperandNumber term to the queue

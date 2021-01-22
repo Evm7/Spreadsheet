@@ -6,7 +6,7 @@
  */
 package edu.upc.etsetb.arqsoft.spreadsheet.model;
 
-import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependencies;
+import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.CircularDependenciesException;
 import edu.upc.etsetb.arqsoft.spreadsheet.exceptions.NoNumberException;
 
 /**
@@ -33,12 +33,12 @@ public class ValueNumber extends CellValue {
      *
      * @param content Cell content
      * @param coordinate Cell coordinate
-     * @throws CircularDependencies Exception raised when exists two formula A and B, and
+     * @throws CircularDependenciesException Exception raised when exists two formula A and B, and
      * A depends on B and B depends on A.
      */
-    public ValueNumber(ContentFormula content, CellCoordinate coordinate) throws CircularDependencies {
-        SpreadSheet.parser.circularDependencies(coordinate);
-        this.value = SpreadSheet.parser.evaluatePostFix(content.getTerms());
+    public ValueNumber(ContentFormula content, CellCoordinate coordinate) throws CircularDependenciesException {
+        SpreadSheet.parser.circularDependencies.checkDependencies(coordinate);
+        this.value = SpreadSheet.parser.postfixEvaluator.evaluatePostFix(content.getTerms());
     }
 
     /**

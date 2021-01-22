@@ -54,6 +54,14 @@ public class Argument implements Term {
         return new OperandNumber(Double.parseDouble(arg));
     }
 
+    public Double getDouble() {
+        return Double.parseDouble(arg);
+    }
+
+    public OperandNumber getOperand() {
+        return new OperandNumber(getDouble());
+    }
+
     /**
      * Return the Type of Argument: ArgumentIndividual | ArgumentRange
      *
@@ -90,6 +98,7 @@ public class Argument implements Term {
 
     /**
      * Get the CellValue of a given CellCoordinate from the SpreadSheet
+     *
      * @param coordinate Cell coordinate
      * @return Cell value
      */

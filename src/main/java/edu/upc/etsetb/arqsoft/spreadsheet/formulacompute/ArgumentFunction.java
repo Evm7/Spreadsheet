@@ -17,8 +17,8 @@ import edu.upc.etsetb.arqsoft.spreadsheet.entities.Visitor;
  *
  * @author estev
  */
-public class OperandFunction implements Term {
-    
+public class ArgumentFunction implements Term {
+
     List<Term> operants;
 
     /**
@@ -26,7 +26,7 @@ public class OperandFunction implements Term {
      *
      * @param operants List of terms
      */
-    public OperandFunction(List<Term> operants) {
+    public ArgumentFunction(List<Term> operants) {
         this.operants = operants;
     }
 
@@ -45,9 +45,9 @@ public class OperandFunction implements Term {
      * the OperandFunction
      *
      * @param fun
-     * @return List of Operand Numbers 
+     * @return List of Operand Numbers
      */
-    private List<OperandNumber> flatten(OperandFunction fun) {
+    private List<OperandNumber> flatten(ArgumentFunction fun) {
         List<OperandNumber> flatList = new ArrayList<OperandNumber>();
         for (Term op : fun.operants) {
             if (op instanceof OperandNumber) {
@@ -57,7 +57,7 @@ public class OperandFunction implements Term {
             } else if (op instanceof ArgumentIndividual) {
                 flatList.add(((ArgumentIndividual) op).getValue());
             } else {
-                flatList.addAll(flatten((OperandFunction) op));
+                flatList.addAll(flatten((ArgumentFunction) op));
             }
         }
         return flatList;
@@ -76,8 +76,16 @@ public class OperandFunction implements Term {
         return res + "]";
     }
 
+    public Double getDouble() {
+        return Double.parseDouble("0");
+    }
+    
+    public OperandNumber getOperand() {
+        return new OperandNumber(getDouble());
+    }
+
     /**
-     * Return the OperandFunction type.
+     * Return the ArgumentFunction type.
      *
      * @return Operand Function type
      */
@@ -85,10 +93,10 @@ public class OperandFunction implements Term {
     public String isType() {
         return "OperandFunction";
     }
-    
+
     @Override
     public void acceptVisitor(Visitor v) {
         v.visitOperandFunction(this);
     }
-    
+
 }

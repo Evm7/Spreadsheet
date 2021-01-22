@@ -10,7 +10,7 @@ package edu.upc.etsetb.arqsoft.spreadsheet.exceptions;
  * Exception class with Formula Update problematic
  * @author estev
  */
-public class CircularDependencies extends Exception {
+public class CircularDependenciesException extends Exception {
 
     /**
      * Exception raise when exists two formula A and B, and
@@ -18,7 +18,7 @@ public class CircularDependencies extends Exception {
      * 
      * @param string String to display
      */
-    public CircularDependencies(String string) {
+    public CircularDependenciesException(String string) {
         super(string);
     }
     
